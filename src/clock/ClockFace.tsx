@@ -1,5 +1,7 @@
 import { ClockLayer } from './ClockLayer'
 import { GradientClockLayer } from './GradientClockLayer'
+import { sunHandRotationDegrees } from './rotations'
+import { usePragueTime } from './usePragueTime'
 import './ClockFace.css'
 
 // Layers are stacked bottom to top. Every SVG shares the same 1200x1200
@@ -38,28 +40,40 @@ const LAYERS: Layer[] = [
     gradientId: 'center-gold-gradient',
     filter: DROP_SHADOW,
   },
+  {
+    id: 'zodiac-ring',
+    kind: 'gradient',
+    src: '/clock/zodiac_ring.svg',
+    gradientId: 'zodiac-gold-gradient',
+    filter: DROP_SHADOW,
+  },
   { id: 'numeric-ring', kind: 'image', src: '/clock/numeric_ring.svg', filter: DROP_SHADOW },
   // Artwork not finalized yet — plain <img> import, on top of everything else.
   { id: 'sun-dial', kind: 'image', src: '/clock/sun_dial.svg', filter: DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
+  { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
 ]
 
 export function ClockFace() {
+  const pragueTime = usePragueTime()
+  const sunRotation = sunHandRotationDegrees(pragueTime)
+
   return (
     <div className="clock-stage">
-      {LAYERS.map((layer) =>
-        layer.kind === 'gradient' ? (
+      {LAYERS.map((layer) => {
+        const rotation = layer.id === 'sun-dial' ? sunRotation : layer.rotation
+        return layer.kind === 'gradient' ? (
           <GradientClockLayer
             key={layer.id}
             src={layer.src}
             gradientId={layer.gradientId}
-            rotation={layer.rotation}
+            rotation={rotation}
             filter={layer.filter}
           />
         ) : (
-          <ClockLayer key={layer.id} src={layer.src} rotation={layer.rotation} filter={layer.filter} />
-        ),
-      )}
+          <ClockLayer key={layer.id} src={layer.src} rotation={rotation} filter={layer.filter} />
+        )
+      })}
     </div>
   )
 }
