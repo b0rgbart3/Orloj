@@ -1,6 +1,11 @@
 import { ClockLayer } from './ClockLayer'
 import { GradientClockLayer } from './GradientClockLayer'
-import { sunHandRotationDegrees } from './rotations'
+import {
+  moonHandRotationDegrees,
+  numericRingRotationDegrees,
+  siderealRotationDegrees,
+  sunHandRotationDegrees,
+} from './rotations'
 import { usePragueTime } from './usePragueTime'
 import './ClockFace.css'
 
@@ -47,21 +52,46 @@ const LAYERS: Layer[] = [
     gradientId: 'zodiac-gold-gradient',
     filter: DROP_SHADOW,
   },
-  { id: 'numeric-ring', kind: 'image', src: '/clock/numeric_ring.svg', filter: DROP_SHADOW },
+  {
+    id: 'numeric-ring',
+    kind: 'gradient',
+    src: '/clock/numeric_ring.svg',
+    gradientId: 'numericGoldGradient',
+    filter: DROP_SHADOW,
+  },
   // Artwork not finalized yet — plain <img> import, on top of everything else.
   { id: 'sun-dial', kind: 'image', src: '/clock/sun_dial.svg', filter: DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
   { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
 ]
 
+// Layers whose rotation is computed live from Prague time, rather than
+// fixed in the layer config above.
+function liveRotation(id: string, pragueTime: ReturnType<typeof usePragueTime>): number | undefined {
+  switch (id) {
+    case 'sun-dial':
+      return sunHandRotationDegrees(pragueTime)
+    case 'moon-dial':
+      return moonHandRotationDegrees(pragueTime)
+    // Zodiac ring and star-dial share one sidereal rotation — same physical
+    // motion (Earth relative to the fixed stars), same spindle.
+    case 'zodiac-ring':
+    case 'star-dial':
+      return siderealRotationDegrees(pragueTime)
+    case 'numeric-ring':
+      return numericRingRotationDegrees(pragueTime.date)
+    default:
+      return undefined
+  }
+}
+
 export function ClockFace() {
   const pragueTime = usePragueTime()
-  const sunRotation = sunHandRotationDegrees(pragueTime)
 
   return (
     <div className="clock-stage">
       {LAYERS.map((layer) => {
-        const rotation = layer.id === 'sun-dial' ? sunRotation : layer.rotation
+        const rotation = liveRotation(layer.id, pragueTime) ?? layer.rotation
         return layer.kind === 'gradient' ? (
           <GradientClockLayer
             key={layer.id}

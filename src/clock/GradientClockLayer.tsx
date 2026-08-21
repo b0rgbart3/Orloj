@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 type GradientClockLayerProps = {
   src: string
@@ -34,19 +34,33 @@ export function GradientClockLayer({ src, gradientId, rotation = 0, filter }: Gr
     }
   }, [src])
 
-  useEffect(() => {
+  // Layout effect (not a plain effect): this must apply in the same paint as
+  // the layer's own rotation. A plain useEffect runs after paint, so for one
+  // frame each update the artwork would show the new rotation with the
+  // gradient still counter-rotated for the old one — a visible flicker on
+  // any layer whose rotation changes continuously (e.g. the zodiac ring's
+  // live sidereal rotation).
+  useLayoutEffect(() => {
     const gradient = containerRef.current?.querySelector(`#${gradientId}`)
     if (!gradient) return
     const [cx, cy] = CENTER
     gradient.setAttribute('gradientTransform', `rotate(${-rotation} ${cx} ${cy})`)
   }, [rotation, gradientId, markup])
 
+  // Memoized so this object's identity is stable across renders where markup
+  // hasn't changed — without this, a fresh { __html: markup } object every
+  // render made React re-assign innerHTML on every re-render (e.g. every
+  // second, from the live clock tick), silently recreating the
+  // <linearGradient> element and wiping out whatever gradientTransform the
+  // layout effect above had applied to the previous one.
+  const innerHtml = useMemo(() => (markup ? { __html: markup } : undefined), [markup])
+
   return (
     <div
       ref={containerRef}
       className="clock-layer"
       style={{ transform: `rotate(${rotation}deg)`, filter }}
-      dangerouslySetInnerHTML={markup ? { __html: markup } : undefined}
+      dangerouslySetInnerHTML={innerHtml}
     />
   )
 }
