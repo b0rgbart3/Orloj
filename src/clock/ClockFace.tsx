@@ -6,7 +6,7 @@ import {
   siderealRotationDegrees,
   sunHandRotationDegrees,
 } from './rotations'
-import { usePragueTime } from './usePragueTime'
+import type { PragueTime } from './usePragueTime'
 import { ZodiacHouseLayer } from './ZodiacHouseLayer'
 import './ClockFace.css'
 
@@ -68,7 +68,7 @@ const LAYERS: Layer[] = [
 
 // Layers whose rotation is computed live from Prague time, rather than
 // fixed in the layer config above.
-function liveRotation(id: string, pragueTime: ReturnType<typeof usePragueTime>): number | undefined {
+function liveRotation(id: string, pragueTime: PragueTime): number | undefined {
   switch (id) {
     case 'sun-dial':
       return sunHandRotationDegrees(pragueTime)
@@ -86,9 +86,7 @@ function liveRotation(id: string, pragueTime: ReturnType<typeof usePragueTime>):
   }
 }
 
-export function ClockFace() {
-  const pragueTime = usePragueTime()
-
+export function ClockFace({ pragueTime }: { pragueTime: PragueTime }) {
   return (
     <div className="clock-stage">
       {LAYERS.map((layer) => {

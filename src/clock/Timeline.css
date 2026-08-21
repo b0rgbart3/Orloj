@@ -1,0 +1,64 @@
+.timeline {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fde677;
+  font: 14px/1.4 ui-monospace, monospace;
+  width: min(640px, 90vw);
+}
+
+.timeline-readout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-play-button,
+.timeline-now-button {
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(253, 230, 119, 0.5);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.timeline-play-button {
+  min-width: 4.5em;
+}
+
+.timeline-now-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.timeline-speed-select {
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(253, 230, 119, 0.5);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.timeline-slider {
+  width: 100%;
+  accent-color: #fde677;
+}

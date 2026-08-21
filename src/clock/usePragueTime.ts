@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 const TIME_ZONE = 'Europe/Prague'
 
 export type PragueTime = {
@@ -12,7 +10,7 @@ export type PragueTime = {
 // Intl's timeZone support resolves Prague's UTC offset (CET/CEST) from the
 // browser's own tz database, so daylight saving is handled automatically —
 // no manual offset math, no DST bugs around the March/October switchover.
-const formatter = new Intl.DateTimeFormat('en-GB', {
+const timeFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: TIME_ZONE,
   hour12: false,
   hour: '2-digit',
@@ -20,8 +18,13 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
   second: '2-digit',
 })
 
-function getPragueTime(date: Date): PragueTime {
-  const parts = formatter.formatToParts(date)
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+  timeZone: TIME_ZONE,
+  dateStyle: 'medium',
+})
+
+export function getPragueTime(date: Date): PragueTime {
+  const parts = timeFormatter.formatToParts(date)
   const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0)
   return {
     date,
@@ -31,14 +34,6 @@ function getPragueTime(date: Date): PragueTime {
   }
 }
 
-/** Live, continuously-updating current time in Prague. */
-export function usePragueTime(): PragueTime {
-  const [time, setTime] = useState(() => getPragueTime(new Date()))
-
-  useEffect(() => {
-    const id = setInterval(() => setTime(getPragueTime(new Date())), 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  return time
+export function formatPragueDate(date: Date): string {
+  return dateFormatter.format(date)
 }
