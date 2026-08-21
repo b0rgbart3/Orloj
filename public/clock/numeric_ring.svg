@@ -3,9 +3,15 @@
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1200 1200" style="enable-background:new 0 0 1200 1200;" xml:space="preserve">
 <style type="text/css">
-	.st10{fill:#FDE677;}
+	.st10{fill:url(#numericGoldGradient);}
 	.st20{fill:#2C4764;}
 </style>
+<linearGradient id="numericGoldGradient" gradientUnits="userSpaceOnUse" x1="600" y1="0" x2="600" y2="1200">
+	<stop offset="0" style="stop-color:#FFFFFF"/>
+	<stop offset="0.3333" style="stop-color:#FDE677"/>
+	<stop offset="0.6667" style="stop-color:#F7CD00"/>
+	<stop offset="1" style="stop-color:#6B4A08"/>
+</linearGradient>
 <g id="Numeric">
 	<path class="st20" fill-rule="evenodd" d="M599.55,140.05a459.5,459.5 0 1,0 0,919a459.5,459.5 0 1,0 0,-919Z
 		M599.55,192.18a407.37,407.37 0 1,0 0,814.74a407.37,407.37 0 1,0 0,-814.74Z"/>

@@ -13,3 +13,9 @@
   pointer-events: none;
   user-select: none;
 }
+
+.clock-layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

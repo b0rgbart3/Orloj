@@ -27,3 +27,15 @@ body {
   justify-content: center;
   overflow: hidden;
 }
+
+.prague-time-readout {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fde677;
+  font: 14px/1.4 ui-monospace, monospace;
+  letter-spacing: 0.5px;
+}
