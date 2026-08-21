@@ -8,6 +8,11 @@ type GradientClockLayerProps = {
   rotation?: number
   /** CSS filter, e.g. a drop-shadow. */
   filter?: string
+  /**
+   * Extra runtime DOM mutation, applied in the same layout effect as the
+   * gradient counter-rotation (same paint, no separate flicker risk).
+   */
+  decorate?: (container: HTMLDivElement) => void
 }
 
 // Every layer shares the same 1200x1200 viewBox, centered at (600,600).
@@ -18,7 +23,7 @@ const CENTER: [number, number] = [600, 600]
  * <linearGradient> can be counter-rotated at runtime, keeping the gradient
  * visually vertical even while the layer itself rotates.
  */
-export function GradientClockLayer({ src, gradientId, rotation = 0, filter }: GradientClockLayerProps) {
+export function GradientClockLayer({ src, gradientId, rotation = 0, filter, decorate }: GradientClockLayerProps) {
   const [markup, setMarkup] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -45,7 +50,8 @@ export function GradientClockLayer({ src, gradientId, rotation = 0, filter }: Gr
     if (!gradient) return
     const [cx, cy] = CENTER
     gradient.setAttribute('gradientTransform', `rotate(${-rotation} ${cx} ${cy})`)
-  }, [rotation, gradientId, markup])
+    if (containerRef.current) decorate?.(containerRef.current)
+  }, [rotation, gradientId, markup, decorate])
 
   // Memoized so this object's identity is stable across renders where markup
   // hasn't changed — without this, a fresh { __html: markup } object every

@@ -7,6 +7,7 @@ import {
   sunHandRotationDegrees,
 } from './rotations'
 import { usePragueTime } from './usePragueTime'
+import { ZodiacHouseLayer } from './ZodiacHouseLayer'
 import './ClockFace.css'
 
 // Layers are stacked bottom to top. Every SVG shares the same 1200x1200
@@ -48,7 +49,7 @@ const LAYERS: Layer[] = [
   {
     id: 'zodiac-ring',
     kind: 'gradient',
-    src: '/clock/zodiac_ring.svg',
+    src: '/clock/zodiac_ring_separated.svg',
     gradientId: 'zodiac-gold-gradient',
     filter: DROP_SHADOW,
   },
@@ -92,6 +93,19 @@ export function ClockFace() {
     <div className="clock-stage">
       {LAYERS.map((layer) => {
         const rotation = liveRotation(layer.id, pragueTime) ?? layer.rotation
+        if (layer.id === 'zodiac-ring' && layer.kind === 'gradient') {
+          return (
+            <ZodiacHouseLayer
+              key={layer.id}
+              src={layer.src}
+              gradientId={layer.gradientId}
+              rotation={rotation}
+              filter={layer.filter}
+              pragueTime={pragueTime}
+              ringRotation={rotation ?? 0}
+            />
+          )
+        }
         return layer.kind === 'gradient' ? (
           <GradientClockLayer
             key={layer.id}
