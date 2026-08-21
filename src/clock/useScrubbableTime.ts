@@ -3,7 +3,7 @@ import { getPragueTime } from './usePragueTime'
 
 const THREE_MONTHS_MS = 3 * 30.4375 * 24 * 60 * 60 * 1000
 
-export const PLAYBACK_SPEEDS = [1, 6, 12, 24] as const
+export const PLAYBACK_SPEEDS = [1, 2, 3, 6] as const
 export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number]
 
 function clamp(value: number, min: number, max: number) {

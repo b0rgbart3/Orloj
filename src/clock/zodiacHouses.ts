@@ -74,7 +74,7 @@ const HAND_COLOR: Record<HandId, string> = {
  * this hand currently over." Both hand and ring rotations share the same
  * "0°/pointing down" baseline convention, so this is a plain difference.
  */
-function angleInRingFrame(handRotationDeg: number, ringRotationDeg: number): number {
+export function angleInRingFrame(handRotationDeg: number, ringRotationDeg: number): number {
   return normalizeDegrees(180 + handRotationDeg - ringRotationDeg)
 }
 

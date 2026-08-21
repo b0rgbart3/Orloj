@@ -6,6 +6,7 @@ import {
   siderealRotationDegrees,
   sunHandRotationDegrees,
 } from './rotations'
+import { SunDialLayer } from './SunDialLayer'
 import type { PragueTime } from './usePragueTime'
 import { ZodiacHouseLayer } from './ZodiacHouseLayer'
 import './ClockFace.css'
@@ -60,7 +61,9 @@ const LAYERS: Layer[] = [
     gradientId: 'numericGoldGradient',
     filter: DROP_SHADOW,
   },
-  // Artwork not finalized yet — plain <img> import, on top of everything else.
+  // sun-dial's `kind: 'image'` here is nominal -- ClockFace special-cases
+  // its id to render via SunDialLayer instead (see below), since the sun
+  // glyph needs to be inlined and repositioned at runtime.
   { id: 'sun-dial', kind: 'image', src: '/clock/sun_dial.svg', filter: DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
   { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
@@ -101,6 +104,18 @@ export function ClockFace({ pragueTime }: { pragueTime: PragueTime }) {
               filter={layer.filter}
               pragueTime={pragueTime}
               ringRotation={rotation ?? 0}
+            />
+          )
+        }
+        if (layer.id === 'sun-dial') {
+          return (
+            <SunDialLayer
+              key={layer.id}
+              src={layer.src}
+              rotation={rotation}
+              filter={layer.filter}
+              pragueTime={pragueTime}
+              ringRotation={siderealRotationDegrees(pragueTime)}
             />
           )
         }

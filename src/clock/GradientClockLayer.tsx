@@ -2,8 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 type GradientClockLayerProps = {
   src: string
-  /** id of the <linearGradient> inside the SVG to counter-rotate so it stays vertical on screen. */
-  gradientId: string
+  /**
+   * id of the <linearGradient> inside the SVG to counter-rotate so it stays
+   * vertical on screen. Omit for layers that only need the `decorate` hook
+   * (inlined SVG access) without any gradient counter-rotation.
+   */
+  gradientId?: string
   /** Rotation in degrees, applied around the layer's center. */
   rotation?: number
   /** CSS filter, e.g. a drop-shadow. */
@@ -46,10 +50,13 @@ export function GradientClockLayer({ src, gradientId, rotation = 0, filter, deco
   // any layer whose rotation changes continuously (e.g. the zodiac ring's
   // live sidereal rotation).
   useLayoutEffect(() => {
-    const gradient = containerRef.current?.querySelector(`#${gradientId}`)
-    if (!gradient) return
-    const [cx, cy] = CENTER
-    gradient.setAttribute('gradientTransform', `rotate(${-rotation} ${cx} ${cy})`)
+    if (gradientId) {
+      const gradient = containerRef.current?.querySelector(`#${gradientId}`)
+      if (gradient) {
+        const [cx, cy] = CENTER
+        gradient.setAttribute('gradientTransform', `rotate(${-rotation} ${cx} ${cy})`)
+      }
+    }
     if (containerRef.current) decorate?.(containerRef.current)
   }, [rotation, gradientId, markup, decorate])
 
