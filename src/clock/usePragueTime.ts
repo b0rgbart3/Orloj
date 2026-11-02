@@ -18,9 +18,11 @@ const timeFormatter = new Intl.DateTimeFormat('en-GB', {
   second: '2-digit',
 })
 
-const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+const datePartsFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: TIME_ZONE,
-  dateStyle: 'medium',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
 })
 
 export function getPragueTime(date: Date): PragueTime {
@@ -34,6 +36,18 @@ export function getPragueTime(date: Date): PragueTime {
   }
 }
 
-export function formatPragueDate(date: Date): string {
-  return dateFormatter.format(date)
+export type PragueDateParts = {
+  day: string
+  month: string
+  year: string
+}
+
+export function getPragueDateParts(date: Date): PragueDateParts {
+  const parts = datePartsFormatter.formatToParts(date)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? ''
+  return {
+    day: get('day'),
+    month: get('month'),
+    year: get('year'),
+  }
 }

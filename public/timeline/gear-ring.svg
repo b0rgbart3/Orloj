@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gearBrass" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#fdf0b3"/>
+      <stop offset="55%" stop-color="#d9a441"/>
+      <stop offset="100%" stop-color="#7a5a1e"/>
+    </radialGradient>
+    <linearGradient id="gearTeeth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6e6ac"/>
+      <stop offset="100%" stop-color="#8a6423"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="53" fill="none" stroke="url(#gearTeeth)" stroke-width="13" stroke-dasharray="9.5 7.5"/>
+  <circle cx="60" cy="60" r="53" fill="none" stroke="#3b2410" stroke-width="13" stroke-dasharray="9.5 7.5" opacity="0.25"/>
+  <circle cx="60" cy="60" r="44" fill="url(#gearBrass)" stroke="#3b2410" stroke-width="2.5"/>
+  <circle cx="60" cy="60" r="44" fill="none" stroke="#fff3cf" stroke-width="1.5" opacity="0.55"/>
+  <circle cx="60" cy="60" r="37" fill="none" stroke="#6e4d1e" stroke-width="1" opacity="0.6"/>
+</svg>

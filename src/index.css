@@ -23,7 +23,8 @@ body {
 .app {
   min-height: 100svh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: calc((100svh - min(90vw, 82vh)) / 2 * 0.4437053125);
   overflow: hidden;
 }
