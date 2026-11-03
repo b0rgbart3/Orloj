@@ -1,0 +1,39 @@
+.prague-time-footnote {
+  position: relative;
+  display: inline-block;
+}
+
+.prague-time-footnote-mark {
+  appearance: none;
+  border: none;
+  background: transparent;
+  margin: 4px 4px 0 0;
+  padding: 6px 6px 6px 1px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  vertical-align: super;
+  position: relative;
+  top: -1px;
+  left: 2px;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.prague-time-footnote-tooltip {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 7px 11px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1.5px solid #000;
+  color: #000;
+  font-size: 0.715rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PragueTimeFootnote } from "./PragueTimeFootnote";
 import { AboutPage } from "./AboutPage";
 import { ClockFace } from "./clock/ClockFace";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
@@ -65,6 +66,7 @@ function App() {
             <span className="app-datetime-hour">{renderDigits(pragueTime.hours.toString())}</span>
             <span className="app-datetime-colon">:</span>
             <span className="app-datetime-minute">{renderDigits(pad(pragueTime.minutes))}</span>
+            <PragueTimeFootnote />
           </p>
         </div>
         {page === "home" && (

@@ -44,6 +44,8 @@ body {
 }
 
 .app-header {
+  position: relative;
+  z-index: 1;
   align-self: stretch;
   display: flex;
   align-items: flex-start;
