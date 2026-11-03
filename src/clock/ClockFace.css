@@ -1,7 +1,7 @@
 .clock-stage {
   position: relative;
-  width: min(90vw, 82vh);
-  height: min(90vw, 82vh);
+  width: var(--clock-size);
+  height: var(--clock-size);
 }
 
 .clock-layer {

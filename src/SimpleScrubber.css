@@ -1,0 +1,42 @@
+.simple-scrubber {
+  -webkit-appearance: none;
+  appearance: none;
+  align-self: stretch;
+  width: auto;
+  margin: 0 40px 0 30px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.simple-scrubber::-webkit-slider-runnable-track {
+  height: 1px;
+  border-radius: 1px;
+  background: #000;
+}
+
+.simple-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 12px;
+  margin-top: -5.5px;
+  border: none;
+  border-radius: 999px;
+  background: #000;
+  cursor: pointer;
+}
+
+.simple-scrubber::-moz-range-track {
+  height: 1px;
+  border-radius: 1px;
+  background: #000;
+}
+
+.simple-scrubber::-moz-range-thumb {
+  width: 22px;
+  height: 12px;
+  border: none;
+  border-radius: 999px;
+  background: #000;
+  cursor: pointer;
+}

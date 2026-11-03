@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { AboutPage } from "./AboutPage";
 import { ClockFace } from "./clock/ClockFace";
-import { Timeline } from "./clock/Timeline";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
 import { Drawer } from "./Drawer";
 import { SimpleControls } from "./SimpleControls";
+import { SimpleScrubber } from "./SimpleScrubber";
 
 export type Page = "home" | "about";
 
@@ -81,17 +81,11 @@ function App() {
       {page === "home" ? (
         <>
           <ClockFace pragueTime={pragueTime} />
-          <Timeline
-            pragueTime={pragueTime}
+          <SimpleScrubber
             offsetMs={offsetMs}
             minOffsetMs={minOffsetMs}
             maxOffsetMs={maxOffsetMs}
             onOffsetChange={setOffsetMs}
-            onReset={resetToNow}
-            isPlaying={isPlaying}
-            onTogglePlay={togglePlay}
-            speedHoursPerSecond={speedHoursPerSecond}
-            onSpeedChange={setSpeedHoursPerSecond}
           />
         </>
       ) : (

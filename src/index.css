@@ -1,5 +1,18 @@
 :root {
   color-scheme: dark;
+
+  /* Maximized clock size: with the ornate control panel gone, the clock
+     is the only thing competing with the header (measured ~128px tall)
+     and a small reserve below for the scrubber (its own 40px margin-top
+     + 12px thumb + 20px bottom margin = 72px). The clock-stage's own
+     top margin-top below pulls it up by 11% of its size to close the
+     artwork's built-in top inset, so that 0.89 factor solves for the
+     exact size where the bottom of the (shifted-up) box lands precisely
+     at the reserved line -- no wasted space, no overlap, at any
+     viewport height. Keep the 128+72=200 reserve in sync with the
+     header's actual height and the scrubber's own margin in
+     SimpleScrubber.css. */
+  --clock-size: min(90vw, calc((100svh - 200px) / 0.89));
 }
 
 * {
@@ -42,7 +55,7 @@ body {
   margin: 0 0 0 30px;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: 900;
-  font-size: 3.25rem;
+  font-size: 3rem;
   line-height: 1.05;
   letter-spacing: -0.04em;
   text-transform: lowercase;
@@ -95,5 +108,5 @@ body {
    visible ring starts, so pull the stage up to close that dead space
    without the visible ring touching the date text above it. */
 .app .clock-stage {
-  margin-top: calc(min(90vw, 82vh) * -0.11);
+  margin-top: calc(var(--clock-size) * -0.11);
 }
