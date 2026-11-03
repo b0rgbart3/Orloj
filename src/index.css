@@ -23,8 +23,77 @@ body {
 .app {
   min-height: 100svh;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: calc((100svh - min(90vw, 82vh)) / 2 * 0.4437053125);
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 80px;
   overflow: hidden;
+}
+
+.app-header {
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 40px 0 0;
+}
+
+.app-title {
+  margin: 0 0 0 30px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 3.25rem;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  text-transform: lowercase;
+  color: #000;
+}
+
+.app-subtitle {
+  margin: 0.25rem 0 0 30px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  letter-spacing: -0.04rem;
+  color: rgba(0, 0, 0, .39);
+}
+
+.app-datetime {
+  margin: 0.5rem 0 0 32px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #000;
+}
+
+.app-datetime-separator {
+  display: inline-block;
+  font-size: 1.5em;
+  line-height: 1;
+  vertical-align: middle;
+  opacity: 0.4;
+}
+
+/* Helvetica's colon glyph has visibly uneven side bearings (more space on
+   the left than the right of the ink), measured at ~0.11em vs ~0.065em.
+   Nudge it left by half that difference so it reads as optically centered
+   between the hour and minute digits instead of looking left-shifted. */
+.app-datetime-colon {
+  margin-left: -0.022em;
+  margin-right: 0.022em;
+}
+
+/* Helvetica's "1" is a narrow glyph with a right-side bearing of ~0.20em,
+   roughly 5x the other digits' ~0.04em average. When "1" leads a two-digit
+   pair (10, 12, 19, 11...) that excess reads as a loose internal gap.
+   Pull the following digit in by the measured excess (~0.16em). */
+.app-datetime-digit-tight {
+  margin-right: -0.16em;
+}
+
+/* The clock artwork has a large built-in transparent margin before the
+   visible ring starts, so pull the stage up to close that dead space
+   without the visible ring touching the date text above it. */
+.app .clock-stage {
+  margin-top: calc(min(90vw, 82vh) * -0.11);
 }

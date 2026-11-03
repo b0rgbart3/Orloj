@@ -1,0 +1,59 @@
+.speed-dropdown {
+  position: relative;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.speed-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 2px 8px;
+  border: 1px solid #6b6b6b;
+  border-radius: 3px;
+  background: #8a8a8a;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  color: #000;
+  cursor: pointer;
+}
+
+.speed-dropdown-caret {
+  width: 8px;
+  height: 5px;
+}
+
+.speed-dropdown-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border: 1px solid #6b6b6b;
+  border-radius: 3px;
+  background: #8a8a8a;
+  min-width: 100%;
+}
+
+.speed-dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 4px 10px;
+  border: none;
+  background: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  color: #000;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.speed-dropdown-option:hover {
+  background: #c4c4c4;
+}
+
+.speed-dropdown-option-active {
+  font-weight: 700;
+}

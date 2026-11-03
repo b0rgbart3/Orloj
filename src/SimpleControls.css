@@ -1,0 +1,38 @@
+.simple-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.simple-controls-button {
+  padding: 2px 8px;
+  border: 1px solid #6b6b6b;
+  border-radius: 3px;
+  background: #8a8a8a;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  color: #000;
+  cursor: pointer;
+}
+
+.simple-controls-button:disabled {
+  color: rgba(0, 0, 0, 0.39);
+  cursor: default;
+}
+
+.simple-controls-play-button {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.simple-controls-play-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.simple-controls-now-button {
+  font-weight: 700;
+}
