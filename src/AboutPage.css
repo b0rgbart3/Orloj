@@ -1,7 +1,257 @@
 .about-page {
-  max-width: 480px;
-  font-family: Helvetica, Arial, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-self: stretch;
+  /* Matches .app-title's own 30px margin, so body content lines up with the
+     title text rather than the header box's outer edge. */
+  padding-left: 30px;
+  padding-right: 40px;
+  padding-bottom: 200px;
+  font-family: 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   font-size: 1rem;
   line-height: 1.6;
   color: #1a1a1a;
+}
+
+.about-page-nav {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.about-page-nav a {
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.about-page-nav a:hover,
+.about-page-nav a:focus-visible {
+  opacity: 1;
+}
+
+.about-page-section {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1100px) {
+  .about-page {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: start;
+    gap: 3rem;
+  }
+}
+
+.about-page h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.about-section-title {
+  margin: 0 0 0.75rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.about-page-section:not(:first-of-type) {
+  margin-top: 1rem;
+}
+
+.about-page-diagram-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+}
+
+.about-page-diagram-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.about-page-diagram-image {
+  flex: 0 0 auto;
+  width: 160px;
+  max-width: 40%;
+  height: auto;
+}
+
+.about-page-diagram-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.about-page-diagram-copy h4 {
+  margin: 0 0 0.35rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.about-page-diagram-copy p {
+  margin: 0;
+}
+
+@media (min-width: 700px) {
+  .about-page-diagram-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .about-page-diagram-row--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .about-page-diagram-image {
+    width: 200px;
+    max-width: 200px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .about-page-diagram-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
+  }
+
+  .about-page-diagram-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .about-page-diagram-image {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+  }
+}
+
+.about-page a {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.about-page-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.about-page-map iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* Google's basic maps embed has no dark-theme param, so approximate one
+     with a color-inversion filter -- a standard workaround for iframe embeds. */
+  filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.about-page-map-link {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+.about-page-links {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.about-page-links li {
+  margin-bottom: 0.4rem;
+}
+
+.about-page-how-it-works-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.about-page-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.about-page-gallery-item {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.about-page-gallery-item--hero {
+  aspect-ratio: 16 / 9;
+}
+
+.about-page-gallery-item--tall-left {
+  aspect-ratio: 3 / 4;
+}
+
+.about-page-gallery-item--tall-right {
+  aspect-ratio: 4 / 5;
+  object-position: 50% 15%;
+}
+
+.about-page-gallery-item--small-left,
+.about-page-gallery-item--small-right {
+  aspect-ratio: 3 / 2;
+}
+
+@media (min-width: 1100px) {
+  .about-page-gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 240px 190px 190px 170px;
+    grid-template-areas:
+      'hero hero'
+      'tall-left tall-right'
+      'tall-left tall-right'
+      'small-left small-right';
+  }
+
+  .about-page-gallery-item {
+    aspect-ratio: auto;
+  }
+
+  .about-page-gallery-item--hero {
+    grid-area: hero;
+  }
+
+  .about-page-gallery-item--tall-left {
+    grid-area: tall-left;
+  }
+
+  .about-page-gallery-item--tall-right {
+    grid-area: tall-right;
+  }
+
+  .about-page-gallery-item--small-left {
+    grid-area: small-left;
+  }
+
+  .about-page-gallery-item--small-right {
+    grid-area: small-right;
+  }
 }

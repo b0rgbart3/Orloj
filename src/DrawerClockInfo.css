@@ -1,0 +1,50 @@
+.drawer-info {
+  padding: 1.5rem;
+  color: #e6e6e6;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.drawer-info-datetime {
+  margin: 0 0 1.25rem;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.drawer-info-datetime-separator {
+  opacity: 0.5;
+}
+
+.drawer-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  line-height: 1.4;
+}
+
+.drawer-info-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.drawer-info-row--text-only {
+  padding-left: calc(1.6em + 0.6rem);
+}
+
+.drawer-info-row strong {
+  color: #fde677;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.drawer-info-nowrap {
+  white-space: nowrap;
+}
+
+.drawer-info-icon {
+  flex: 0 0 auto;
+  height: 1.6em;
+  width: 1.6em;
+  object-fit: contain;
+}

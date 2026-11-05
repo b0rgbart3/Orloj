@@ -53,6 +53,23 @@ body {
   padding: 16px 40px 0 0;
 }
 
+.app-title-block {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.76;
+  transition: opacity 0.15s ease;
+}
+
+.app-title-block:hover,
+.app-title-block:focus-visible {
+  opacity: 1;
+}
+
 .app-title {
   margin: 0 0 0 30px;
   font-family: Helvetica, Arial, sans-serif;

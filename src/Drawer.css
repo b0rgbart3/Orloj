@@ -12,10 +12,13 @@
   flex-direction: column;
   align-items: stretch;
   z-index: 100;
+  cursor: pointer;
 }
 
 .drawer--open {
-  width: 30vw;
+  width: 40vw;
+  cursor: default;
+  overflow-y: auto;
 }
 
 .drawer-hamburger {
@@ -40,13 +43,26 @@
   border-radius: 2px;
 }
 
+.drawer-menu {
+  position: fixed;
+  top: 80px;
+  left: 0.75rem;
+  z-index: 500;
+  background: #1a1a1a;
+  border: 1px solid #fde677;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  cursor: default;
+}
+
 .drawer-nav {
   list-style: none;
   margin: 0;
-  padding: 0 1.5rem;
+  padding: 1rem 1.5rem;
+  min-width: 140px;
 }
 
-.drawer-nav li + li {
+.drawer-nav li+li {
   margin-top: 0.5rem;
 }
 

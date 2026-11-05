@@ -47,7 +47,12 @@ function App() {
   const { day, month, year } = getPragueDateParts(pragueTime.date);
 
   return (
-    <main className="app">
+    <main
+      className="app"
+      onClick={() => {
+        if (drawerOpen) setDrawerOpen(false);
+      }}
+    >
       <Drawer
         open={drawerOpen}
         onToggle={() => setDrawerOpen((isOpen) => !isOpen)}
@@ -56,18 +61,29 @@ function App() {
           setPage(nextPage);
           setDrawerOpen(false);
         }}
+        pragueTime={pragueTime}
+        dateParts={{ day, month, year }}
       />
       <header className="app-header">
         <div className="app-header-text">
-          <h1 className="app-title">pražský orloj</h1>
-          <p className="app-subtitle">Prague's Astronomical Clock</p>
-          <p className="app-datetime">
-            {month} {day}, {year} <span className="app-datetime-separator">|</span>{" "}
-            <span className="app-datetime-hour">{renderDigits(pragueTime.hours.toString())}</span>
-            <span className="app-datetime-colon">:</span>
-            <span className="app-datetime-minute">{renderDigits(pad(pragueTime.minutes))}</span>
-            <PragueTimeFootnote />
-          </p>
+          <button
+            type="button"
+            className="app-title-block"
+            onClick={() => setPage(page === "home" ? "about" : "home")}
+            aria-label={page === "home" ? "View about page" : "View home page"}
+          >
+            <h1 className="app-title">pražský orloj</h1>
+            <p className="app-subtitle">Prague's Astronomical Clock</p>
+          </button>
+          {page === "home" && (
+            <p className="app-datetime">
+              {month} {day}, {year} <span className="app-datetime-separator">|</span>{" "}
+              <span className="app-datetime-hour">{renderDigits(pragueTime.hours.toString())}</span>
+              <span className="app-datetime-colon">:</span>
+              <span className="app-datetime-minute">{renderDigits(pad(pragueTime.minutes))}</span>
+              <PragueTimeFootnote />
+            </p>
+          )}
         </div>
         {page === "home" && (
           <SimpleControls
