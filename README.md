@@ -1,5 +1,7 @@
 # pražský orloj
 
+![screenshot](./screenshot.jpg)
+
 A digital recreation of the Prague Orloj — the medieval astronomical clock on Prague's Old Town Hall — built as layered, animated SVG graphics in React.
 
 ## About the Prague Orloj
