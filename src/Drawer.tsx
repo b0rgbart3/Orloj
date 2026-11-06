@@ -13,9 +13,13 @@ type DrawerProps = {
   dateParts: PragueDateParts
 }
 
-const NAV_ITEMS: { page: Page; label: string }[] = [
+const NAV_ITEMS: { page: Page; label: string; indent?: boolean }[] = [
   { page: 'home', label: 'home' },
   { page: 'about', label: 'about' },
+  { page: 'about/real-clock', label: 'the real clock', indent: true },
+  { page: 'about/how-it-works', label: 'how it works', indent: true },
+  { page: 'about/digital-version', label: 'about this digital version', indent: true },
+  { page: 'learn/sidereal-time', label: 'sidereal time' },
 ]
 
 export function Drawer({ open, onToggle, page, onNavigate, pragueTime, dateParts }: DrawerProps) {
@@ -51,7 +55,12 @@ export function Drawer({ open, onToggle, page, onNavigate, pragueTime, dateParts
             {NAV_ITEMS.map((item) => (
               <li key={item.page}>
                 <button
-                  className={item.page === page ? 'drawer-nav-active' : ''}
+                  className={[
+                    item.page === page ? 'drawer-nav-active' : '',
+                    item.indent ? 'drawer-nav-sub' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   onClick={() => {
                     setMenuOpen(false)
                     onNavigate(item.page)

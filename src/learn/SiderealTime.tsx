@@ -1,13 +1,33 @@
+import { Figure } from "./Figure";
+import {
+  AnnualLapDiagram,
+  EclipticEquatorDiagram,
+  LiveReadingDiagram,
+  LstZeroDiagram,
+  MeridianTransitDiagram,
+  OrlojHistoryPhoto,
+  RightAscensionDiagram,
+  SiderealDayDiagram,
+  SolarDayDiagram,
+} from "./diagrams";
+
 export function SiderealTime() {
   return (
     <>
       <h3>Two kinds of day</h3>
+      <Figure caption="A solar day: the sun back in the same part of the sky, noon to noon.">
+        <SolarDayDiagram />
+      </Figure>
       <p>
         Every clock on your wall keeps <strong>solar time</strong>: one full day is however long it
         takes the sun to return to the same spot in the sky — roughly overhead at noon, back overhead
         at noon tomorrow. That's 24 hours, by definition; it's the whole reason an hour is the length
         it is.
       </p>
+
+      <Figure caption="A sidereal day is a full turn against the stars — a touch short of facing the sun again.">
+        <SiderealDayDiagram />
+      </Figure>
       <p>
         But the sun returning to the same spot isn't the same thing as the Earth completing one full
         spin. While the Earth turns on its axis, it has also crept about 1/365th of the way around its
@@ -17,6 +37,10 @@ export function SiderealTime() {
         a <strong>sidereal day</strong> — takes just 23 hours, 56 minutes, 4 seconds. Shorter than a
         solar day, every single day, forever.
       </p>
+
+      <Figure caption="That four-minute gap, compounded over a year, is one full extra lap.">
+        <AnnualLapDiagram />
+      </Figure>
       <p>
         That four-minute gap is small, but it compounds. Over 365-ish solar days it adds up to one
         entire extra sidereal rotation — which is exactly why, over the course of a year, the
@@ -29,6 +53,9 @@ export function SiderealTime() {
       </p>
 
       <h3>The sky's own zero point</h3>
+      <Figure caption="Where the sun's path crosses the sky's equator: the vernal equinox point.">
+        <EclipticEquatorDiagram />
+      </Figure>
       <p>
         Civil time needs a reference point to count from (midnight, by convention). Sidereal time
         needs one too — and astronomers picked a specific point in the sky rather than a specific
@@ -41,6 +68,10 @@ export function SiderealTime() {
         sun or the moon, it doesn't wander, so every other position in the sky can be measured against
         it consistently, year after year.
       </p>
+
+      <Figure caption="A star's highest point, crossing due north–south overhead, is its transit.">
+        <MeridianTransitDiagram />
+      </Figure>
       <p>
         The other half of the definition is the <strong>meridian</strong> — not a time-zone boundary,
         but a literal line in your local sky: the arc running from due north on your horizon, straight
@@ -50,6 +81,10 @@ export function SiderealTime() {
         centered overhead on the north–south line — is called its <strong>transit</strong>, or{" "}
         <strong>culmination</strong>.
       </p>
+
+      <Figure caption="LST 0h: the instant the vernal equinox point sits on the meridian.">
+        <LstZeroDiagram />
+      </Figure>
       <p>
         Put the two together: <strong>Local Sidereal Time is defined as 0h at the instant the vernal
         equinox point transits your local meridian.</strong> From there it counts up, at the sidereal
@@ -60,6 +95,9 @@ export function SiderealTime() {
       </p>
 
       <h3>Why anyone bothered measuring it</h3>
+      <Figure caption="Whatever right ascension equals LST is transiting — overhead right now.">
+        <RightAscensionDiagram />
+      </Figure>
       <p>
         Astronomers gave every cataloged star a fixed sky-coordinate called{" "}
         <strong>right ascension</strong> — the sky's version of longitude, also measured in hours,
@@ -74,6 +112,9 @@ export function SiderealTime() {
       </p>
 
       <h3>Why the Orloj has a dial for it at all</h3>
+      <Figure caption="The real mechanism on Old Town Hall: gears, not pixels, since 1410.">
+        <OrlojHistoryPhoto />
+      </Figure>
       <p>
         This is the real reason the clock on Old Town Hall carries a star pointer rigidly fixed to its
         zodiac ring, geared to the sidereal day rather than the solar one: in 1410, telling the time of
@@ -86,6 +127,10 @@ export function SiderealTime() {
         anything resembling an accurate solar clock was common, is a genuine engineering and
         scientific feat — not a toy, a working instrument.
       </p>
+
+      <Figure caption="On this clock: the star hand runs about four minutes ahead, every day.">
+        <LiveReadingDiagram />
+      </Figure>
       <p>
         On <em>this</em> digital version, the star pointer's reading against the fixed Roman ring —
         shown as a Roman numeral in the info drawer — is that same Local Sidereal Time, computed live

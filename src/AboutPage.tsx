@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./AboutPage.css";
 import aerialView from "./assets/01c-1b.jpg";
 import facadeCloseup from "./assets/Astronomical_Clock_8341899828.jpg";
@@ -78,7 +79,7 @@ const RING_ITEMS: DiagramItem[] = [
     src: "/about_page/zodiac_ring.svg",
     alt: "The zodiac ring, carrying the twelve zodiac signs",
     title: "The zodiac ring",
-    body: "This ring turns on its own sidereal clock — one full rotation every 23 hours and 56 minutes, the true rotation period of the Earth against the stars rather than the sun. Over the year it slowly drifts out of step with civil time, carrying the zodiac signs past the sun, moon, and star dials in their actual seasonal order.",
+    body: "This ring turns on its own sidereal clock — one full rotation every 23 hours and 56 minutes, the true rotation period of the Earth against the stars rather than the sun. Over the year it slowly drifts out of step with civil time, carrying the zodiac signs past the sun, moon, and star dials in their actual seasonal order.\n\nLook closely and the twelve signs aren't evenly sized — Taurus and Cancer stretch wide while Capricorn and Scorpio pinch narrow. That comes from how the ring is drawn: a classical astrolabe projects the ecliptic, the sun's path through the zodiac, onto a flat disk as seen from the celestial pole. Because the ecliptic sits 23.4° off from the celestial equator — Earth's axial tilt — that projection pushes the ring off-center, and the signs along it end up stretched or squeezed depending on how far each one falls from the pole in the projection.\n\nThat distortion comes entirely from the tilt of the Earth's axis, not from where the clock is built — the real Orloj's zodiac ring would look identical mounted in Prague or anywhere else on Earth. (The parts of a real astrolabe that are genuinely tied to one location — the horizon line and the unequal day-and-night hour curves — live on the plate behind the ring, not on the ring itself.)",
   },
   {
     src: "/about_page/numeric_ring.svg",
@@ -121,12 +122,21 @@ const SECTIONS = [
   { id: "digital-version", label: "About this digital version" },
 ];
 
-export function AboutPage() {
+type AboutPageProps = {
+  initialSection?: string;
+};
+
+export function AboutPage({ initialSection }: AboutPageProps) {
+  useEffect(() => {
+    if (!initialSection) return;
+    document.getElementById(initialSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [initialSection]);
+
   return (
     <article className="about-page">
       <nav className="about-page-nav" aria-label="About page sections">
         {SECTIONS.map(({ id, label }) => (
-          <a key={id} href={`#${id}`}>
+          <a key={id} href={`#about/${id}`}>
             {label}
           </a>
         ))}
@@ -232,7 +242,9 @@ export function AboutPage() {
               <img className="about-page-diagram-image" src={src} alt={alt} />
               <div className="about-page-diagram-copy">
                 <h4>{title}</h4>
-                <p>{body}</p>
+                {body.split("\n\n").map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </div>
             </div>
           ))}
@@ -250,7 +262,9 @@ export function AboutPage() {
               <img className="about-page-diagram-image" src={src} alt={alt} />
               <div className="about-page-diagram-copy">
                 <h4>{title}</h4>
-                <p>{body}</p>
+                {body.split("\n\n").map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </div>
             </div>
           ))}

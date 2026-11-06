@@ -108,8 +108,8 @@ function App() {
             onOffsetChange={setOffsetMs}
           />
         </>
-      ) : page === "about" ? (
-        <AboutPage />
+      ) : page.startsWith("about") ? (
+        <AboutPage initialSection={page === "about" ? undefined : page.slice("about/".length)} />
       ) : (
         <LearnPage slug={page.slice("learn/".length)} />
       )}

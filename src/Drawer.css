@@ -84,3 +84,11 @@
   font-weight: 700;
   text-decoration: underline;
 }
+
+.drawer-nav button.drawer-nav-sub {
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(253, 230, 119, 0.7);
+}
