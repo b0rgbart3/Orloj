@@ -133,10 +133,12 @@ export function sunsetCivilHour(date: Date): number {
   return sunsetApparentSolarHour + (pragueUtcOffsetHours(date) - longitudeCorrectionHours)
 }
 
-// Where "24" sits in numeric_ring.svg's unrotated baseline, clockwise from
-// top: one 15° step past the quarter (90°) mark, in the lower-right
-// quadrant.
-const NUMERIC_RING_24_BASELINE_DEG = 105
+// Where "24" sits in numeric_ring.svg's unrotated baseline, in this file's
+// usual convention (clockwise from the bottom, same as sunHandRotationDegrees):
+// one 15° step past the three-quarter (270°) mark. Measured directly from
+// the glyph's own bounding box in numeric_ring.svg -- confirmed against the
+// "12" glyph sitting exactly opposite it, 180° away.
+const NUMERIC_RING_24_BASELINE_DEG = 285
 
 /**
  * Degrees to rotate the numeric-ring layer.

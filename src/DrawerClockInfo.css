@@ -1,5 +1,5 @@
 .drawer-info {
-  padding: 1.5rem;
+  padding: 1.5rem calc(1.5rem + 10px) 150px 1.5rem;
   color: #e6e6e6;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -17,7 +17,7 @@
 
 .drawer-info-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
   margin: 0 0 0.9rem;
   line-height: 1.4;
@@ -28,14 +28,29 @@
   min-width: 0;
 }
 
-.drawer-info-row--text-only {
-  padding-left: calc(1.6em + 0.6rem);
+.drawer-info-subpara {
+  margin: 0 0 0.7rem;
+}
+
+.drawer-info-subpara:last-child {
+  margin-bottom: 0;
 }
 
 .drawer-info-row strong {
-  color: #fde677;
+  color: #fff;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.drawer-info-row a {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+.drawer-info-row a:hover,
+.drawer-info-row a:focus-visible {
+  text-decoration-color: #fff;
 }
 
 .drawer-info-nowrap {
@@ -47,4 +62,77 @@
   height: 1.6em;
   width: 1.6em;
   object-fit: contain;
+}
+
+.drawer-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+.drawer-info-table td {
+  padding: 0.45rem 0.5rem 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  vertical-align: middle;
+}
+
+.drawer-info-table tr:last-child td {
+  border-bottom: none;
+}
+
+.drawer-info-table-icon {
+  width: 1.6em;
+  padding-right: 0.6rem;
+}
+
+.drawer-info-table-label {
+  color: #999;
+  white-space: nowrap;
+  padding-right: 0.75rem;
+}
+
+.drawer-info-table-value {
+  color: #fff;
+  font-weight: 700;
+}
+
+.drawer-info-table-sub {
+  display: block;
+  margin-top: 0.15rem;
+  font-weight: 400;
+  color: #aaa;
+  font-size: 0.85em;
+}
+
+.drawer-info-table-sub-inline {
+  font-weight: 400;
+  color: #aaa;
+  font-size: 0.85em;
+}
+
+.drawer-swatch {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  vertical-align: middle;
+}
+
+.zodiac-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2375em;
+  height: 1.2375em;
+  border-radius: 0.2475em;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: #000;
+  color: #fff;
+  font-size: 1.2375em;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
 }

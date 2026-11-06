@@ -260,12 +260,18 @@ export function AboutPage() {
         <p>
           To make it easier to see at a glance which sign each dial is
           currently reading, this digital version shades that zodiac wedge:
-          purple for the sun, black for the moon, and red for the star
-          pointer. When two or more dials land on the same sign, the sun's
-          purple takes priority over the moon's black, which in turn takes
-          priority over the star's red. This highlighting is a feature of
-          this digital version only — the mechanical clock on Old Town Hall
-          has no such coloring.
+          purple for the sun, black for the moon. When both dials land on the
+          same sign, the sun's purple takes priority over the moon's black.
+          This highlighting is a feature of this digital version only — the
+          mechanical clock on Old Town Hall has no such coloring.
+        </p>
+        <p>
+          The star pointer isn't part of this highlighting. It's rigidly
+          fixed to the zodiac ring itself, so it always rests over the same
+          wedge no matter the date — shading that wedge would look like a
+          live reading without ever actually being one. The star's real,
+          changing reading is sidereal time itself, shown as a Roman numeral
+          in the info drawer instead.
         </p>
       </div>
 

@@ -1,4 +1,4 @@
-import { moonHandRotationDegrees, normalizeDegrees, siderealRotationDegrees, sunHandRotationDegrees } from './rotations'
+import { moonHandRotationDegrees, normalizeDegrees, sunHandRotationDegrees } from './rotations'
 import type { PragueTime } from './usePragueTime'
 
 export type ZodiacSign =
@@ -57,15 +57,16 @@ export function houseAt(angleDeg: number): ZodiacHouse {
   return house
 }
 
-export type HandId = 'sun' | 'moon' | 'star'
+// The star hand deliberately has no HandId of its own here — see the note
+// on activeHouseHighlights below for why it's excluded from ring painting.
+export type HandId = 'sun' | 'moon'
 
 // Fixed priority order for contested houses — first match wins.
-const HAND_PRIORITY: HandId[] = ['sun', 'moon', 'star']
+const HAND_PRIORITY: HandId[] = ['sun', 'moon']
 
-const HAND_COLOR: Record<HandId, string> = {
+export const HAND_COLOR: Record<HandId, string> = {
   sun: '#800080',
   moon: '#000000',
-  star: '#FF0000',
 }
 
 /**
@@ -79,21 +80,21 @@ export function angleInRingFrame(handRotationDeg: number, ringRotationDeg: numbe
 }
 
 /**
- * Sign -> highlight color for the given moment. Sun beats Moon beats Star
- * when two or more hands share a house.
+ * Sign -> highlight color for the given moment. Sun beats Moon when both
+ * hands share a house.
  *
- * Note: the Star hand and the zodiac ring share one rotation value
- * (siderealRotationDegrees), so the Star's angle-in-ring-frame is always
- * exactly 180° — a constant. That's not a bug: it's a direct consequence of
- * them being rigidly linked. In this artwork, the wedge sitting at 180° is
- * Pisces, so the Star's highlight (red, unless outranked by Sun/Moon) will
- * always land on Pisces.
+ * The Star hand is deliberately excluded: it shares its rotation value with
+ * the zodiac ring itself (siderealRotationDegrees), so its angle-in-ring-frame
+ * is always exactly 180° — a constant, landing on whatever wedge sits at 180°
+ * (Pisces, in this artwork) every day forever. Painting that wedge would look
+ * like a live reading but never actually convey one. The Star's real,
+ * changing reading is sidereal time itself — see siderealRingNumeral in
+ * explainClock.ts.
  */
 export function activeHouseHighlights(pragueTime: PragueTime, ringRotationDeg: number): Map<ZodiacSign, string> {
   const handAngle: Record<HandId, number> = {
     sun: angleInRingFrame(sunHandRotationDegrees(pragueTime), ringRotationDeg),
     moon: angleInRingFrame(moonHandRotationDegrees(pragueTime), ringRotationDeg),
-    star: angleInRingFrame(siderealRotationDegrees(pragueTime), ringRotationDeg),
   }
   const result = new Map<ZodiacSign, string>()
   for (const hand of HAND_PRIORITY) {

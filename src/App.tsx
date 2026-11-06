@@ -5,10 +5,12 @@ import { ClockFace } from "./clock/ClockFace";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
 import { Drawer } from "./Drawer";
+import { LearnPage } from "./LearnPage";
+import { usePageRoute } from "./routing";
 import { SimpleControls } from "./SimpleControls";
 import { SimpleScrubber } from "./SimpleScrubber";
 
-export type Page = "home" | "about";
+export type { Page } from "./routing";
 
 function pad(n: number) {
   return n.toString().padStart(2, "0");
@@ -30,7 +32,7 @@ function renderDigits(digits: string) {
 }
 
 function App() {
-  const [page, setPage] = useState<Page>("home");
+  const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const {
     pragueTime,
@@ -58,7 +60,7 @@ function App() {
         onToggle={() => setDrawerOpen((isOpen) => !isOpen)}
         page={page}
         onNavigate={(nextPage) => {
-          setPage(nextPage);
+          navigate(nextPage);
           setDrawerOpen(false);
         }}
         pragueTime={pragueTime}
@@ -69,7 +71,7 @@ function App() {
           <button
             type="button"
             className="app-title-block"
-            onClick={() => setPage(page === "home" ? "about" : "home")}
+            onClick={() => navigate(page === "home" ? "about" : "home")}
             aria-label={page === "home" ? "View about page" : "View home page"}
           >
             <h1 className="app-title">pražský orloj</h1>
@@ -106,8 +108,10 @@ function App() {
             onOffsetChange={setOffsetMs}
           />
         </>
-      ) : (
+      ) : page === "about" ? (
         <AboutPage />
+      ) : (
+        <LearnPage slug={page.slice("learn/".length)} />
       )}
     </main>
   );
