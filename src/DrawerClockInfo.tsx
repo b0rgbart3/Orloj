@@ -1,4 +1,4 @@
-import { explainClock, HAND_COLOR_NAME, zodiacName, zodiacSymbol } from './clock/explainClock'
+import { explainClock, HAND_COLOR_NAME, zodiacDateRange, zodiacName, zodiacSymbol } from './clock/explainClock'
 import type { HandId, ZodiacSign } from './clock/zodiacHouses'
 import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import './DrawerClockInfo.css'
@@ -88,7 +88,7 @@ export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps)
           </tr>
           <tr>
             <td className="drawer-info-table-icon">
-              <img className="drawer-info-icon" src="/clock/icons/star-icon.svg" alt="" />
+              <img className="drawer-info-icon drawer-info-icon--star" src="/clock/icons/star-icon.svg" alt="" />
             </td>
             <td className="drawer-info-table-label">Star</td>
             <td className="drawer-info-table-value">
@@ -114,9 +114,10 @@ export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps)
           The <strong>sun dial</strong> currently rests in the house of{' '}
           <strong><ZodiacLabel sign={e.sunSign} /></strong>
           <HighlightNote hand="sun" winner={e.sunHighlightHand} />. This marks the sun's real
-          position against the zodiac for today — the same placement that gives this stretch of
-          the calendar its traditional sun sign, so anyone born on a date like today's is
-          considered a <strong>{zodiacName(e.sunSign)}</strong>.
+          position against the zodiac for today, so anyone born on this day is considered a{' '}
+          <strong>{zodiacName(e.sunSign)}</strong>, because the sun is in the house of{' '}
+          {zodiacName(e.sunSign)} during the date range{' '}
+          <strong>{zodiacDateRange(e.sunSign)}</strong>.
         </span>
       </p>
       <div className="drawer-info-row">
@@ -154,7 +155,7 @@ export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps)
         </span>
       </p>
       <p className="drawer-info-row">
-        <img className="drawer-info-icon" src="/clock/icons/star-icon.svg" alt="" />
+        <img className="drawer-info-icon drawer-info-icon--star" src="/clock/icons/star-icon.svg" alt="" />
         <span className="drawer-info-text">
           The <strong>star pointer</strong> currently reads <strong>{e.starRingNumeral}</strong> on
           the fixed Roman ring — true{' '}

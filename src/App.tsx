@@ -24,7 +24,10 @@ function renderDigits(digits: string) {
   return digits.split("").map((digit, index) => {
     const isTightLeadingOne = digit === "1" && index < digits.length - 1;
     return (
-      <span key={index} className={isTightLeadingOne ? "app-datetime-digit-tight" : undefined}>
+      <span
+        key={index}
+        className={isTightLeadingOne ? "app-datetime-digit-tight" : undefined}
+      >
         {digit}
       </span>
     );
@@ -34,6 +37,7 @@ function renderDigits(digits: string) {
 function App() {
   const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const {
     pragueTime,
     offsetMs,
@@ -53,15 +57,36 @@ function App() {
       className="app"
       onClick={() => {
         if (drawerOpen) setDrawerOpen(false);
+        if (menuOpen) setMenuOpen(false);
       }}
     >
       <Drawer
         open={drawerOpen}
-        onToggle={() => setDrawerOpen((isOpen) => !isOpen)}
+        onToggle={() => {
+          setDrawerOpen((isOpen) => !isOpen);
+          setMenuOpen(false);
+        }}
+        menuOpen={menuOpen}
+        onToggleMenu={() => setMenuOpen((isOpen) => !isOpen)}
         page={page}
         onNavigate={(nextPage) => {
           navigate(nextPage);
           setDrawerOpen(false);
+          setMenuOpen(false);
+          // Clicking a nav link should always jump to the top of its target
+          // (or target section), even if the hash doesn't actually change --
+          // e.g. re-clicking "about" while already deep-scrolled on the About
+          // page, where no hashchange fires to trigger a re-render.
+          const sectionId = nextPage.startsWith("about/")
+            ? nextPage.slice("about/".length)
+            : null;
+          if (sectionId) {
+            document
+              .getElementById(sectionId)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
         }}
         pragueTime={pragueTime}
         dateParts={{ day, month, year }}
@@ -79,12 +104,29 @@ function App() {
           </button>
           {page === "home" && (
             <p className="app-datetime">
-              {month} {day}, {year} <span className="app-datetime-separator">|</span>{" "}
-              <span className="app-datetime-hour">{renderDigits(pragueTime.hours.toString())}</span>
+              {month} {day}, {year}{" "}
+              <span className="app-datetime-separator">|</span>{" "}
+              <span className="app-datetime-hour">
+                {renderDigits(pragueTime.hours.toString())}
+              </span>
               <span className="app-datetime-colon">:</span>
-              <span className="app-datetime-minute">{renderDigits(pad(pragueTime.minutes))}</span>
+              <span className="app-datetime-minute">
+                {renderDigits(pad(pragueTime.minutes))}
+              </span>
               <PragueTimeFootnote />
             </p>
+          )}
+          {page === "home" && (
+            <button
+              type="button"
+              className="app-moment-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDrawerOpen(true);
+              }}
+            >
+              What the clock tells us about this moment
+            </button>
           )}
         </div>
         {page === "home" && (
@@ -109,7 +151,11 @@ function App() {
           />
         </>
       ) : page.startsWith("about") ? (
-        <AboutPage initialSection={page === "about" ? undefined : page.slice("about/".length)} />
+        <AboutPage
+          initialSection={
+            page === "about" ? undefined : page.slice("about/".length)
+          }
+        />
       ) : (
         <LearnPage slug={page.slice("learn/".length)} />
       )}

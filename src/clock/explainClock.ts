@@ -79,6 +79,30 @@ export function zodiacName(sign: ZodiacSign): string {
   return sign[0].toUpperCase() + sign.slice(1)
 }
 
+// The conventional Western tropical-zodiac "sun sign" date range for each
+// house -- the popularly-cited boundaries (e.g. almanacs, horoscope columns),
+// not a per-year astronomical computation. The real crossing moment can
+// drift by a day across years, but these are the dates people mean when they
+// say "I'm a Taurus."
+const ZODIAC_DATE_RANGES: Record<ZodiacSign, string> = {
+  aries: 'March 21 – April 19',
+  taurus: 'April 20 – May 20',
+  gemini: 'May 21 – June 20',
+  cancer: 'June 21 – July 22',
+  leo: 'July 23 – August 22',
+  virgo: 'August 23 – September 22',
+  libra: 'September 23 – October 22',
+  scorpio: 'October 23 – November 21',
+  sagittarius: 'November 22 – December 21',
+  capricorn: 'December 22 – January 19',
+  aquarius: 'January 20 – February 18',
+  pisces: 'February 19 – March 20',
+}
+
+export function zodiacDateRange(sign: ZodiacSign): string {
+  return ZODIAC_DATE_RANGES[sign]
+}
+
 // The trailing U+FE0E forces text presentation, so browsers render the bare
 // glyph (stylable via CSS) instead of a platform-specific colored emoji.
 export function zodiacSymbol(sign: ZodiacSign): string {

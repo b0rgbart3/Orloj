@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import type { Page } from './App'
 import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import { DrawerClockInfo } from './DrawerClockInfo'
@@ -7,6 +6,8 @@ import './Drawer.css'
 type DrawerProps = {
   open: boolean
   onToggle: () => void
+  menuOpen: boolean
+  onToggleMenu: () => void
   page: Page
   onNavigate: (page: Page) => void
   pragueTime: PragueTime
@@ -22,9 +23,7 @@ const NAV_ITEMS: { page: Page; label: string; indent?: boolean }[] = [
   { page: 'learn/sidereal-time', label: 'sidereal time' },
 ]
 
-export function Drawer({ open, onToggle, page, onNavigate, pragueTime, dateParts }: DrawerProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
-
+export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigate, pragueTime, dateParts }: DrawerProps) {
   return (
     <>
       <nav
@@ -38,7 +37,7 @@ export function Drawer({ open, onToggle, page, onNavigate, pragueTime, dateParts
           className="drawer-hamburger"
           onClick={(e) => {
             e.stopPropagation()
-            setMenuOpen((isOpen) => !isOpen)
+            onToggleMenu()
           }}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
@@ -61,10 +60,7 @@ export function Drawer({ open, onToggle, page, onNavigate, pragueTime, dateParts
                   ]
                     .filter(Boolean)
                     .join(' ')}
-                  onClick={() => {
-                    setMenuOpen(false)
-                    onNavigate(item.page)
-                  }}
+                  onClick={() => onNavigate(item.page)}
                 >
                   {item.label}
                 </button>

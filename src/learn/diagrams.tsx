@@ -40,15 +40,15 @@ export function SolarDayDiagram() {
 /** Paragraph 2: a sidereal day (aligned to a fixed star) is a hair shorter
  * than the extra spin needed to re-align with the sun. */
 export function SiderealDayDiagram() {
-  const earth = { x: 130, y: 110 };
+  const earth = { x: 130, y: 112 };
   const star = polarPoint(earth.x, earth.y, 80, 0);
-  const sun = polarPoint(earth.x, earth.y, 96, 20);
+  const sun = polarPoint(earth.x, earth.y, 92, 34);
   const starEdge = polarPoint(earth.x, earth.y, 26, 0);
-  const sunEdge = polarPoint(earth.x, earth.y, 26, 20);
-  const arcMid = polarPoint(earth.x, earth.y, 52, 10);
+  const sunEdge = polarPoint(earth.x, earth.y, 26, 34);
+  const arcMid = polarPoint(earth.x, earth.y, 48, 17);
   return (
     <svg viewBox="0 0 400 190" role="img" aria-label="Earth must spin a little past a full turn relative to the stars to face the sun again">
-      <text x={star.x} y="22" textAnchor="middle" {...LABEL}>a fixed, distant star</text>
+      <text x="20" y="20" {...LABEL}>a fixed, distant star</text>
       <line x1={star.x} y1="30" x2={starEdge.x} y2={starEdge.y} stroke={DIAGRAM_INK} strokeWidth="1.5" strokeDasharray="3,3" />
 
       <circle cx={earth.x} cy={earth.y} r="26" fill="none" stroke={DIAGRAM_INK} strokeWidth="1.5" />
@@ -56,12 +56,12 @@ export function SiderealDayDiagram() {
       <line x1={starEdge.x} y1={starEdge.y} x2={star.x} y2={star.y + 4} stroke={DIAGRAM_INK} strokeWidth="1.5" />
       <line x1={sunEdge.x} y1={sunEdge.y} x2={sun.x} y2={sun.y} stroke={DIAGRAM_GOLD} strokeWidth="2" />
       <circle cx={sun.x} cy={sun.y} r="13" fill={DIAGRAM_GOLD} />
-      <text x={sun.x + 20} y={sun.y + 4} {...LABEL}>the sun</text>
+      <text x={sun.x + 18} y={sun.y + 4} {...LABEL}>the sun</text>
 
-      <path d={arcPath(earth.x, earth.y, 40, 0, 20)} fill="none" stroke={DIAGRAM_GOLD} strokeWidth="1.5" />
-      <text x={arcMid.x + 12} y={arcMid.y + 4} {...LABEL_GOLD}>≈4 extra minutes of spin</text>
+      <path d={arcPath(earth.x, earth.y, 42, 0, 34)} fill="none" stroke={DIAGRAM_GOLD} strokeWidth="1.5" />
+      <text x={arcMid.x + 16} y={arcMid.y + 2} {...LABEL_GOLD}>≈4 extra minutes of spin</text>
 
-      <text x={earth.x} y="165" textAnchor="middle" {...LABEL}>one full turn vs. the stars ≠ facing the sun again</text>
+      <text x={earth.x} y="168" textAnchor="middle" {...LABEL}>one full turn vs. the stars ≠ facing the sun again</text>
     </svg>
   );
 }
@@ -121,7 +121,7 @@ export function EclipticEquatorDiagram() {
       <text x="90" y="36" {...LABEL_GOLD}>ecliptic — sun's yearly path</text>
 
       <circle cx={equinox.x} cy={equinox.y} r="4.5" fill={DIAGRAM_GOLD} stroke={DIAGRAM_INK} />
-      <text x={equinox.x + 10} y={equinox.y + 22} {...LABEL}>♈ vernal equinox point</text>
+      <text x={equinox.x + 10} y={equinox.y + 22} {...LABEL}>♈︎ vernal equinox point</text>
       <text x={equinox.x + 10} y={equinox.y + 36} {...LABEL}>(sidereal time's zero mark)</text>
     </svg>
   );
@@ -142,15 +142,15 @@ export function MeridianTransitDiagram() {
 
       <line x1={zenith.x} y1="150" x2={zenith.x} y2={zenith.y} stroke={DIAGRAM_INK} strokeWidth="1.5" strokeDasharray="3,3" />
       <text x={zenith.x} y="28" textAnchor="middle" {...LABEL}>zenith</text>
-      <text x={zenith.x + 10} y="95" {...LABEL}>meridian</text>
+      <text x={zenith.x - 10} y="62" textAnchor="end" {...LABEL}>meridian</text>
 
       <path d={`M ${n.x + 20} 150 Q 200 55 ${s.x - 20} 150`} fill="none" stroke={DIAGRAM_GOLD} strokeWidth="1.5" strokeDasharray="4,3" />
       <text x={n.x + 8} y="166" {...LABEL_GOLD}>rises</text>
       <text x={s.x - 42} y="166" {...LABEL_GOLD}>sets</text>
 
       <circle cx={transit.x} cy={transit.y} r="4.5" fill={DIAGRAM_GOLD} stroke={DIAGRAM_INK} />
-      <text x={transit.x + 10} y={transit.y - 4} {...LABEL}>transit (culmination):</text>
-      <text x={transit.x + 10} y={transit.y + 10} {...LABEL}>highest point, crossing the meridian</text>
+      <text x={transit.x + 16} y={transit.y - 4} {...LABEL}>transit (culmination):</text>
+      <text x={transit.x + 16} y={transit.y + 10} {...LABEL}>highest point overhead</text>
     </svg>
   );
 }
@@ -158,11 +158,11 @@ export function MeridianTransitDiagram() {
 /** Paragraph 6: Local Sidereal Time is 0h exactly when the vernal equinox
  * point sits on the meridian, counting up from there. */
 export function LstZeroDiagram() {
-  const center = { x: 200, y: 105 };
-  const r = 66;
+  const center = { x: 200, y: 100 };
+  const r = 62;
   const zeroMark = polarPoint(center.x, center.y, r, 0);
   return (
-    <svg viewBox="0 0 400 190" role="img" aria-label="A 24-sidereal-hour dial, zero marked where the vernal equinox point sits on the meridian">
+    <svg viewBox="0 0 400 200" role="img" aria-label="A 24-sidereal-hour dial, zero marked where the vernal equinox point sits on the meridian">
       <circle cx={center.x} cy={center.y} r={r} fill="none" stroke={DIAGRAM_INK} strokeWidth="1" opacity="0.6" />
       {Array.from({ length: 24 }, (_, i) => i * 15).map((deg) => {
         const a = polarPoint(center.x, center.y, r - 5, deg);
@@ -194,11 +194,11 @@ export function LstZeroDiagram() {
         );
       })}
 
-      <line x1={center.x} y1="170" x2={center.x} y2="20" stroke={DIAGRAM_INK} strokeWidth="1" strokeDasharray="3,3" opacity="0.5" />
-      <text x={center.x} y="184" textAnchor="middle" {...LABEL}>meridian</text>
+      <line x1={center.x} y1={center.y + r} x2={center.x} y2={center.y - r - 18} stroke={DIAGRAM_INK} strokeWidth="1" strokeDasharray="3,3" opacity="0.5" />
+      <text x={center.x - 10} y={center.y - r + 15} textAnchor="end" {...LABEL}>meridian</text>
 
       <circle cx={zeroMark.x} cy={zeroMark.y} r="4.5" fill={DIAGRAM_GOLD} />
-      <text x="330" y="20" {...LABEL_GOLD}>♈ on the meridian = LST 0h</text>
+      <text x={zeroMark.x + 14} y={zeroMark.y - 4} {...LABEL_GOLD}>♈︎ = LST 0h</text>
     </svg>
   );
 }
@@ -257,9 +257,9 @@ export function OrlojHistoryPhoto() {
 export function LiveReadingDiagram() {
   const center = { x: 200, y: 105 };
   const r = 66;
-  const civilTip = polarPoint(center.x, center.y, 58, 40);
-  const starTip = polarPoint(center.x, center.y, 66, 48);
-  const gapLabel = polarPoint(center.x, center.y, 80, 44);
+  const civilTip = polarPoint(center.x, center.y, 58, 28);
+  const starTip = polarPoint(center.x, center.y, 66, 58);
+  const gapLabel = polarPoint(center.x, center.y, 92, 43);
   return (
     <svg viewBox="0 0 400 190" role="img" aria-label="The star hand points a little further around the dial than the civil-time hand, at the same instant">
       <circle cx={center.x} cy={center.y} r={r} fill="none" stroke={DIAGRAM_INK} strokeWidth="1" opacity="0.5" />
@@ -270,13 +270,13 @@ export function LiveReadingDiagram() {
       })}
 
       <line x1={center.x} y1={center.y} x2={civilTip.x} y2={civilTip.y} stroke={DIAGRAM_INK} strokeWidth="2.5" />
-      <text {...LABEL} x={civilTip.x - 55} y={civilTip.y - 6}>civil-time hand</text>
+      <text {...LABEL} x={civilTip.x - 62} y={civilTip.y - 2}>civil-time hand</text>
 
       <line x1={center.x} y1={center.y} x2={starTip.x} y2={starTip.y} stroke={DIAGRAM_GOLD} strokeWidth="2.5" />
-      <text {...LABEL_GOLD} x={starTip.x + 8} y={starTip.y - 2}>star hand</text>
+      <text {...LABEL_GOLD} x={starTip.x + 10} y={starTip.y + 6}>star hand</text>
 
-      <path d={arcPath(center.x, center.y, r + 14, 40, 48)} fill="none" stroke={DIAGRAM_GOLD} strokeWidth="1.5" />
-      <text {...LABEL_GOLD} x={gapLabel.x + 10} y={gapLabel.y} textAnchor="start">+4 min/day</text>
+      <path d={arcPath(center.x, center.y, r + 16, 28, 58)} fill="none" stroke={DIAGRAM_GOLD} strokeWidth="1.5" />
+      <text {...LABEL_GOLD} x={gapLabel.x} y={gapLabel.y - 6} textAnchor="middle">+4 min/day</text>
     </svg>
   );
 }

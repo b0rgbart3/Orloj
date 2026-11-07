@@ -64,6 +64,10 @@
   object-fit: contain;
 }
 
+.drawer-info-icon--star {
+  transform: rotate(180deg);
+}
+
 .drawer-info-table {
   width: 100%;
   border-collapse: collapse;

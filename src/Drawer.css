@@ -78,11 +78,15 @@
   color: #fde677;
   cursor: pointer;
   white-space: nowrap;
+  opacity: 0.8;
+}
+
+.drawer-nav button:hover {
+  opacity: 1;
 }
 
 .drawer-nav button.drawer-nav-active {
   font-weight: 700;
-  text-decoration: underline;
 }
 
 .drawer-nav button.drawer-nav-sub {

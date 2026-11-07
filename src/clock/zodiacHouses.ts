@@ -76,7 +76,7 @@ export const HAND_COLOR: Record<HandId, string> = {
  * "0°/pointing down" baseline convention, so this is a plain difference.
  */
 export function angleInRingFrame(handRotationDeg: number, ringRotationDeg: number): number {
-  return normalizeDegrees(180 + handRotationDeg - ringRotationDeg)
+  return normalizeDegrees(handRotationDeg - ringRotationDeg)
 }
 
 /**
@@ -85,8 +85,8 @@ export function angleInRingFrame(handRotationDeg: number, ringRotationDeg: numbe
  *
  * The Star hand is deliberately excluded: it shares its rotation value with
  * the zodiac ring itself (siderealRotationDegrees), so its angle-in-ring-frame
- * is always exactly 180° — a constant, landing on whatever wedge sits at 180°
- * (Pisces, in this artwork) every day forever. Painting that wedge would look
+ * is always exactly 0° — a constant, landing on whatever wedge sits at 0°
+ * (Virgo, in this artwork) every day forever. Painting that wedge would look
  * like a live reading but never actually convey one. The Star's real,
  * changing reading is sidereal time itself — see siderealRingNumeral in
  * explainClock.ts.

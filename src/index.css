@@ -98,6 +98,27 @@ body {
   color: #000;
 }
 
+.app-moment-button {
+  display: block;
+  margin: 0.6rem 0 0 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #000;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.app-moment-button:hover,
+.app-moment-button:focus-visible {
+  opacity: 1;
+}
+
 .app-datetime-separator {
   display: inline-block;
   font-size: 1.5em;

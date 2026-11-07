@@ -128,8 +128,13 @@ type AboutPageProps = {
 
 export function AboutPage({ initialSection }: AboutPageProps) {
   useEffect(() => {
-    if (!initialSection) return;
-    document.getElementById(initialSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (initialSection) {
+      document
+        .getElementById(initialSection)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }, [initialSection]);
 
   return (
@@ -213,6 +218,52 @@ export function AboutPage({ initialSection }: AboutPageProps) {
         ))}
       </div>
 
+      <div className="about-page-section">
+        <h3>
+          What the Pražský orloj taught the residents of Prague in the 15th
+          Century
+        </h3>
+        <p>
+          Before 1410, Prague told time the way most of medieval Europe did — by
+          the sun, by church bells, by the feel of morning, midday, and evening.
+          Clocks were rare, expensive, and private. There was no such thing as
+          "a watch" that people would wear on their wrist. The Orloj put
+          something new in the town square: one public face showing every
+          citizen the same 24 equal hours, readable by anyone who could count a
+          numeral, without needing a priest or a sundial. That was a small
+          social revolution. Time stopped belonging to the fields and the parish
+          and became civic property — a shared, numerical system that belonged
+          to the whole town. And once an hour is a fixed, visible unit everyone
+          can check against the same dial, it becomes possible to ask someone to
+          be somewhere at the third hour rather than "at sunrise" — which means
+          labor itself can start to be scheduled, divided, and measured by the
+          clock instead of by daylight. Historians of early wage labor have
+          pointed to exactly that shift, from task time to clock time, as one of
+          the quiet preconditions for the factory discipline that arrived
+          centuries later. The Orloj didn't cause that on its own, but as one of
+          Central Europe's first great public clocks, it helped teach an entire
+          city to think of a day as a set of uniform, countable parts.
+        </p>
+        <p>
+          It's worth being precise about what the clock itself actually claims:
+          its zodiac ring and sun-and-moon dials encode a geocentric, Ptolemaic
+          universe, with sun and moon circling a fixed Earth — not the
+          heliocentric model Copernicus would publish in 1543, more than fifty
+          years after the clock's major 1490s renovation. There's no documented
+          link between the Orloj and Copernicus, or, a century later, Galileo.
+          But all three are products of the same underlying conviction: that the
+          heavens run on fixed, calculable rules precise enough to be built into
+          a machine. By putting that conviction on permanent public display in a
+          town square — the sky rendered as something orderly enough to gear and
+          dial, not just observed — the Orloj helped normalize the habit of mind
+          that later let Copernicus relocate the center of the universe, and let
+          Galileo insist its rules answer to a telescope rather than a text. The
+          clock's own answer was wrong about where the center sat — but the
+          deeper assumption underneath it, that the cosmos is legible machinery,
+          is the same thread running through all three.
+        </p>
+      </div>
+
       <div className="about-page-text">
         <h2 id="how-it-works" className="about-section-title">
           How it Works
@@ -272,21 +323,60 @@ export function AboutPage({ initialSection }: AboutPageProps) {
 
         <h3>Zodiac highlights</h3>
         <p>
-          To make it easier to see at a glance which sign each dial is
-          currently reading, this digital version shades that zodiac wedge:
-          purple for the sun, black for the moon. When both dials land on the
-          same sign, the sun's purple takes priority over the moon's black.
-          This highlighting is a feature of this digital version only — the
-          mechanical clock on Old Town Hall has no such coloring.
+          To make it easier to see at a glance which sign each dial is currently
+          reading, this digital version shades that zodiac wedge: purple for the
+          sun, black for the moon. When both dials land on the same sign, the
+          sun's purple takes priority over the moon's black. This highlighting
+          is a feature of this digital version only — the mechanical clock on
+          Old Town Hall has no such coloring.
         </p>
         <p>
-          The star pointer isn't part of this highlighting. It's rigidly
-          fixed to the zodiac ring itself, so it always rests over the same
-          wedge no matter the date — shading that wedge would look like a
-          live reading without ever actually being one. The star's real,
-          changing reading is sidereal time itself, shown as a Roman numeral
-          in the info drawer instead.
+          The star pointer isn't part of this highlighting. It's rigidly fixed
+          to the zodiac ring itself, so it always rests over the same wedge no
+          matter the date — shading that wedge would look like a live reading
+          without ever actually being one. The star's real, changing reading is
+          sidereal time itself, shown as a Roman numeral in the info drawer
+          instead.
         </p>
+
+        <h3>The Kalendarium clockface</h3>
+        <div className="about-page-kalendarium">
+          <div className="about-page-kalendarium-copy">
+            <p>
+              Mounted directly below the astronomical dial is a second,
+              quieter clockface — the Kalendarium. A large disc of 365 days
+              turns once a year past a fixed pointer, held by a gilded angel,
+              to mark today's date; its outer ring also carries a name-day for
+              each day of the year. A middle ring holds twelve painted
+              roundels, one per month, in the medieval "Labors of the Months"
+              tradition — sowing, harvesting, and other scenes of the
+              agricultural year paired with each zodiac sign. At the center
+              sits a medallion bearing the coat of arms of Prague's Old Town.
+            </p>
+            <p>
+              It's a much younger addition than the dial above it — the
+              artwork you see today was painted by Josef Mánes in 1865–70,
+              replacing an earlier Gothic calendar plate. (The roundels
+              mounted on the tower are copies; Mánes's originals now hang in
+              Prague's City Museum.)
+            </p>
+            <p>
+              Mechanically it's simple: a single gear train advancing one
+              division per day, with no sun, moon, or star position to
+              compute. The real astronomical achievement is the dial above it
+              — the Kalendarium is a civic and artistic companion piece,
+              prized for its artwork and its saints'-day calendar rather than
+              for any astronomy of its own. That's also why this digital
+              version doesn't model it: there's no underlying mechanism to
+              simulate, just a date on a painted disc.
+            </p>
+          </div>
+          <img
+            className="about-page-kalendarium-image"
+            src="/about_page/kalendarium.png"
+            alt="The Kalendarium, the calendar dial mounted below the astronomical dial"
+          />
+        </div>
       </div>
 
       <div className="about-page-section">
@@ -302,25 +392,52 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           same moment.
         </p>
         <p>
-          Press the play button to watch the clock run forward on its own,
-          and use the dropdown next to it to choose the pace — anywhere from
-          real time up to 48 simulated hours per second — to watch the rings
-          and dials race through days, months, even whole seasons. The scrub
-          bar beneath the clock face does the same thing by hand: drag it to
-          jump to any moment within three months of today, forward or back.
-          The Now button snaps everything back to the current moment in
-          Prague.
+          Press the play button to watch the clock run forward on its own, and
+          use the dropdown next to it to choose the pace — anywhere from real
+          time up to 48 simulated hours per second — to watch the rings and
+          dials race through days, months, even whole seasons. The scrub bar
+          beneath the clock face does the same thing by hand: drag it to jump to
+          any moment within three months of today, forward or back. The Now
+          button snaps everything back to the current moment in Prague.
         </p>
         <p>
-          The sidebar along the left edge — click it to open — reads the
-          clock face for you at whatever moment is currently showing: which
-          zodiac house the sun, moon, and stars are each resting in, the
-          moon's current phase and illumination, and what the gold outer
-          ring and inner ring are reading in both civil and old Bohemian
-          hours. It's a detailed, moment-by-moment breakdown the mechanical
-          clock itself can't offer — one of the real advantages of a digital
-          version.
+          The sidebar along the left edge — click it to open — reads the clock
+          face for you at whatever moment is currently showing: which zodiac
+          house the sun, moon, and stars are each resting in, the moon's current
+          phase and illumination, and what the gold outer ring and inner ring
+          are reading in both civil and old Bohemian hours. It's a detailed,
+          moment-by-moment breakdown the mechanical clock itself can't offer —
+          one of the real advantages of a digital version.
         </p>
+        <h3>What this digital version can teach people in the 21st century</h3>
+        <p>
+          The real Orloj can only ever show one thing: right now. This digital
+          version can show the clock at any moment — scrub forward to the next
+          solstice, back to the day you were born, or press play and watch the
+          rings race through a year in minutes. That turns the clock from a
+          single daily reading into something closer to a planetarium: a way to
+          actually watch the zodiac ring's 23-hour-56-minute sidereal rotation
+          slowly pull away from the 24-hour civil ring, rather than just being
+          told the two periods differ. Sidereal time is a concept almost nobody
+          encounters day to day — this is one of the few places a person can
+          watch it happen.
+        </p>
+        <p>
+          The clock dials only work because they're based on the geometry of a
+          rotating, axially-tilted globe. Run the animation
+          long enough to see the zodiac ring's year-long drift or the moon
+          dial's phase catch back up with the sun, and you're watching the
+          consequences of a spherical, moving Earth play out mechanically — the
+          same consequences the Orloj's original builders worked out five
+          centuries ago with nothing but geometry. Maybe the simplest lesson is
+          the most honest one: a clockmaker in 1410 built a model good enough
+          that, with nothing but updated math and a screen instead of gears, it
+          still tells the same true story about the sky today. The tools for
+          measuring time and watching the heavens have gotten smaller and faster
+          since 1510 — but the basic human itch to mark the hour and watch the
+          sky turn hasn't changed all that much.
+        </p>
+
         <p>
           I was personally fascinated by the Pražský orloj while visiting Prague
           in 2014. As is my process, I thought the best way to learn how the

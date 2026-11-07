@@ -89,6 +89,39 @@
   height: auto;
 }
 
+.about-page-kalendarium {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+  align-items: start;
+}
+
+.about-page-kalendarium-copy {
+  min-width: 0;
+}
+
+.about-page-kalendarium-copy p {
+  margin: 0 0 0.75rem;
+}
+
+.about-page-kalendarium-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.about-page-kalendarium-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 1100px) {
+  .about-page-kalendarium {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 3rem;
+  }
+}
+
 .about-page-diagram-copy {
   flex: 1 1 auto;
   min-width: 0;
