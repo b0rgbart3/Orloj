@@ -1,0 +1,21 @@
+.zodiac-sign-tooltip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 10px));
+  z-index: 10;
+  pointer-events: auto;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1.5px solid #000;
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.zodiac-sign-tooltip .zodiac-symbol {
+  margin-left: 0.5em;
+  font-weight: 400;
+}

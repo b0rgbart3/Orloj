@@ -104,11 +104,27 @@ export function activeHouseHighlights(pragueTime: PragueTime, ringRotationDeg: n
   return result
 }
 
-/** Applies (or clears) fill overrides on the 12 wedge <path>s inside `container`. */
+/**
+ * Applies (or clears) fill overrides on the 12 wedge <path>s inside
+ * `container`, and makes each one clickable -- the wedges otherwise sit
+ * inside a `pointer-events: none` layer (see ClockFace.css), so this is also
+ * what opts them back in to receiving clicks for the sign tooltip.
+ */
 export function applyZodiacHighlights(container: Element, highlights: ReadonlyMap<ZodiacSign, string>): void {
   for (const house of ZODIAC_HOUSES) {
     const el = container.querySelector<SVGPathElement>(`#zodiac-wedge-${house.sign}`)
     if (!el) continue
     el.style.fill = highlights.get(house.sign) ?? ''
+    el.style.pointerEvents = 'auto'
+    el.style.cursor = 'pointer'
   }
+}
+
+const WEDGE_ID_PREFIX = 'zodiac-wedge-'
+
+/** Recovers the sign from a `#zodiac-wedge-<sign>` element id, e.g. for click handling. */
+export function zodiacSignFromWedgeId(id: string): ZodiacSign | null {
+  if (!id.startsWith(WEDGE_ID_PREFIX)) return null
+  const candidate = id.slice(WEDGE_ID_PREFIX.length)
+  return ZODIAC_HOUSES.some((h) => h.sign === candidate) ? (candidate as ZodiacSign) : null
 }

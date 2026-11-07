@@ -16,7 +16,7 @@
 }
 
 .drawer--open {
-  width: 40vw;
+  width: 44vw;
   cursor: default;
   overflow-y: auto;
 }

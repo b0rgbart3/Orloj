@@ -116,7 +116,17 @@ function App() {
               <PragueTimeFootnote />
             </p>
           )}
-          {page === "home" && (
+        </div>
+        {page === "home" && (
+          <div className="app-header-right">
+            <SimpleControls
+              offsetMs={offsetMs}
+              onReset={resetToNow}
+              isPlaying={isPlaying}
+              onTogglePlay={togglePlay}
+              speedHoursPerSecond={speedHoursPerSecond}
+              onSpeedChange={setSpeedHoursPerSecond}
+            />
             <button
               type="button"
               className="app-moment-button"
@@ -125,19 +135,9 @@ function App() {
                 setDrawerOpen(true);
               }}
             >
-              What the clock tells us about this moment
+              What the clock tells us <br /> about this moment
             </button>
-          )}
-        </div>
-        {page === "home" && (
-          <SimpleControls
-            offsetMs={offsetMs}
-            onReset={resetToNow}
-            isPlaying={isPlaying}
-            onTogglePlay={togglePlay}
-            speedHoursPerSecond={speedHoursPerSecond}
-            onSpeedChange={setSpeedHoursPerSecond}
-          />
+          </div>
         )}
       </header>
       {page === "home" ? (

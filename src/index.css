@@ -2,17 +2,19 @@
   color-scheme: dark;
 
   /* Maximized clock size: with the ornate control panel gone, the clock
-     is the only thing competing with the header (measured ~128px tall)
-     and a small reserve below for the scrubber (its own 40px margin-top
-     + 12px thumb + 20px bottom margin = 72px). The clock-stage's own
-     top margin-top below pulls it up by 11% of its size to close the
-     artwork's built-in top inset, so that 0.89 factor solves for the
-     exact size where the bottom of the (shifted-up) box lands precisely
-     at the reserved line -- no wasted space, no overlap, at any
-     viewport height. Keep the 128+72=200 reserve in sync with the
-     header's actual height and the scrubber's own margin in
-     SimpleScrubber.css. */
-  --clock-size: min(90vw, calc((100svh - 200px) / 0.89));
+     is the only thing competing with the header and a small reserve
+     below for the scrubber. The clock-stage's own top margin-top below
+     pulls it up by 11% of its size to close the artwork's built-in top
+     inset, so that 0.89 factor solves for the exact size where the
+     bottom of the (shifted-up) box lands precisely at the reserved
+     line -- no wasted space, no overlap, at any viewport height. This
+     182px reserve was trimmed down from a measured 200px by removing
+     slack that rendered as unused blank space below the scrubber,
+     rather than by shrinking the header or scrubber themselves --
+     reduce it further only after re-measuring that margin, since
+     going below the header + scrubber's real footprint causes the
+     scrubber to be pushed below the viewport. */
+  --clock-size: min(99vw, calc((100svh - 182px) / 0.89));
 }
 
 * {
@@ -98,25 +100,41 @@ body {
   color: #000;
 }
 
+.app-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
 .app-moment-button {
-  display: block;
-  margin: 0.6rem 0 0 32px;
-  padding: 0;
-  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  padding: 10px 20px;
   border: none;
+  border-radius: 999px;
   font-family: Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  font-size: 0.85rem;
-  color: #000;
-  text-align: left;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgb(48, 48, 48);
+  text-align: center;
   cursor: pointer;
-  opacity: 0.6;
   transition: opacity 0.15s ease;
+  border: 4px solid rgb(107, 107, 107);
+
+  background: none;
 }
 
 .app-moment-button:hover,
 .app-moment-button:focus-visible {
   opacity: 1;
+  border-color: black;
+  color: black;
 }
 
 .app-datetime-separator {
