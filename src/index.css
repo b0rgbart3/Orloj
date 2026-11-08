@@ -15,6 +15,24 @@
      going below the header + scrubber's real footprint causes the
      scrubber to be pushed below the viewport. */
   --clock-size: min(99vw, calc((100svh - 182px) / 0.89));
+
+  /* Shared long-form body copy styling for the About page and every Learn
+     deep-dive page, so new deep-dive topics match without restating this. */
+  --copy-font-family: 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --copy-font-weight: 700;
+  --copy-font-size: 1.07rem;
+  --copy-line-height: 1.6;
+  --copy-letter-spacing: -0.06em;
+  --copy-color: #1a1a1a;
+  --copy-link-weight: 700;
+
+  /* Shared title style for the About page's section headings and each
+     Learn deep-dive page's title. Tighter than the default line-height
+     so wrapped two-line titles don't gain extra vertical gap. */
+  --title-font-family: Helvetica, Arial, sans-serif;
+  --title-font-weight: 800;
+  --title-letter-spacing: -0.04em;
+  --title-line-height: 1.05;
 }
 
 * {
