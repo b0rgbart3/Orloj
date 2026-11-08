@@ -125,11 +125,11 @@ export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps)
         <div className="drawer-info-text">
           <p className="drawer-info-subpara">
             The <strong>hand</strong> points to <strong>{e.innerRingNumeral}</strong> on the inner
-            ring. That's the current civil hour — the same hour you'd read off an ordinary clock,
-            with each numeral marking two different hours as the hand sweeps around twice a day.
-            (The value a 12-hour clock would show, as opposed to the modern European-style 24-hour
-            clock.) It's one hand doing double duty: that same tip also reaches a numeral on the
-            outer ring.
+            ring — the nearest civil hour, 12-hour-clock style, with each numeral marking two
+            different hours as the hand sweeps around twice a day. Like any analog hour hand, it
+            reaches a numeral only right on the hour; the rest of the time it's between two,
+            closer to whichever one it's about to strike. It's one hand doing double duty: that
+            same tip also reaches a numeral on the outer ring.
           </p>
           <p className="drawer-info-subpara">
             That same <strong>hand</strong> also reads{' '}

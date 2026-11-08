@@ -23,9 +23,11 @@ const ROMAN_HOUR_NUMERALS = [
 ]
 
 /** The Roman numeral the hand (and inner ring) currently points to -- the
- * inner ring's I-XII numerals appear twice over the 24-hour face. */
-export function innerRingNumeral(hours: number): string {
-  return ROMAN_HOUR_NUMERALS[hours % 12]
+ * inner ring's I-XII numerals appear twice over the 24-hour face. Rounds to
+ * the nearest numeral (not the floor), matching where the hand visually
+ * sits: e.g. at :50 past the hour it's already nearly on the next numeral. */
+export function innerRingNumeral(fractionalHour: number): string {
+  return ROMAN_HOUR_NUMERALS[Math.round(fractionalHour) % 12]
 }
 
 const MOON_PHASE_NAMES = [
@@ -155,8 +157,10 @@ export function explainClock(pragueTime: PragueTime): ClockExplanation {
   const moonSign = houseAt(moonAngle).sign
   const highlights = activeHouseHighlights(pragueTime, ringRotation)
 
+  const fractionalHour = pragueTime.hours + pragueTime.minutes / 60 + pragueTime.seconds / 3600
+
   return {
-    innerRingNumeral: innerRingNumeral(pragueTime.hours),
+    innerRingNumeral: innerRingNumeral(fractionalHour),
     outerRingHour: outerRingHour(pragueTime),
     starRingNumeral: siderealRingNumeral(pragueTime),
     sunSign,

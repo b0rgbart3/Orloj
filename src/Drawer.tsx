@@ -46,7 +46,24 @@ export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigat
           <span />
           <span />
         </button>
-        {open && <DrawerClockInfo pragueTime={pragueTime} dateParts={dateParts} />}
+        {open && (
+          <button
+            className="drawer-close"
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggle()
+            }}
+            aria-label="Close"
+          >
+            <span />
+            <span />
+          </button>
+        )}
+        {open && (
+          <div className="drawer-scroll">
+            <DrawerClockInfo pragueTime={pragueTime} dateParts={dateParts} />
+          </div>
+        )}
       </nav>
       {menuOpen && (
         <div className="drawer-menu" onClick={(e) => e.stopPropagation()}>

@@ -168,3 +168,46 @@ body {
 .app .clock-stage {
   margin-top: calc(var(--clock-size) * -0.11);
 }
+
+@media (max-width: 700px) {
+  :root {
+    --clock-size: min(99vw, calc((100svh - 340px) / 0.89));
+  }
+
+  .app {
+    padding-left: 0;
+    padding-top: 80px;
+    padding-bottom: 32px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 16px 0;
+    text-align: center;
+  }
+
+  .app-header-text,
+  .app-title,
+  .app-subtitle,
+  .app-datetime {
+    margin-left: 0;
+  }
+
+  .app-header-right {
+    align-items: center;
+    width: 100%;
+  }
+
+  .app-moment-button {
+    width: 100%;
+    max-width: 420px;
+    margin: 10px auto 24px;
+    padding: 6px 20px;
+    white-space: nowrap;
+  }
+
+  .app-moment-button-break {
+    display: none;
+  }
+}

@@ -135,7 +135,7 @@ function App() {
                 setDrawerOpen(true);
               }}
             >
-              What the clock tells us <br /> about this moment
+              What the clock tells us <br className="app-moment-button-break" /> about this moment
             </button>
           </div>
         )}

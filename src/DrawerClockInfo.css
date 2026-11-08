@@ -4,6 +4,12 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 
+@media (max-width: 700px) {
+  .drawer-info {
+    padding-bottom: 2rem;
+  }
+}
+
 .drawer-info-datetime {
   margin: 0 0 1.25rem;
   color: #fff;

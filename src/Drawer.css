@@ -18,6 +18,11 @@
 .drawer--open {
   width: 44vw;
   cursor: default;
+}
+
+.drawer-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -41,6 +46,41 @@
   height: 3px;
   background: #fde677;
   border-radius: 2px;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.drawer-close span {
+  position: absolute;
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: #9a9a9a;
+}
+
+.drawer-close span:first-child {
+  transform: rotate(45deg);
+}
+
+.drawer-close span:last-child {
+  transform: rotate(-45deg);
+}
+
+.drawer-close:hover span {
+  background: #cfcfcf;
 }
 
 .drawer-menu {
@@ -95,4 +135,16 @@
   padding-bottom: 0.5rem;
   font-size: 0.9rem;
   color: rgba(253, 230, 119, 0.7);
+}
+
+@media (max-width: 700px) {
+  .drawer {
+    width: 100%;
+    height: 80px;
+  }
+
+  .drawer--open {
+    width: 100%;
+    height: 100svh;
+  }
 }
