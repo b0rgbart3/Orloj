@@ -1,7 +1,10 @@
 .simple-scrubber-wrap {
-  position: relative;
   align-self: stretch;
   margin-top: -20px;
+}
+
+.simple-scrubber-track-wrap {
+  position: relative;
 }
 
 .simple-scrubber-ticks {
@@ -68,4 +71,19 @@
   border-radius: 999px;
   background: #000;
   cursor: pointer;
+}
+
+.simple-scrubber-labels {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 40px 0 30px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.simple-scrubber-label-center {
+  flex: 1;
+  text-align: center;
 }

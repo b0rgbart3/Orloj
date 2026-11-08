@@ -1,21 +1,28 @@
-import type { PlaybackSpeed } from "./clock/useScrubbableTime";
+import type { PlaybackSpeed, RangeOption } from "./clock/useScrubbableTime";
 import "./SimpleControls.css";
+import { RangeDropdown } from "./RangeDropdown";
 import { SpeedDropdown } from "./SpeedDropdown";
 
 export function SimpleControls({
   offsetMs,
+  customAnchor,
   onReset,
   isPlaying,
   onTogglePlay,
   speedHoursPerSecond,
   onSpeedChange,
+  rangeOption,
+  onRangeChange,
 }: {
   offsetMs: number;
+  customAnchor: Date | null;
   onReset: () => void;
   isPlaying: boolean;
   onTogglePlay: () => void;
   speedHoursPerSecond: PlaybackSpeed;
   onSpeedChange: (speed: PlaybackSpeed) => void;
+  rangeOption: RangeOption;
+  onRangeChange: (option: RangeOption) => void;
 }) {
   return (
     <div className="simple-controls">
@@ -37,11 +44,12 @@ export function SimpleControls({
         )}
       </button>
       <SpeedDropdown value={speedHoursPerSecond} onChange={onSpeedChange} />
+      <RangeDropdown value={rangeOption} onChange={onRangeChange} />
       <button
         type="button"
         className="simple-controls-button simple-controls-now-button"
         onClick={onReset}
-        disabled={offsetMs === 0 && !isPlaying}
+        disabled={offsetMs === 0 && !isPlaying && customAnchor === null}
       >
         Now
       </button>

@@ -52,6 +52,12 @@ function App() {
     togglePlay,
     speedHoursPerSecond,
     setSpeedHoursPerSecond,
+    rangeOption,
+    setRangeOption,
+    customAnchor,
+    anchorDate,
+    minDate,
+    maxDate,
   } = useScrubbableTime();
   const { day, month, year } = getPragueDateParts(pragueTime.date);
 
@@ -139,6 +145,9 @@ function App() {
               onTogglePlay={togglePlay}
               speedHoursPerSecond={speedHoursPerSecond}
               onSpeedChange={setSpeedHoursPerSecond}
+              customAnchor={customAnchor}
+              rangeOption={rangeOption}
+              onRangeChange={setRangeOption}
             />
             <button
               type="button"
@@ -161,6 +170,9 @@ function App() {
             minOffsetMs={minOffsetMs}
             maxOffsetMs={maxOffsetMs}
             onOffsetChange={setOffsetMs}
+            minDate={minDate}
+            maxDate={maxDate}
+            anchorDate={anchorDate}
           />
           <DateTimeModal
             open={dateTimeModalOpen}
