@@ -4,6 +4,7 @@ import { AboutPage } from "./AboutPage";
 import { ClockFace } from "./clock/ClockFace";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
+import { DateTimeModal } from "./DateTimeModal";
 import { Drawer } from "./Drawer";
 import { LearnPage } from "./LearnPage";
 import { usePageRoute } from "./routing";
@@ -38,10 +39,12 @@ function App() {
   const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dateTimeModalOpen, setDateTimeModalOpen] = useState(false);
   const {
     pragueTime,
     offsetMs,
     setOffsetMs,
+    setExactDate,
     resetToNow,
     minOffsetMs,
     maxOffsetMs,
@@ -104,15 +107,25 @@ function App() {
           </button>
           {page === "home" && (
             <p className="app-datetime">
-              {month} {day}, {year}{" "}
-              <span className="app-datetime-separator">|</span>{" "}
-              <span className="app-datetime-hour">
-                {renderDigits(pragueTime.hours.toString())}
-              </span>
-              <span className="app-datetime-colon">:</span>
-              <span className="app-datetime-minute">
-                {renderDigits(pad(pragueTime.minutes))}
-              </span>
+              <button
+                type="button"
+                className="app-datetime-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDateTimeModalOpen(true);
+                }}
+                aria-label="Set an exact date and time"
+              >
+                {month} {day}, {year}{" "}
+                <span className="app-datetime-separator">|</span>{" "}
+                <span className="app-datetime-hour">
+                  {renderDigits(pragueTime.hours.toString())}
+                </span>
+                <span className="app-datetime-colon">:</span>
+                <span className="app-datetime-minute">
+                  {renderDigits(pad(pragueTime.minutes))}
+                </span>
+              </button>
               <PragueTimeFootnote />
             </p>
           )}
@@ -148,6 +161,12 @@ function App() {
             minOffsetMs={minOffsetMs}
             maxOffsetMs={maxOffsetMs}
             onOffsetChange={setOffsetMs}
+          />
+          <DateTimeModal
+            open={dateTimeModalOpen}
+            initialDate={pragueTime.date}
+            onClose={() => setDateTimeModalOpen(false)}
+            onConfirm={setExactDate}
           />
         </>
       ) : page.startsWith("about") ? (

@@ -1,8 +1,37 @@
+.simple-scrubber-wrap {
+  position: relative;
+  align-self: stretch;
+  margin-top: -20px;
+}
+
+.simple-scrubber-ticks {
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  right: 40px;
+  height: 0;
+  pointer-events: none;
+}
+
+.simple-scrubber-tick {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.simple-scrubber-tick-tall {
+  height: 18px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .simple-scrubber {
   -webkit-appearance: none;
   appearance: none;
-  align-self: stretch;
-  width: auto;
+  display: block;
+  width: calc(100% - 70px);
   margin: 0 40px 0 30px;
   background: transparent;
   cursor: pointer;

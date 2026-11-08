@@ -71,6 +71,10 @@ export function useScrubbableTime() {
     setOffsetMsState(clamp(next, minOffsetMs, maxOffsetMs))
   }
 
+  function setExactDate(date: Date) {
+    setOffsetMs(date.getTime() - Date.now())
+  }
+
   function resetToNow() {
     setIsPlaying(false)
     setOffsetMsState(0)
@@ -84,6 +88,7 @@ export function useScrubbableTime() {
     pragueTime,
     offsetMs,
     setOffsetMs,
+    setExactDate,
     resetToNow,
     minOffsetMs,
     maxOffsetMs,
