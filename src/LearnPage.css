@@ -61,7 +61,7 @@
 }
 
 .learn-page-body a {
-  color: #1a1a1a;
+  color: var(--copy-link-color);
   font-weight: var(--copy-link-weight);
   text-decoration: none;
 }

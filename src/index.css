@@ -19,12 +19,13 @@
   /* Shared long-form body copy styling for the About page and every Learn
      deep-dive page, so new deep-dive topics match without restating this. */
   --copy-font-family: 'Iowan Old Style', Georgia, 'Times New Roman', serif;
-  --copy-font-weight: 700;
+  --copy-font-weight: 600;
   --copy-font-size: 1.07rem;
   --copy-line-height: 1.6;
   --copy-letter-spacing: -0.06em;
-  --copy-color: #1a1a1a;
-  --copy-link-weight: 700;
+  --copy-color: #353535;
+  --copy-link-color: #000;
+  --copy-link-weight: 900;
 
   /* Shared title style for the About page's section headings and each
      Learn deep-dive page's title. Tighter than the default line-height

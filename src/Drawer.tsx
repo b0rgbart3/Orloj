@@ -20,6 +20,7 @@ const NAV_ITEMS: { page: Page; label: string; indent?: boolean }[] = [
   { page: 'about/real-clock', label: 'the real clock', indent: true },
   { page: 'about/how-it-works', label: 'how it works', indent: true },
   { page: 'about/digital-version', label: 'about this digital version', indent: true },
+  { page: 'about/developer', label: 'about the developer', indent: true },
   { page: 'learn/sidereal-time', label: 'sidereal time' },
 ]
 

@@ -60,6 +60,7 @@ const MIKULAS_OF_KADAN_URL =
   "https://en.wikipedia.org/wiki/Mikul%C3%A1%C5%A1_of_Kada%C5%88";
 const JAN_SINDEL_URL = "https://en.wikipedia.org/wiki/Jan_%C5%A0indel";
 const DEVELOPER_PORTFOLIO_URL = "https://bartdorityportfolio.online/";
+const MOON_MATH_URL = "https://moon-math.online/";
 
 type DiagramItem = {
   src: string;
@@ -138,6 +139,7 @@ const SECTIONS = [
   { id: "real-clock", label: "The real clock" },
   { id: "how-it-works", label: "How it works" },
   { id: "digital-version", label: "About this digital version" },
+  { id: "developer", label: "About the developer" },
 ];
 
 type AboutPageProps = {
@@ -459,6 +461,12 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           digital version helps other people fascinated by this wonderful
           achievement better understand how it functions.
         </p>
+      </div>
+
+      <div className="about-page-section">
+        <h2 id="developer" className="about-section-title">
+          About the developer
+        </h2>
         <p>
           This digital version was built by{" "}
           <a
@@ -467,6 +475,10 @@ export function AboutPage({ initialSection }: AboutPageProps) {
             rel="noopener noreferrer"
           >
             Bart Dority
+          </a>
+          . More projects live at{" "}
+          <a href={MOON_MATH_URL} target="_blank" rel="noopener noreferrer">
+            moon-math.online
           </a>
           .
         </p>
