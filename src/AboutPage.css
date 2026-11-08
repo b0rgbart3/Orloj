@@ -16,25 +16,15 @@
 
 .about-page-nav {
   grid-column: 1 / -1;
+  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+  gap: 0.6rem;
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-}
-
-.about-page-nav a {
-  text-decoration: none;
-  opacity: 0.6;
-  transition: opacity 0.15s ease;
-}
-
-.about-page-nav a:hover,
-.about-page-nav a:focus-visible {
-  opacity: 1;
 }
 
 .about-page-section {
@@ -175,7 +165,7 @@
   }
 }
 
-.about-page a {
+.about-page a:not(.pill-button) {
   color: #1a1a1a;
   text-decoration: underline;
 }

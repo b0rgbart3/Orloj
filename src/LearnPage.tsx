@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./LearnPage.css";
 import { DEEP_DIVE_TOPICS } from "./learn/topics";
 
@@ -7,6 +8,10 @@ type LearnPageProps = {
 
 export function LearnPage({ slug }: LearnPageProps) {
   const topic = DEEP_DIVE_TOPICS[slug];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [slug]);
 
   if (!topic) {
     return (

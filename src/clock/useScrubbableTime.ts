@@ -84,6 +84,11 @@ export function useScrubbableTime() {
     setIsPlaying((prev) => !prev)
   }
 
+  function setSpeed(speed: PlaybackSpeed) {
+    setSpeedHoursPerSecond(speed)
+    setIsPlaying(true)
+  }
+
   return {
     pragueTime,
     offsetMs,
@@ -95,6 +100,6 @@ export function useScrubbableTime() {
     isPlaying,
     togglePlay,
     speedHoursPerSecond,
-    setSpeedHoursPerSecond,
+    setSpeedHoursPerSecond: setSpeed,
   }
 }

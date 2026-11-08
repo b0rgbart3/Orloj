@@ -66,7 +66,24 @@ type DiagramItem = {
   alt: string;
   title: string;
   body: string;
+  link?: { term: string; href: string };
 };
+
+function renderDiagramBody(body: string, link?: { term: string; href: string }) {
+  return body.split("\n\n").map((paragraph) => {
+    if (!link || !paragraph.includes(link.term)) {
+      return <p key={paragraph}>{paragraph}</p>;
+    }
+    const [before, after] = paragraph.split(link.term);
+    return (
+      <p key={paragraph}>
+        {before}
+        <a href={link.href}>{link.term}</a>
+        {after}
+      </p>
+    );
+  });
+}
 
 const RING_ITEMS: DiagramItem[] = [
   {
@@ -113,6 +130,7 @@ const DIAL_ITEMS: DiagramItem[] = [
     alt: "The star dial pointer",
     title: "The star dial",
     body: "A small star-tipped pointer, fixed to the zodiac ring, marks sidereal time directly — the true position of the stars overhead, completing one rotation every 23 hours and 56 minutes.",
+    link: { term: "sidereal time", href: "#learn/sidereal-time" },
   },
 ];
 
@@ -141,7 +159,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
     <article className="about-page">
       <nav className="about-page-nav" aria-label="About page sections">
         {SECTIONS.map(({ id, label }) => (
-          <a key={id} href={`#about/${id}`}>
+          <a key={id} className="pill-button" href={`#about/${id}`}>
             {label}
           </a>
         ))}
@@ -283,7 +301,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
       <div className="about-page-section about-page-section--wide">
         <h3>Three rings</h3>
         <div className="about-page-diagram-list">
-          {RING_ITEMS.map(({ src, alt, title, body }, index) => (
+          {RING_ITEMS.map(({ src, alt, title, body, link }, index) => (
             <div
               key={title}
               className={`about-page-diagram-row${
@@ -293,9 +311,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
               <img className="about-page-diagram-image" src={src} alt={alt} />
               <div className="about-page-diagram-copy">
                 <h4>{title}</h4>
-                {body.split("\n\n").map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
+                {renderDiagramBody(body, link)}
               </div>
             </div>
           ))}
@@ -303,7 +319,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
 
         <h3>Four dials</h3>
         <div className="about-page-diagram-list">
-          {DIAL_ITEMS.map(({ src, alt, title, body }, index) => (
+          {DIAL_ITEMS.map(({ src, alt, title, body, link }, index) => (
             <div
               key={title}
               className={`about-page-diagram-row${
@@ -313,9 +329,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
               <img className="about-page-diagram-image" src={src} alt={alt} />
               <div className="about-page-diagram-copy">
                 <h4>{title}</h4>
-                {body.split("\n\n").map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
+                {renderDiagramBody(body, link)}
               </div>
             </div>
           ))}
