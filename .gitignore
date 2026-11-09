@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python backend
+server/.venv
+server/__pycache__
+server/.env
+server/lancedb/*
+!server/lancedb/.gitkeep
+server/documents/*
+!server/documents/.gitkeep

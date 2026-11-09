@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+langgraph
+langchain-core
+lancedb
+sentence-transformers
+openai
+pypdf
+python-dotenv
+llama-index-core

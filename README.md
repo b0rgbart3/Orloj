@@ -90,6 +90,51 @@ applied to each of `sunHandRotationDegrees`, `moonHandRotationDegrees`, and `sid
   - `Timeline.tsx` — the bottom-center date/time readout, scrubber, and play/pause + speed controls for traveling through time.
 - `reference/` — the original Illustrator trace (`full_clock_trace.ai`) and reference imagery.
 - `scripts/clean-svg-layers.py` — strips hidden Illustrator layers out of a freshly-exported SVG in `public/clock/` and prunes unused CSS. Re-run after re-exporting any layer from the `.ai` file.
+- `server/` — the Python RAG backend for the chat panel; see "Orloj expert chatbot" below.
+
+## Orloj expert chatbot (RAG backend)
+
+A Python backend (`server/`) powers a chat panel ("Ask the orloj expert") that answers questions about the Prague Orloj's history, mechanics, and astronomy, grounded in a small library of source PDFs via retrieval-augmented generation.
+
+- **FastAPI** (`server/main.py`) — serves the chat API, and in production also serves the built frontend from the same process.
+- **LangGraph** (`server/ask_agent.py`) — a 4-node agent: rewrite query → embed query → search LanceDB → generate a grounded answer.
+- **LanceDB** (`server/lancedb/`, gitignored) — local embedded vector store.
+- **sentence-transformers**, model `BAAI/bge-small-en-v1.5` — embeddings.
+- **Ollama** (local, default) or **OpenRouter** (hosted) — the LLM backend, switchable via the `LLM_BACKEND` env var.
+- **`server/pdf_injest.py`** — a standalone CLI script that chunks and embeds the PDFs in `server/documents/` into LanceDB. Never run by the API itself — re-run it manually whenever PDFs are added.
+
+### Running the backend locally
+
+```bash
+cd server
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env    # defaults to LLM_BACKEND=ollama; requires `ollama serve` running locally
+
+# Ingest the PDFs in server/documents/ into the local vector DB
+# (run once, and again any time you add new PDFs)
+python pdf_injest.py
+
+# Quick CLI test, no web server needed
+python dev_cli.py "what does the star ring show?"
+
+# Run the API on :8000 (also serves dist/ if a production build exists)
+uvicorn main:app --port 8000 --reload
+```
+
+With the backend running on `:8000`, run the frontend dev server as usual in another terminal — `vite.config.ts` proxies `/api` there automatically:
+
+```bash
+npm run dev   # :5173, proxies /api/* to localhost:8000
+```
+
+Or test the real combined-server shape (one process, no proxy, same as production):
+
+```bash
+npm run build
+cd server && uvicorn main:app --port 8000   # now serves the built app + chat API together on :8000
+```
 
 ## Getting started
 

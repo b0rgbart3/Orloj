@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PragueTimeFootnote } from "./PragueTimeFootnote";
 import { AboutPage } from "./AboutPage";
+import { ChatPanel } from "./ChatPanel";
 import { ClockFace } from "./clock/ClockFace";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
@@ -40,6 +41,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dateTimeModalOpen, setDateTimeModalOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const {
     pragueTime,
     offsetMs,
@@ -67,6 +69,7 @@ function App() {
       onClick={() => {
         if (drawerOpen) setDrawerOpen(false);
         if (menuOpen) setMenuOpen(false);
+        if (chatOpen) setChatOpen(false);
       }}
     >
       <Drawer
@@ -100,6 +103,7 @@ function App() {
         pragueTime={pragueTime}
         dateParts={{ day, month, year }}
       />
+      <ChatPanel open={chatOpen} onToggle={() => setChatOpen(false)} />
       <header className="app-header">
         <div className="app-header-text">
           <button
@@ -158,6 +162,16 @@ function App() {
               }}
             >
               What the clock tells us <br className="app-moment-button-break" /> about this moment
+            </button>
+            <button
+              type="button"
+              className="app-moment-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setChatOpen(true);
+              }}
+            >
+              Ask the orloj expert
             </button>
           </div>
         )}
