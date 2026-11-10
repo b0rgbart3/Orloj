@@ -5,6 +5,8 @@
 <style type="text/css">
 	.zodiac-blue{fill:#54718E;}
 	.zodiac-gold{fill:url(#zodiac-gold-gradient);}
+	.crossbeam{fill:#5A5A5A;}
+	.hub-bolt{fill:url(#hub-bolt-gradient);}
 </style>
 <linearGradient id="zodiac-gold-gradient" gradientUnits="userSpaceOnUse" x1="600" y1="0" x2="600" y2="1200">
 	<stop offset="0" style="stop-color:#FFFFFF"/>
@@ -12,30 +14,60 @@
 	<stop offset="0.6667" style="stop-color:#F7CD00"/>
 	<stop offset="1" style="stop-color:#6B4A08"/>
 </linearGradient>
-<path id="zodiac-wedge-aquarius" class="zodiac-blue" d="M532.09,747.98l32.13-59.78c-9.52-14.64-16.82-30.71-21.37-47.77l-50.7,35.96
+<radialGradient id="hub-bolt-gradient" cx="50%" cy="50%" r="72%" gradientUnits="objectBoundingBox">
+	<stop offset="0" style="stop-color:#EDEDED"/>
+	<stop offset="0.35" style="stop-color:#8A8A8A"/>
+	<stop offset="0.75" style="stop-color:#3A3A3A"/>
+	<stop offset="1" style="stop-color:#1C1C1C"/>
+</radialGradient>
+<!-- The 12 wedge ids below were originally assigned to the wrong (opposite)
+     wedge shape in each of the 6 real zodiacal pairs, verified by directly
+     computing each wedge's raw centroid angle and comparing to where the sun
+     hand actually points right now against a known real-world sign (Scorpio,
+     not Taurus); every pair came out ~180 degrees swapped, consistently,
+     confirming a uniform mislabeling rather than one-off errors. The ids
+     here have been corrected (swapped pairwise: aries/libra, taurus/scorpio,
+     gemini/sagittarius, cancer/capricorn, leo/aquarius, virgo/pisces) so
+     each wedge's id now matches its own real sign. zodiacHouses.ts's
+     ZODIAC_HOUSES angle ranges were already correct and did not need to
+     change; only the ids on the shapes below did. -->
+<path id="zodiac-wedge-leo" class="zodiac-blue" d="M532.09,747.98l32.13-59.78c-9.52-14.64-16.82-30.71-21.37-47.77l-50.7,35.96
 	C501.25,702.65,514.87,726.81,532.09,747.98z"/>
-<path id="zodiac-wedge-capricorn" class="zodiac-blue" d="M492.04,676.08l51.25-34.01c-3.28-11.77-5.23-24.02-5.72-36.62h-58.27
+<path id="zodiac-wedge-cancer" class="zodiac-blue" d="M492.04,676.08l51.25-34.01c-3.28-11.77-5.23-24.02-5.72-36.62h-58.27
 	C479.92,630.12,484.36,653.84,492.04,676.08z"/>
-<path id="zodiac-wedge-pisces" class="zodiac-blue" d="M619.34,815.1l-7.01-77.33c-19.7-13.81-36.57-31.31-49.28-51.42l-31.17,61.35
+<path id="zodiac-wedge-virgo" class="zodiac-blue" d="M619.34,815.1l-7.01-77.33c-19.7-13.81-36.57-31.31-49.28-51.42l-31.17,61.35
 	C555.18,776.44,585.1,799.67,619.34,815.1z"/>
-<path id="zodiac-wedge-aries" class="zodiac-blue" d="M758.58,832.74l-37.55-61.32c-1.04,0.02-2.07,0.04-3.12,0.04c-36.71,0-71.78-11.33-101.09-30.64l2.14,74.11
+<path id="zodiac-wedge-libra" class="zodiac-blue" d="M758.58,832.74l-37.55-61.32c-1.04,0.02-2.07,0.04-3.12,0.04c-36.71,0-71.78-11.33-101.09-30.64l2.14,74.11
 	c30.15,13.64,63.65,21.25,98.94,21.25C731.78,836.18,745.36,834.99,758.58,832.74z"/>
-<path id="zodiac-wedge-taurus" class="zodiac-blue" d="M717.91,771.46c-0.13,0-0.27,0-0.4-0.01l40.74,61.34c57.09-9.64,107.27-39.4,142.88-81.66l-60.55-30.09
+<path id="zodiac-wedge-scorpio" class="zodiac-blue" d="M717.91,771.46c-0.13,0-0.27,0-0.4-0.01l40.74,61.34c57.09-9.64,107.27-39.4,142.88-81.66l-60.55-30.09
 	C809.18,752.19,765.81,771.46,717.91,771.46z"/>
-<path id="zodiac-wedge-gemini" class="zodiac-blue" d="M891.39,599.31c0,46.75-18.79,89.14-49.27,120.16l60.05,30.43c34.01-40.93,54.44-93.39,54.44-150.59
+<path id="zodiac-wedge-sagittarius" class="zodiac-blue" d="M891.39,599.31c0,46.75-18.79,89.14-49.27,120.16l60.05,30.43c34.01-40.93,54.44-93.39,54.44-150.59
 	c0-4.61-0.15-9.18-0.41-13.73l-64.86,9.66C891.37,596.59,891.39,597.95,891.39,599.31z"/>
-<path id="zodiac-wedge-sagittarius" class="zodiac-blue" d="M537.43,599.31c0-11.01,1.15-21.85,3.31-32.41l-55.33-21.42c-4.05,17.29-6.19,35.31-6.19,53.82
+<path id="zodiac-wedge-gemini" class="zodiac-blue" d="M537.43,599.31c0-11.01,1.15-21.85,3.31-32.41l-55.33-21.42c-4.05,17.29-6.19,35.31-6.19,53.82
 	c0,3.04,0.08,6.07,0.19,9.08l58.18-2.47C537.49,603.73,537.43,601.53,537.43,599.31z"/>
-<path id="zodiac-wedge-scorpio" class="zodiac-blue" d="M485.2,546.37l55.26,21.86c2.92-14.91,7.88-29.26,14.56-42.76c-7.82-12.2-23.18-37.29-35.62-57.73
+<path id="zodiac-wedge-taurus" class="zodiac-blue" d="M485.2,546.37l55.26,21.86c2.92-14.91,7.88-29.26,14.56-42.76c-7.82-12.2-23.18-37.29-35.62-57.73
 	C503.51,491.31,491.76,517.86,485.2,546.37z"/>
-<path id="zodiac-wedge-cancer" class="zodiac-blue" d="M881.57,426.89l-54.06,35.99c37.83,31.98,62.39,79.69,63.81,131.67c21.34-1.91,49.05-5.12,64.99-7.02
+<path id="zodiac-wedge-capricorn" class="zodiac-blue" d="M881.57,426.89l-54.06,35.99c37.83,31.98,62.39,79.69,63.81,131.67c21.34-1.91,49.05-5.12,64.99-7.02
 	C953.19,524.29,925.08,467.58,881.57,426.89z"/>
-<path id="zodiac-wedge-libra" class="zodiac-blue" d="M515.47,473.78l39.55,51.69c11.21-22.68,27.25-42.96,46.63-59.42l-9.27-68.24
+<path id="zodiac-wedge-aries" class="zodiac-blue" d="M515.47,473.78l39.55,51.69c11.21-22.68,27.25-42.96,46.63-59.42l-9.27-68.24
 	C561.25,416.96,534.89,443,515.47,473.78z"/>
-<path id="zodiac-wedge-leo" class="zodiac-blue" d="M705.31,422.64c4.18-0.31,8.38-0.48,12.6-0.48c41.46,0,79.51,15.38,109.35,40.51l55.06-35.08
+<path id="zodiac-wedge-aquarius" class="zodiac-blue" d="M705.31,422.64c4.18-0.31,8.38-0.48,12.6-0.48c41.46,0,79.51,15.38,109.35,40.51l55.06-35.08
 	c-39.29-37.06-91.29-60.96-148.83-64.64L705.31,422.64z"/>
-<path id="zodiac-wedge-virgo" class="zodiac-blue" d="M596.34,395.44l6.22,69.86c28.35-23.78,63.7-39.42,101.4-42.55l26.8-59.96c-4.26-0.22-8.54-0.34-12.85-0.34
+<path id="zodiac-wedge-pisces" class="zodiac-blue" d="M596.34,395.44l6.22,69.86c28.35-23.78,63.7-39.42,101.4-42.55l26.8-59.96c-4.26-0.22-8.54-0.34-12.85-0.34
 	C673.51,362.44,631.95,374.48,596.34,395.44z"/>
+<!-- Fixed support spokes connecting the ring to the center hub, aligned to
+     the wedge boundaries above (pisces/aries, virgo/libra, gemini/cancer,
+     sagittarius/capricorn). Drawn here, underneath the gold ring/symbol
+     artwork below, so they stay visually bounded within this ring's own
+     disc instead of overlapping the roman/numeric rings in other layers. -->
+<g id="zodiac_x5F_crossbeams">
+	<polygon class="crossbeam" points="596.79,620.36 622.49,908.81 632.45,907.93 606.75,619.48"/>
+	<polygon class="crossbeam" points="604.44,579.87 599.36,396.49 589.36,396.77 594.45,580.15"/>
+	<polygon class="crossbeam" points="620.17,604.24 956.44,591.55 956.07,581.56 619.80,594.25"/>
+	<polygon class="crossbeam" points="579.75,596.15 479.07,601.92 479.64,611.91 580.32,606.14"/>
+	<circle class="crossbeam" cx="600" cy="600" r="22"/>
+	<circle class="hub-bolt" cx="600" cy="600" r="13"/>
+</g>
 <g>
 	<path class="zodiac-gold" d="M714.12,326.42c-151.91,0-275.06,122.51-275.06,273.64S562.21,873.7,714.12,873.7s275.06-122.51,275.06-273.64
 		S866.03,326.42,714.12,326.42z M714.12,864.8C567.15,864.8,448,746.27,448,600.06s119.14-264.74,266.12-264.74

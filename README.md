@@ -100,8 +100,10 @@ A Python backend (`server/`) powers a chat panel ("Ask the orloj expert") that a
 - **LangGraph** (`server/ask_agent.py`) — a 4-node agent: rewrite query → embed query → search LanceDB → generate a grounded answer.
 - **LanceDB** (`server/lancedb/`, gitignored) — local embedded vector store.
 - **sentence-transformers**, model `BAAI/bge-small-en-v1.5` — embeddings.
-- **Ollama** (local, default) or **OpenRouter** (hosted) — the LLM backend, switchable via the `LLM_BACKEND` env var.
+- **Ollama** (local, default) or **OpenRouter** (hosted) — the LLM backend, switchable via the `LLM_BACKEND` env var. Local dev defaults to Ollama; production runs `LLM_BACKEND=openrouter`, since the deployed box has no local LLM and limited RAM to spare for one.
 - **`server/pdf_injest.py`** — a standalone CLI script that chunks and embeds the PDFs in `server/documents/` into LanceDB. Never run by the API itself — re-run it manually whenever PDFs are added.
+- **`server/dev_cli.py`** — a throwaway CLI for exercising the agent directly (`python dev_cli.py "<question>"`), no web server needed.
+- **`server/start.sh`** — the production launch script (activates the venv, runs `uvicorn`); what PM2 runs on the deployed box.
 
 ### Running the backend locally
 

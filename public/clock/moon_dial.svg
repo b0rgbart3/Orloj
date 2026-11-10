@@ -12,7 +12,6 @@
 <line class="st0" x1="602.41" y1="601.44" x2="597.59" y2="601.44"/>
 <circle class="st0" cx="600" cy="881.29" r="23.16"/>
 <polygon class="st0" points="602.41,601.89 602.41,869.59 597.59,869.59 597.59,601.44 "/>
-<circle cx="600" cy="600" r="7.07"/>
 <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="585.2578" y1="870.312" x2="607.2095" y2="892.2637">
 	<stop  offset="0" style="stop-color:#E7ECFC"/>
 	<stop  offset="0.0332" style="stop-color:#FFFFFF"/>
