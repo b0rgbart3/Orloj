@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { describeCurrentMoment } from './clock/explainClock'
 import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import './ChatPanel.css'
@@ -34,6 +34,86 @@ export function ChatPanel({ open, onToggle, pragueTime, dateParts }: ChatPanelPr
     requestAnimationFrame(() => {
       scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
     })
+  }
+
+  // Turns bare "https://..." runs within a plain-text segment into real
+  // links, trimming trailing sentence punctuation (periods, commas, closing
+  // quotes) that isn't actually part of the URL.
+  function autoLink(text: string, keyPrefix: string): ReactNode[] {
+    const urlRegex = /https?:\/\/[^\s<>]+/g
+    const nodes: ReactNode[] = []
+    let lastIndex = 0
+    let match: RegExpExecArray | null
+    let linkIndex = 0
+
+    while ((match = urlRegex.exec(text))) {
+      if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index))
+
+      let url = match[0]
+      const trailingPunctuation = url.match(/[.,;:!?)'"]+$/)?.[0] ?? ''
+      if (trailingPunctuation) url = url.slice(0, -trailingPunctuation.length)
+
+      nodes.push(
+        <a
+          key={`${keyPrefix}-link-${linkIndex++}`}
+          className="chat-link"
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {url}
+        </a>,
+      )
+      if (trailingPunctuation) nodes.push(trailingPunctuation)
+      lastIndex = match.index + match[0].length
+    }
+
+    if (lastIndex < text.length) nodes.push(text.slice(lastIndex))
+    return nodes
+  }
+
+  function renderInline(text: string, keyPrefix: string): ReactNode[] {
+    const parts = text.split(/(\{\{swatch:[a-zA-Z]+\}\}|\*\*[^*]+\*\*)/g)
+    return parts.flatMap((part, index) => {
+      const swatchMatch = part.match(/^\{\{swatch:([a-zA-Z]+)\}\}$/)
+      if (swatchMatch) {
+        return [
+          <span
+            key={`${keyPrefix}-${index}`}
+            className="chat-swatch"
+            style={{ background: swatchMatch[1] }}
+            aria-hidden="true"
+          />,
+        ]
+      }
+      const boldMatch = part.match(/^\*\*([^*]+)\*\*$/)
+      if (boldMatch) {
+        return [<strong key={`${keyPrefix}-${index}`}>{boldMatch[1]}</strong>]
+      }
+      return autoLink(part, `${keyPrefix}-${index}`)
+    })
+  }
+
+  // A line that's *entirely* a bold span (e.g. "**The real clock:**") is a
+  // section label -- rendered as its own block with vertical breathing room,
+  // rather than inline bold text running into the following sentence.
+  function renderContent(content: string) {
+    const lines = content.split('\n')
+    const nodes: ReactNode[] = []
+    lines.forEach((line, index) => {
+      const labelMatch = line.trim().match(/^\*\*([^*]+)\*\*$/)
+      if (labelMatch) {
+        nodes.push(
+          <div key={`label-${index}`} className="chat-section-label">
+            {labelMatch[1]}
+          </div>,
+        )
+      } else {
+        nodes.push(<span key={`line-${index}`}>{renderInline(line, `l${index}`)}</span>)
+        if (index < lines.length - 1) nodes.push('\n')
+      }
+    })
+    return nodes
   }
 
   function replaceLastAssistantMessage(content: string) {
@@ -113,7 +193,11 @@ export function ChatPanel({ open, onToggle, pragueTime, dateParts }: ChatPanelPr
             )}
             {messages.map((message, index) => (
               <div key={index} className={`chat-message chat-message--${message.role}`}>
-                {message.content || (isStreaming && index === messages.length - 1 ? '…' : '')}
+                {message.content
+                  ? renderContent(message.content)
+                  : isStreaming && index === messages.length - 1
+                    ? '…'
+                    : ''}
               </div>
             ))}
           </div>

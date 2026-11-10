@@ -172,6 +172,17 @@ export function explainClock(pragueTime: PragueTime): ClockExplanation {
   }
 }
 
+/** Mirrors DrawerClockInfo's <HighlightNote> in plain text: which hand's
+ * color actually paints a dial's wedge, once the sun-beats-moon-beats-star
+ * priority rule has resolved any ties. */
+function describeHighlight(hand: HandId, winner: HandId): string {
+  const color = HAND_COLOR_NAME[winner]
+  if (winner === hand) {
+    return `highlighted in ${color} on the zodiac ring`
+  }
+  return `sharing that wedge with the ${winner}, so the ring shows the ${winner}'s ${color} there instead of its own`
+}
+
 /** Plain-text summary of the current dial state, for handing to the chatbot
  * as live context alongside the user's question -- the same facts the
  * drawer shows, condensed and without the educational prose. The displayed
@@ -182,9 +193,9 @@ export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueD
   const pad = (n: number) => n.toString().padStart(2, '0')
   return [
     `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} Prague local time.`,
-    `Sun dial: ${zodiacName(e.sunSign)}`,
-    `Moon dial: ${zodiacName(e.moonSign)} -- ${e.moonPhase}, ${e.moonIllumination}% lit`,
-    `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}`,
-    `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}`,
+    `Sun dial: ${zodiacName(e.sunSign)} ${zodiacSymbol(e.sunSign)} -- ${describeHighlight('sun', e.sunHighlightHand)}.`,
+    `Moon dial: ${zodiacName(e.moonSign)} ${zodiacSymbol(e.moonSign)} -- ${e.moonPhase}, ${e.moonIllumination}% lit -- ${describeHighlight('moon', e.moonHighlightHand)}.`,
+    `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}.`,
+    `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}.`,
   ].join('\n')
 }

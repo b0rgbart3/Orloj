@@ -95,6 +95,37 @@
   border-bottom-left-radius: 2px;
 }
 
+.chat-swatch {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  margin: 0 0.2em;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  vertical-align: middle;
+}
+
+.chat-section-label {
+  font-weight: 700;
+  margin: 0.9rem 0 0.3rem;
+}
+
+.chat-section-label:first-child {
+  margin-top: 0;
+}
+
+.chat-link {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+.chat-link:hover,
+.chat-link:focus-visible {
+  text-decoration-color: #fff;
+}
+
 .chat-panel-input-row {
   flex: 0 0 auto;
   display: flex;
