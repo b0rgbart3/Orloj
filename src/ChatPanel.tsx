@@ -74,7 +74,7 @@ export function ChatPanel({ open, onToggle, pragueTime, dateParts }: ChatPanelPr
 
   function renderInline(text: string, keyPrefix: string): ReactNode[] {
     const parts = text.split(/(\{\{swatch:[a-zA-Z]+\}\}|\*\*[^*]+\*\*)/g)
-    return parts.flatMap((part, index) => {
+    return parts.flatMap((part, index): ReactNode[] => {
       const swatchMatch = part.match(/^\{\{swatch:([a-zA-Z]+)\}\}$/)
       if (swatchMatch) {
         return [
