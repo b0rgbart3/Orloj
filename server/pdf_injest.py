@@ -1,6 +1,7 @@
-"""Standalone CLI script to ingest PDFs from server/documents/ into LanceDB.
+"""Standalone CLI script to ingest PDFs and text files from server/documents/
+into LanceDB.
 
-Run manually whenever new source PDFs are added:
+Run manually whenever new source PDFs or .txt files are added:
     python pdf_injest.py
 
 Not invoked by the API/UI — ingestion is a deliberate, offline step.
@@ -30,6 +31,31 @@ def load_pdf_text(path: Path) -> str:
     return re.sub(r"[ \t]+", " ", raw)
 
 
+def load_txt_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+LOADERS = {
+    ".pdf": load_pdf_text,
+    ".txt": load_txt_text,
+}
+
+
+def chunk_faq_text(text: str, splitter: SentenceSplitter) -> list[str]:
+    """Splits FAQ-formatted .txt files on blank lines so each Q&A pair stays
+    one atomic chunk, instead of running them through the generic sentence
+    splitter (which could merge unrelated pairs or cut a question away from
+    its answer)."""
+    blocks = [b.strip() for b in re.split(r"\n\s*\n", text) if b.strip()]
+    chunks = []
+    for block in blocks:
+        if len(block.split()) > 512:
+            chunks.extend(splitter.split_text(block))
+        else:
+            chunks.append(block)
+    return chunks
+
+
 def existing_sources(table) -> set[str]:
     if table is None:
         return set()
@@ -38,9 +64,11 @@ def existing_sources(table) -> set[str]:
 
 
 def main():
-    pdf_paths = sorted(DOCUMENTS_DIR.glob("*.pdf"))
-    if not pdf_paths:
-        print(f"No PDFs found in {DOCUMENTS_DIR}")
+    doc_paths = sorted(
+        p for ext in LOADERS for p in DOCUMENTS_DIR.glob(f"*{ext}")
+    )
+    if not doc_paths:
+        print(f"No PDFs or text files found in {DOCUMENTS_DIR}")
         return
 
     db = lancedb.connect(str(LANCEDB_DIR))
@@ -52,19 +80,23 @@ def main():
     model = SentenceTransformer(EMBEDDING_MODEL)
 
     rows = []
-    for pdf_path in pdf_paths:
-        if pdf_path.name in already_ingested:
-            print(f"Skipping already-ingested: {pdf_path.name}")
+    for doc_path in doc_paths:
+        if doc_path.name in already_ingested:
+            print(f"Skipping already-ingested: {doc_path.name}")
             continue
 
-        text = load_pdf_text(pdf_path)
+        text = LOADERS[doc_path.suffix.lower()](doc_path)
         if not text.strip():
-            print(f"Warning: no extractable text in {pdf_path.name}")
+            print(f"Warning: no extractable text in {doc_path.name}")
             continue
 
-        chunks = [c for c in splitter.split_text(text) if len(c.split()) >= MIN_CHUNK_WORDS]
+        if doc_path.suffix.lower() == ".txt":
+            raw_chunks = chunk_faq_text(text, splitter)
+        else:
+            raw_chunks = splitter.split_text(text)
+        chunks = [c for c in raw_chunks if len(c.split()) >= MIN_CHUNK_WORDS]
         if not chunks:
-            print(f"Warning: no usable chunks from {pdf_path.name}")
+            print(f"Warning: no usable chunks from {doc_path.name}")
             continue
 
         embeddings = model.encode(chunks, show_progress_bar=False)
@@ -75,10 +107,10 @@ def main():
                     "vector": vector.tolist(),
                     "doc_type": "orloj",
                     "text": chunk,
-                    "source": pdf_path.name,
+                    "source": doc_path.name,
                 }
             )
-        print(f"Ingested {len(chunks)} chunks from {pdf_path.name}")
+        print(f"Ingested {len(chunks)} chunks from {doc_path.name}")
 
     if not rows:
         print("Nothing new to ingest.")

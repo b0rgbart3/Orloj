@@ -103,7 +103,12 @@ function App() {
         pragueTime={pragueTime}
         dateParts={{ day, month, year }}
       />
-      <ChatPanel open={chatOpen} onToggle={() => setChatOpen(false)} />
+      <ChatPanel
+        open={chatOpen}
+        onToggle={() => setChatOpen(false)}
+        pragueTime={pragueTime}
+        dateParts={{ day, month, year }}
+      />
       <header className="app-header">
         <div className="app-header-text">
           <button

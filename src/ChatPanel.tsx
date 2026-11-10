@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import { describeCurrentMoment } from './clock/explainClock'
+import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import './ChatPanel.css'
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string }
@@ -12,9 +14,11 @@ type StreamEvent =
 type ChatPanelProps = {
   open: boolean
   onToggle: () => void
+  pragueTime: PragueTime
+  dateParts: PragueDateParts
 }
 
-export function ChatPanel({ open, onToggle }: ChatPanelProps) {
+export function ChatPanel({ open, onToggle, pragueTime, dateParts }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
@@ -50,10 +54,11 @@ export function ChatPanel({ open, onToggle }: ChatPanelProps) {
     setIsStreaming(true)
 
     try {
+      const context = describeCurrentMoment(pragueTime, dateParts)
       const response = await fetch('/api/ask/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history }),
+        body: JSON.stringify({ message: text, history, context }),
       })
       if (!response.ok || !response.body) throw new Error(`Request failed (${response.status})`)
 

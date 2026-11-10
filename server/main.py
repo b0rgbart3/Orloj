@@ -25,17 +25,18 @@ app.add_middleware(
 class AskRequest(BaseModel):
     message: str
     history: list[dict] = []
+    context: str | None = None
 
 
 @app.post("/api/ask")
 def ask(request: AskRequest):
-    return run_agent(request.message, request.history)
+    return run_agent(request.message, request.history, request.context)
 
 
 @app.post("/api/ask/stream")
 def ask_stream(request: AskRequest):
     return StreamingResponse(
-        stream_agent_response(request.message, request.history),
+        stream_agent_response(request.message, request.history, request.context),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "Connection": "keep-alive"},
     )
@@ -43,7 +44,7 @@ def ask_stream(request: AskRequest):
 
 @app.post("/api/followup")
 def followup(request: AskRequest):
-    return {"followup": generate_followup(request.message, request.history)}
+    return {"followup": generate_followup(request.message, request.history, request.context)}
 
 
 if DIST_DIR.exists():

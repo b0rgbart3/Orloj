@@ -14,7 +14,7 @@ import {
   sunHandRotationDegrees,
   sunsetCivilHour,
 } from './rotations'
-import type { PragueTime } from './usePragueTime'
+import type { PragueDateParts, PragueTime } from './usePragueTime'
 
 const MS_PER_DAY = 86400000
 
@@ -170,4 +170,21 @@ export function explainClock(pragueTime: PragueTime): ClockExplanation {
     moonPhase: moonPhaseName(phaseDeg),
     moonIllumination: moonIlluminationPercent(phaseDeg),
   }
+}
+
+/** Plain-text summary of the current dial state, for handing to the chatbot
+ * as live context alongside the user's question -- the same facts the
+ * drawer shows, condensed and without the educational prose. The displayed
+ * moment may be one the visitor has scrubbed to rather than the real
+ * present, so this only describes what the clock currently shows. */
+export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueDateParts): string {
+  const e = explainClock(pragueTime)
+  const pad = (n: number) => n.toString().padStart(2, '0')
+  return [
+    `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} Prague local time.`,
+    `Sun dial: ${zodiacName(e.sunSign)}`,
+    `Moon dial: ${zodiacName(e.moonSign)} -- ${e.moonPhase}, ${e.moonIllumination}% lit`,
+    `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}`,
+    `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}`,
+  ].join('\n')
 }
