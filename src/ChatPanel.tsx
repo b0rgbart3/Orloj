@@ -23,28 +23,173 @@ type ChatPanelProps = {
 // stages with more than one phrase cycle through them while that stage is
 // still in progress, so the status line keeps moving even on a slow step.
 const STAGE_PHRASES: Record<string, string[]> = {
-  digesting: ["digesting the question"],
-  context: ["determining the context"],
-  searching: ["researching the knowledge base", "checking sources"],
-  generating: ["formulating a response", "validating"],
+  digesting: [
+    "divining your question",
+    "unraveling your words",
+    "weighing the question",
+  ],
+  context: [
+    "reading the celestial alignment",
+    "aligning the spheres",
+    "taking the measure of the moment",
+  ],
+  searching: [
+    "consulting the ancient texts",
+    "cross-referencing the stars",
+    "scanning the old manuscripts",
+  ],
+  generating: [
+    "pondering",
+    "contacting the oracle",
+    "divining the answer",
+    "consulting the gears",
+    "charting the answer",
+    "casting the horoscope",
+  ],
 };
 const STAGE_CYCLE_MS = 1800;
 
+const SITE_ORIGIN = "https://orloj.moon-math.online/";
+
+// Topics the chatbot might touch on, mapped to the About/Learn page that
+// covers them in depth. Checked against the user's question as well as the
+// assistant's answer, since the answer doesn't always repeat the keyword
+// the question used.
+const LINK_RULES: Array<{
+  match: RegExp;
+  href: string;
+  label: string;
+  kind: "about-section" | "learn-page";
+}> = [
+  {
+    match: /\bthe real (clock|orloj)\b|\bmikul[aá]š? (of )?kada[nň]\b|\bjan š?indel\b/i,
+    href: `${SITE_ORIGIN}#about/real-clock`,
+    label: "The real clock",
+    kind: "about-section",
+  },
+  {
+    match:
+      /\bhow it works\b|\bzodiac ring\b|\bkalendarium\b|\bthree rings\b|\bfour dials\b|\b(roman ring|old bohemian)\b/i,
+    href: `${SITE_ORIGIN}#about/how-it-works`,
+    label: "How it works",
+    kind: "about-section",
+  },
+  {
+    match: /\bthis digital version\b|\bdigital version\b/i,
+    href: `${SITE_ORIGIN}#about/digital-version`,
+    label: "About this digital version",
+    kind: "about-section",
+  },
+  {
+    match: /\bbart dority\b|\bmoon-math\.online\b|\bthe developer\b/i,
+    href: `${SITE_ORIGIN}#about/developer`,
+    label: "About the developer",
+    kind: "about-section",
+  },
+  {
+    match: /\bsidereal (time|day)\b/i,
+    href: `${SITE_ORIGIN}#learn/sidereal-time`,
+    label: "Local Sidereal Time",
+    kind: "learn-page",
+  },
+  {
+    match:
+      /\bastrological zodiac\b|\bzodiac sign(s)?\b|\b(aries|taurus|gemini|cancer|leo|virgo|libra|scorpio|sagittarius|capricorn|aquarius|pisces)\b/i,
+    href: `${SITE_ORIGIN}#learn/astrological-zodiac`,
+    label: "The Astrological Zodiac",
+    kind: "learn-page",
+  },
+];
+const MAX_LEARN_MORE_LINKS = 2;
+
+// Builds a short "learn more" footer out of whichever About/Learn pages the
+// conversation touched on, so visitors get pointed at the deeper material
+// instead of it staying buried in the About page.
+function buildLearnMoreFooter(question: string, answer: string): string {
+  const haystack = `${question}\n${answer}`;
+  const seen = new Set<string>();
+  const lines: string[] = [];
+
+  for (const rule of LINK_RULES) {
+    if (lines.length >= MAX_LEARN_MORE_LINKS) break;
+    if (seen.has(rule.href) || !rule.match.test(haystack)) continue;
+    seen.add(rule.href);
+    const link = `[${rule.label}](${rule.href})`;
+    const where =
+      rule.kind === "about-section"
+        ? `the ${link} section of the About page`
+        : `the ${link} page`;
+    lines.push(
+      lines.length === 0
+        ? `To learn more, visit ${where}.`
+        : `Or learn more about ${where}.`,
+    );
+  }
+
+  return lines.length ? `\n\n${lines.join("\n")}` : "";
+}
+
+// Picks a random phrase other than the one currently showing, so repeated
+// cycles within a long stage don't keep landing on the same line.
+function pickNextIndex(phraseCount: number, currentIndex: number) {
+  if (phraseCount < 2) return 0;
+  let next = Math.floor(Math.random() * phraseCount);
+  while (next === currentIndex) {
+    next = Math.floor(Math.random() * phraseCount);
+  }
+  return next;
+}
+
 function ThinkingStatus({ stage }: { stage: string | null }) {
   const phrases = (stage && STAGE_PHRASES[stage]) || ["thinking"];
-  const [index, setIndex] = useState(0);
+  // `gen` bumps on every pick (even if `index` lands on a repeat across a
+  // stage change) so the key below always changes, forcing the entrance
+  // animation to replay instead of silently patching the text in place.
+  const [pick, setPick] = useState(() => ({
+    index: Math.floor(Math.random() * phrases.length),
+    gen: 0,
+  }));
 
   useEffect(() => {
-    setIndex(0);
+    setPick((p) => ({
+      index: Math.floor(Math.random() * phrases.length),
+      gen: p.gen + 1,
+    }));
     if (phrases.length < 2) return;
     const id = setInterval(() => {
-      setIndex((i) => (i + 1) % phrases.length);
+      setPick((p) => ({
+        index: pickNextIndex(phrases.length, p.index),
+        gen: p.gen + 1,
+      }));
     }, STAGE_CYCLE_MS);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- phrases is derived from stage
   }, [stage]);
 
-  return <span className="chat-thinking-status">{phrases[index]}</span>;
+  return (
+    <span className="chat-thinking-status">
+      <span key={pick.gen} className="chat-thinking-phrase">
+        {phrases[pick.index]}
+      </span>
+    </span>
+  );
+}
+
+function ArmillarySphere() {
+  return (
+    <div className="chat-armillary" aria-hidden="true">
+      <div className="chat-armillary-axis chat-armillary-axis--1">
+        <div className="chat-armillary-ring" />
+      </div>
+      <div className="chat-armillary-axis chat-armillary-axis--2">
+        <div className="chat-armillary-ring" />
+      </div>
+      <div className="chat-armillary-axis chat-armillary-axis--3">
+        <div className="chat-armillary-ring" />
+      </div>
+      <div className="chat-armillary-core" />
+    </div>
+  );
 }
 
 function ThinkingDots() {
@@ -69,6 +214,8 @@ export function ChatPanel({
   const [stage, setStage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pendingTokensRef = useRef("");
+  const isDrainingRef = useRef(false);
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
@@ -84,6 +231,32 @@ export function ChatPanel({
     requestAnimationFrame(() => {
       scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
     });
+  }
+
+  // Streamed tokens are buffered here instead of rendered immediately so
+  // that paragraph breaks ("\n\n") can introduce a brief reading pause --
+  // otherwise the full answer flows out at network speed with no rhythm.
+  const PARAGRAPH_PAUSE_MS = 1000;
+
+  async function drainPendingTokens() {
+    if (isDrainingRef.current) return;
+    isDrainingRef.current = true;
+    while (pendingTokensRef.current.length > 0) {
+      const buffer = pendingTokensRef.current;
+      const breakIndex = buffer.indexOf("\n\n");
+      if (breakIndex === -1) {
+        pendingTokensRef.current = "";
+        appendToLastAssistantMessage(buffer);
+        break;
+      }
+      const chunk = buffer.slice(0, breakIndex + 2);
+      pendingTokensRef.current = buffer.slice(breakIndex + 2);
+      appendToLastAssistantMessage(chunk);
+      await new Promise((resolve) =>
+        setTimeout(resolve, PARAGRAPH_PAUSE_MS),
+      );
+    }
+    isDrainingRef.current = false;
   }
 
   // Turns bare "https://..." runs within a plain-text segment into real
@@ -124,7 +297,9 @@ export function ChatPanel({
   }
 
   function renderInline(text: string, keyPrefix: string): ReactNode[] {
-    const parts = text.split(/(\{\{swatch:[a-zA-Z]+\}\}|\*\*[^*]+\*\*)/g);
+    const parts = text.split(
+      /(\{\{swatch:[a-zA-Z]+\}\}|\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g,
+    );
     return parts.flatMap((part, index): ReactNode[] => {
       const swatchMatch = part.match(/^\{\{swatch:([a-zA-Z]+)\}\}$/);
       if (swatchMatch) {
@@ -135,6 +310,20 @@ export function ChatPanel({
             style={{ background: swatchMatch[1] }}
             aria-hidden="true"
           />,
+        ];
+      }
+      const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (linkMatch) {
+        return [
+          <a
+            key={`${keyPrefix}-${index}`}
+            className="chat-link"
+            href={linkMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {linkMatch[1]}
+          </a>,
         ];
       }
       const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
@@ -167,6 +356,13 @@ export function ChatPanel({
       }
     });
     return nodes;
+  }
+
+  function handleClose() {
+    pendingTokensRef.current = "";
+    setMessages([]);
+    setInput("");
+    onToggle();
   }
 
   function replaceLastAssistantMessage(content: string) {
@@ -223,8 +419,16 @@ export function ChatPanel({
           if (event.type === "stage") {
             setStage(event.stage);
           } else if (event.type === "token") {
-            appendToLastAssistantMessage(event.content);
+            pendingTokensRef.current += event.content;
+            void drainPendingTokens();
+          } else if (event.type === "done") {
+            const footer = buildLearnMoreFooter(text, event.answer);
+            if (footer) {
+              pendingTokensRef.current += footer;
+              void drainPendingTokens();
+            }
           } else if (event.type === "error") {
+            pendingTokensRef.current = "";
             replaceLastAssistantMessage(
               `Sorry, something went wrong: ${event.message}`,
             );
@@ -248,14 +452,17 @@ export function ChatPanel({
     >
       {open && (
         <>
-          <button
-            className="chat-panel-close"
-            onClick={onToggle}
-            aria-label="Close chat"
-          >
-            <span />
-            <span />
-          </button>
+          <div className="chat-panel-header">
+            <span className="chat-panel-title">Ask the Orloj Expert:</span>
+            <button
+              className="chat-panel-close"
+              onClick={handleClose}
+              aria-label="Close chat"
+            >
+              <span />
+              <span />
+            </button>
+          </div>
           <div className="chat-panel-scroll" ref={scrollRef}>
             <div className="chat-panel-intro">
               <div className="chat-panel-avatar-wrap">
@@ -287,7 +494,12 @@ export function ChatPanel({
                   key={index}
                   className={`chat-message-wrap chat-message-wrap--${message.role}`}
                 >
-                  {isPending && <ThinkingStatus stage={stage} />}
+                  {isPending && (
+                    <div className="chat-thinking-row">
+                      <ArmillarySphere />
+                      <ThinkingStatus stage={stage} />
+                    </div>
+                  )}
                   <div className={`chat-message chat-message--${message.role}`}>
                     {message.content ? (
                       renderContent(message.content)
