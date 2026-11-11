@@ -14,14 +14,18 @@ type DrawerProps = {
   dateParts: PragueDateParts
 }
 
-const NAV_ITEMS: { page: Page; label: string; indent?: boolean }[] = [
-  { page: 'home', label: 'home' },
+type NavItem = { page: Page; label: string; indent?: boolean } | { label: string }
+
+const NAV_ITEMS: NavItem[] = [
+  { page: 'home', label: 'prazsky orloj' },
   { page: 'about', label: 'about' },
   { page: 'about/real-clock', label: 'the real clock', indent: true },
   { page: 'about/how-it-works', label: 'how it works', indent: true },
   { page: 'about/digital-version', label: 'about this digital version', indent: true },
   { page: 'about/developer', label: 'about the developer', indent: true },
-  { page: 'learn/sidereal-time', label: 'sidereal time' },
+  { label: 'learn more' },
+  { page: 'learn/sidereal-time', label: 'sidereal time', indent: true },
+  { page: 'learn/astrological-zodiac', label: 'astrological zodiac', indent: true },
 ]
 
 export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigate, pragueTime, dateParts }: DrawerProps) {
@@ -70,18 +74,22 @@ export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigat
         <div className="drawer-menu" onClick={(e) => e.stopPropagation()}>
           <ul className="drawer-nav">
             {NAV_ITEMS.map((item) => (
-              <li key={item.page}>
-                <button
-                  className={[
-                    item.page === page ? 'drawer-nav-active' : '',
-                    item.indent ? 'drawer-nav-sub' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={() => onNavigate(item.page)}
-                >
-                  {item.label}
-                </button>
+              <li key={item.label}>
+                {'page' in item ? (
+                  <button
+                    className={[
+                      item.page === page ? 'drawer-nav-active' : '',
+                      item.indent ? 'drawer-nav-sub' : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => onNavigate(item.page)}
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <span className="drawer-nav-header">{item.label}</span>
+                )}
               </li>
             ))}
           </ul>

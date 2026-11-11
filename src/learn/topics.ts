@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { AstrologicalZodiac } from "./AstrologicalZodiac";
 import { SiderealTime } from "./SiderealTime";
 
 export type DeepDiveTopic = {
@@ -18,5 +19,11 @@ export const DEEP_DIVE_TOPICS: Record<string, DeepDiveTopic> = {
     title: "What is Local Sidereal Time, and why does the Pražský Orloj keep track of it?",
     dek: "A four-minute-a-day gap between the sun's clock and the stars' — and the reason a 15th-century clockmaker thought it was worth building into gears.",
     Content: SiderealTime,
+  },
+  "astrological-zodiac": {
+    slug: "astrological-zodiac",
+    title: "The Astrological Zodiac",
+    dek: "The twelve signs circling the Orloj's dial, with their glyphs, elements, classical rulers, and traditional date ranges.",
+    Content: AstrologicalZodiac,
   },
 };

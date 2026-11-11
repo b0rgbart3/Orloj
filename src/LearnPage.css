@@ -103,3 +103,47 @@
     margin-right: auto;
   }
 }
+
+.zodiac-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.zodiac-list-item {
+  padding: 0.9rem 1.1rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  border-radius: 10px;
+}
+
+.zodiac-list-item p {
+  margin: 0;
+}
+
+.zodiac-list-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.35rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.zodiac-list-symbol {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.zodiac-list-dates {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: rgba(26, 26, 26, 0.6);
+  white-space: nowrap;
+}

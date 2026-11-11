@@ -66,12 +66,24 @@ applied to each of `sunHandRotationDegrees`, `moonHandRotationDegrees`, and `sid
 
 ## Tech stack
 
+### Frontend
+
 - **[React](https://react.dev/) 19 + [TypeScript](https://www.typescriptlang.org/)** — the whole app is a handful of function components and hooks; no routing, no state management library (plain `useState`/`useEffect` is enough so far).
 - **[Vite](https://vite.dev/)** — dev server + build tooling. Client-only (no SSR needed for this kind of app).
-- **Plain CSS** (`src/index.css`, `src/clock/ClockFace.css`) — no CSS framework or CSS-in-JS; layout is a handful of `position: absolute` layers plus flexbox centering.
+- **Plain CSS** (`src/index.css`, `src/clock/ClockFace.css`, `src/ChatPanel.css`) — no CSS framework or CSS-in-JS; layout is a handful of `position: absolute` layers plus flexbox centering, and the chat panel's entrance/thinking animations are plain CSS `@keyframes`.
 - **[Oxlint](https://oxc.rs/docs/guide/usage/linter)** — linting (`npm run lint`).
 - **[Playwright](https://playwright.dev/)** (dev-time only, not in `package.json`) — used ad hoc via `npx playwright screenshot`/a small script to visually verify changes in a headless browser during development; there's no automated test suite yet.
 - No animation library — rotation is plain CSS `transform: rotate()`, computed each render from live time via React state.
+- The chat panel talks to the backend over the browser `fetch` streaming API (reading the SSE response body directly), no client library for it.
+
+### Backend (`server/`)
+
+- **Python 3 + [FastAPI](https://fastapi.tiangolo.com/)** (`server/main.py`) — serves the chat endpoints (`/api/ask`, `/api/ask/stream`) and, in production, the built frontend from the same process.
+- **[LangGraph](https://langchain-ai.github.io/langgraph/)** (`server/ask_agent.py`) — orchestrates the RAG pipeline as an explicit state graph rather than a single hand-rolled function; see "Orloj expert chatbot" below for the node-by-node breakdown.
+- **[LanceDB](https://lancedb.github.io/lancedb/)** (`server/lancedb/`, gitignored) — embedded, file-based vector store for the retrieved reference passages; no separate database service to run.
+- **[sentence-transformers](https://www.sbert.net/)**, model `BAAI/bge-small-en-v1.5` — generates the embeddings used for retrieval.
+- **[Ollama](https://ollama.com/)** (local, default) or **[OpenRouter](https://openrouter.ai/)** (hosted) — the LLM backend, switchable via the `LLM_BACKEND` env var; the OpenAI Python SDK is used as a thin client against whichever one is active, since both expose OpenAI-compatible APIs.
+- **[uvicorn](https://www.uvicorn.org/)** — ASGI server; `server/start.sh` is what PM2 runs on the deployed box.
 
 ## Project structure
 
@@ -94,7 +106,7 @@ applied to each of `sunHandRotationDegrees`, `moonHandRotationDegrees`, and `sid
 
 ## Orloj expert chatbot (RAG backend)
 
-A Python backend (`server/`) powers a chat panel ("Ask the orloj expert") that answers questions about the Prague Orloj's history, mechanics, and astronomy, grounded in a small library of source PDFs via retrieval-augmented generation.
+A Python backend (`server/`) powers a chat panel that answers questions about the Prague Orloj's history, mechanics, and astronomy, grounded in a small library of source PDFs via retrieval-augmented generation — speaking in character as the ghost of Jan Šindel (see "Persona" below).
 
 - **FastAPI** (`server/main.py`) — serves the chat API, and in production also serves the built frontend from the same process.
 - **LangGraph** (`server/ask_agent.py`) — a 4-node agent: rewrite query → embed query → search LanceDB → generate a grounded answer.
@@ -104,6 +116,32 @@ A Python backend (`server/`) powers a chat panel ("Ask the orloj expert") that a
 - **`server/pdf_injest.py`** — a standalone CLI script that chunks and embeds the PDFs in `server/documents/` into LanceDB. Never run by the API itself — re-run it manually whenever PDFs are added.
 - **`server/dev_cli.py`** — a throwaway CLI for exercising the agent directly (`python dev_cli.py "<question>"`), no web server needed.
 - **`server/start.sh`** — the production launch script (activates the venv, runs `uvicorn`); what PM2 runs on the deployed box.
+
+### Persona: the ghost of Jan Šindel
+
+The chatbot doesn't speak as a generic "AI assistant" — it's written to be Jan Šindel, the real 15th-century mathematician and astronomer who worked with clockmaker Mikuláš of Kadaň to design the Orloj's astronomical dial in 1410, speaking now as an AI reincarnation inhabiting this digital recreation of the clock he helped design. The idea was to let the chatbot be part of the same story the clock itself tells, rather than bolting a generic docent character onto it.
+
+This is entirely a system-prompt-level decision (`SYSTEM_PROMPT` in `server/ask_agent.py`), not a separate feature:
+
+- The model is instructed to speak in first person whenever its own role, Mikuláš of Kadaň, or the real clock's original design/history comes up ("I collaborated with...", "we built...") — never describing Jan Šindel in the third person.
+- A literal "who are you?" / "what are you?" question gets a fixed, exact two-paragraph introduction (Jan Šindel's identity and purpose, then a hand-off crediting Bart Dority for the digital version) — deliberately scoped so it only fires on genuine self-identity questions, not on ordinary history questions that happen to mention Jan Šindel (e.g. "tell me about Jan Sindel" is answered as regular retrieved history, in first person, without the canned intro).
+- The existing "real clock vs. this digital version" labeled-answer logic (for questions like "who built this?", where the two genuinely differ) keeps the persona's first-person voice in the "real clock" paragraph and hands off cleanly to Bart Dority's bio in the "digital version" paragraph — so the persona never claims credit for the website itself.
+- The chat UI reinforces it outside the prompt too: `ChatPanel.tsx` shows Jan Šindel's portrait (`src/assets/jan_sindel.jpg`) captioned "Jan Sindel, mathematician" above the conversation, and the input placeholder reads "Ask Jan about the Orloj....".
+
+### Live pipeline status (SSE stage events)
+
+A naive RAG chatbot shows one spinner from the moment you hit send until the full answer appears — often several seconds of dead air, since query rewriting, a vector search, and the LLM's time-to-first-token all take real time. That silence reads as "is this stuck?" rather than "this is thinking." Instead, the pipeline narrates its own progress to the UI as it actually happens, so the wait feels like watching real work rather than staring at a black box:
+
+- `stream_agent_response` (`server/ask_agent.py`) runs the same four LangGraph nodes as the non-streaming path (`rewrite_query` → `embed_query` → `vector_search` → `llm_answer`), but emits a Server-Sent `stage` event over the still-open HTTP response *before* each node runs: `digesting` (rewriting the question) → `context` (embedding it) → `searching` (the LanceDB vector search — this event also carries the retrieved source titles) → `generating` (handed off to the LLM).
+- Once generation starts, the LLM completion itself streams (`stream=True`) through a background worker thread writing into a `queue.Queue`, rather than blocking the generator — so the SSE response forwards each `token` event to the browser the instant it's produced, instead of buffering the whole answer and sending it as one chunk at the end.
+- On the frontend, `ChatPanel.tsx` keeps the current stage name in state and maps it through `STAGE_PHRASES` — a lookup from stage to one or more visitor-facing phrases (e.g. `searching` → "researching the knowledge base" / "checking sources"). Stages with more than one phrase cycle through them on a timer for as long as the backend is still in that stage, so the status line keeps visibly moving even if one step runs long, rather than freezing on a single phrase.
+- The status line and the animated three-dot indicator are deliberately two separate pieces of UI, rendered independently (see below): the phrase says *what* the pipeline is doing right now, the dots are just a constant "still alive" heartbeat that doesn't depend on the stage at all.
+
+### Chat UI (`src/ChatPanel.tsx`)
+
+- The status phrase renders in italics on its own line above the reply bubble, while the three-dot indicator renders inside the bubble itself — split into two components (`ThinkingStatus`, `ThinkingDots`) so each can update independently, rather than being one combined "thinking" widget.
+- Lightweight inline formatting, handled client-side rather than full markdown: `{{swatch:colorname}}` tokens render as small color dots (used for hand/ring colors), `**bold**` runs become inline bold or, when a whole line is just a bold span, a standalone section label (used by the real-clock/digital-version split), and bare `https://` URLs are auto-linked.
+- The avatar, caption, and intro line stay pinned at the top of the scrollable conversation rather than disappearing once a question is asked — replies are appended underneath, and the panel scrolls as the conversation grows.
 
 ### Running the backend locally
 
