@@ -11,7 +11,7 @@ export type Page = "home" | "about" | `about/${string}` | `learn/${string}`;
  * isn't a registered route doesn't get reinterpreted as "go home". */
 function matchPage(hash: string): Page | null {
   const path = hash.replace(/^#\/?/, "");
-  if (path === "") return "home";
+  if (path === "" || path === "home") return "home";
   if (path === "about") return "about";
   if (path.startsWith("about/") && path.length > "about/".length) return path as Page;
   if (path.startsWith("learn/") && path.length > "learn/".length) return path as Page;

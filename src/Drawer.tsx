@@ -26,6 +26,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'learn more' },
   { page: 'learn/sidereal-time', label: 'sidereal time', indent: true },
   { page: 'learn/astrological-zodiac', label: 'astrological zodiac', indent: true },
+  { page: 'learn/the-geometry', label: 'the geometry', indent: true },
+  { page: 'learn/about-astrolabes', label: 'about astrolabes', indent: true },
 ]
 
 export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigate, pragueTime, dateParts }: DrawerProps) {

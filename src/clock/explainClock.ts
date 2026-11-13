@@ -14,7 +14,7 @@ import {
   sunHandRotationDegrees,
   sunsetCivilHour,
 } from './rotations'
-import type { PragueDateParts, PragueTime } from './usePragueTime'
+import { getPragueDateParts, type PragueDateParts, type PragueTime } from './usePragueTime'
 
 const MS_PER_DAY = 86400000
 
@@ -49,15 +49,47 @@ export function moonIlluminationPercent(phaseDeg: number): number {
   return Math.round(((1 - Math.cos((phaseDeg * Math.PI) / 180)) / 2) * 100)
 }
 
+/** The most recent sunset at or before `pragueTime`, and the next one after
+ * it -- today's sunset if it hasn't happened yet, otherwise tomorrow's;
+ * yesterday's if today's hasn't happened yet, otherwise today's. Both the
+ * outer ring's hour count and the chatbot's live context are built from
+ * this same pair, so "hours since sunset" and "when is sunset" never
+ * disagree. */
+export function sunsetWindow(pragueTime: PragueTime): {
+  previous: { date: Date; civilHour: number }
+  next: { date: Date; civilHour: number }
+} {
+  const currentCivilHour = pragueTime.hours + pragueTime.minutes / 60 + pragueTime.seconds / 3600
+  const todaySunset = sunsetCivilHour(pragueTime.date)
+  if (currentCivilHour >= todaySunset) {
+    const tomorrow = new Date(pragueTime.date.getTime() + MS_PER_DAY)
+    return {
+      previous: { date: pragueTime.date, civilHour: todaySunset },
+      next: { date: tomorrow, civilHour: sunsetCivilHour(tomorrow) },
+    }
+  }
+  const yesterday = new Date(pragueTime.date.getTime() - MS_PER_DAY)
+  return {
+    previous: { date: yesterday, civilHour: sunsetCivilHour(yesterday) },
+    next: { date: pragueTime.date, civilHour: todaySunset },
+  }
+}
+
+/** Formats a fractional civil hour (e.g. 16.05) as "HH:MM". */
+function formatCivilHour(civilHour: number): string {
+  const totalMinutes = Math.round(civilHour * 60)
+  const h = Math.floor(totalMinutes / 60) % 24
+  const m = totalMinutes % 60
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
+}
+
 /** The old Bohemian/Italian hour (1-24, counting up from the most recent
  * sunset) that the outer numeric ring currently reads under the hand. */
 export function outerRingHour(pragueTime: PragueTime): number {
   const currentCivilHour = pragueTime.hours + pragueTime.minutes / 60 + pragueTime.seconds / 3600
-  const sunsetToday = sunsetCivilHour(pragueTime.date)
-  const hoursSinceSunset =
-    currentCivilHour >= sunsetToday
-      ? currentCivilHour - sunsetToday
-      : currentCivilHour - sunsetCivilHour(new Date(pragueTime.date.getTime() - MS_PER_DAY)) + 24
+  const { previous } = sunsetWindow(pragueTime)
+  let hoursSinceSunset = currentCivilHour - previous.civilHour
+  if (hoursSinceSunset < 0) hoursSinceSunset += 24
   const rounded = Math.round(hoursSinceSunset)
   return rounded <= 0 ? 24 : rounded
 }
@@ -191,11 +223,15 @@ function describeHighlight(hand: HandId, winner: HandId): string {
 export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueDateParts): string {
   const e = explainClock(pragueTime)
   const pad = (n: number) => n.toString().padStart(2, '0')
+  const { previous, next } = sunsetWindow(pragueTime)
+  const previousParts = getPragueDateParts(previous.date)
+  const nextParts = getPragueDateParts(next.date)
   return [
     `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} Prague local time.`,
     `Sun dial: ${zodiacName(e.sunSign)} ${zodiacSymbol(e.sunSign)} -- ${describeHighlight('sun', e.sunHighlightHand)}.`,
     `Moon dial: ${zodiacName(e.moonSign)} ${zodiacSymbol(e.moonSign)} -- ${e.moonPhase}, ${e.moonIllumination}% lit -- ${describeHighlight('moon', e.moonHighlightHand)}.`,
     `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}.`,
     `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}.`,
+    `Sunset (computed live for Prague's latitude, not read off the hand): most recent was ${previousParts.month} ${previousParts.day} at ${formatCivilHour(previous.civilHour)} Prague local time -- hour 0 that the outer ring's count of ${e.outerRingHour} is measured from; the next one is ${nextParts.month} ${nextParts.day} at ${formatCivilHour(next.civilHour)}.`,
   ].join('\n')
 }

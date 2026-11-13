@@ -47,7 +47,11 @@ body {
 }
 
 body {
-  background: #808080;
+  background: #777777;
+  /* background-image: url('assets/stone.jpg');
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat; */
 }
 
 #root {

@@ -1,5 +1,7 @@
 import type { ComponentType } from "react";
+import { AboutAstrolabes } from "./AboutAstrolabes";
 import { AstrologicalZodiac } from "./AstrologicalZodiac";
+import { Geometry } from "./Geometry";
 import { SiderealTime } from "./SiderealTime";
 
 export type DeepDiveTopic = {
@@ -25,5 +27,17 @@ export const DEEP_DIVE_TOPICS: Record<string, DeepDiveTopic> = {
     title: "The Astrological Zodiac",
     dek: "The twelve signs circling the Orloj's dial, with their glyphs, elements, classical rulers, and traditional date ranges.",
     Content: AstrologicalZodiac,
+  },
+  "the-geometry": {
+    slug: "the-geometry",
+    title: "The Geometry",
+    dek: "How a flat stereographic projection of the Prague sky lets one Sun hand read four time systems off four different rings at once.",
+    Content: Geometry,
+  },
+  "about-astrolabes": {
+    slug: "about-astrolabes",
+    title: "About Astrolabes",
+    dek: "The parts of a planispheric astrolabe, and how the instrument traveled from ancient Greece through the Islamic Golden Age to Renaissance Europe and the open sea.",
+    Content: AboutAstrolabes,
   },
 };

@@ -147,3 +147,29 @@
   color: rgba(26, 26, 26, 0.6);
   white-space: nowrap;
 }
+
+.term-list {
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.term-list-item {
+  padding: 0.9rem 1.1rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  border-radius: 10px;
+}
+
+.term-list-term {
+  margin: 0 0 0.35rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.term-list-description {
+  margin: 0;
+}
