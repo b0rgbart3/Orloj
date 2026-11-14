@@ -1,12 +1,15 @@
 import { ClockLayer } from './ClockLayer'
 import { GradientClockLayer } from './GradientClockLayer'
+import { HorizonPlateLayer } from './HorizonPlateLayer'
+import type { Location } from './location'
 import {
   moonHandRotationDegrees,
   numericRingRotationDegrees,
   siderealRotationDegrees,
   sunHandRotationDegrees,
 } from './rotations'
-import { SunDialLayer } from './SunDialLayer'
+import { SunGlyphLayer } from './SunGlyphLayer'
+import { useOnlyLayerDebug } from './useOnlyLayerDebug'
 import type { PragueTime } from './usePragueTime'
 import { ZodiacHouseLayer } from './ZodiacHouseLayer'
 import './ClockFace.css'
@@ -25,6 +28,9 @@ type Layer =
 // GradientClockLayer), keeping it visually vertical once these layers
 // start rotating.
 const LAYERS: Layer[] = [
+  // background's `kind`/`src` here are nominal -- ClockFace special-cases
+  // its id to render via HorizonPlateLayer instead (see below), a
+  // generated astrolabe plate rather than a static file.
   { id: 'background', kind: 'image', src: '/clock/background.svg' },
   {
     id: 'gold-trim',
@@ -61,19 +67,24 @@ const LAYERS: Layer[] = [
     gradientId: 'numericGoldGradient',
     filter: DROP_SHADOW,
   },
-  // sun-dial's `kind: 'image'` here is nominal -- ClockFace special-cases
-  // its id to render via SunDialLayer instead (see below), since the sun
-  // glyph needs to be inlined and repositioned at runtime.
+  // sun-dial is the pointer arm/corona artwork only -- fully static, so it
+  // renders through the plain <img> path like moon-dial/star-dial below.
   { id: 'sun-dial', kind: 'image', src: '/clock/sun_dial.svg', filter: DROP_SHADOW },
+  // sun-glyph's `kind: 'image'` here is nominal -- ClockFace special-cases
+  // its id to render via SunGlyphLayer instead (see below), since the glyph
+  // needs to be inlined and repositioned at runtime as it rides the zodiac
+  // ring's eccentric circle over the year.
+  { id: 'sun-glyph', kind: 'image', src: '/clock/sun_glyph.svg', filter: DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
   { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
 ]
 
 // Layers whose rotation is computed live from Prague time, rather than
 // fixed in the layer config above.
-function liveRotation(id: string, pragueTime: PragueTime): number | undefined {
+function liveRotation(id: string, pragueTime: PragueTime, location: Location): number | undefined {
   switch (id) {
     case 'sun-dial':
+    case 'sun-glyph':
       return sunHandRotationDegrees(pragueTime)
     case 'moon-dial':
       return moonHandRotationDegrees(pragueTime)
@@ -81,19 +92,27 @@ function liveRotation(id: string, pragueTime: PragueTime): number | undefined {
     // motion (Earth relative to the fixed stars), same spindle.
     case 'zodiac-ring':
     case 'star-dial':
-      return siderealRotationDegrees(pragueTime)
+      return siderealRotationDegrees(pragueTime, location)
     case 'numeric-ring':
-      return numericRingRotationDegrees(pragueTime.date)
+      return numericRingRotationDegrees(pragueTime.date, location)
     default:
       return undefined
   }
 }
 
-export function ClockFace({ pragueTime }: { pragueTime: PragueTime }) {
+const LAYER_IDS = LAYERS.map((layer) => layer.id)
+
+export function ClockFace({ pragueTime, location }: { pragueTime: PragueTime; location: Location }) {
+  const onlyLayer = useOnlyLayerDebug(LAYER_IDS)
+  const visibleLayers = onlyLayer ? LAYERS.filter((layer) => layer.id === onlyLayer) : LAYERS
+
   return (
     <div className="clock-stage">
-      {LAYERS.map((layer) => {
-        const rotation = liveRotation(layer.id, pragueTime) ?? layer.rotation
+      {visibleLayers.map((layer) => {
+        const rotation = liveRotation(layer.id, pragueTime, location) ?? layer.rotation
+        if (layer.id === 'background') {
+          return <HorizonPlateLayer key={layer.id} location={location} />
+        }
         if (layer.id === 'zodiac-ring' && layer.kind === 'gradient') {
           return (
             <ZodiacHouseLayer
@@ -107,15 +126,15 @@ export function ClockFace({ pragueTime }: { pragueTime: PragueTime }) {
             />
           )
         }
-        if (layer.id === 'sun-dial') {
+        if (layer.id === 'sun-glyph') {
           return (
-            <SunDialLayer
+            <SunGlyphLayer
               key={layer.id}
               src={layer.src}
               rotation={rotation}
               filter={layer.filter}
               pragueTime={pragueTime}
-              ringRotation={siderealRotationDegrees(pragueTime)}
+              ringRotation={siderealRotationDegrees(pragueTime, location)}
             />
           )
         }

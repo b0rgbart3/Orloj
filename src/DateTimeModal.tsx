@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Location } from "./clock/location";
 import {
   getPragueDateTimeInputValues,
   pragueWallTimeToUtc,
@@ -8,11 +9,13 @@ import "./DateTimeModal.css";
 export function DateTimeModal({
   open,
   initialDate,
+  location,
   onClose,
   onConfirm,
 }: {
   open: boolean;
   initialDate: Date;
+  location: Location;
   onClose: () => void;
   onConfirm: (date: Date) => void;
 }) {
@@ -22,12 +25,13 @@ export function DateTimeModal({
 
   useEffect(() => {
     if (!open) return;
-    const values = getPragueDateTimeInputValues(initialDate);
+    const values = getPragueDateTimeInputValues(initialDate, location);
     setDateValue(values.date);
     setTimeValue(values.time);
     dateInputRef.current?.focus();
-    // initialDate intentionally excluded: it ticks every second while the
-    // clock runs, and re-syncing on every tick would fight the user's typing.
+    // initialDate/location intentionally excluded: initialDate ticks every
+    // second while the clock runs, and re-syncing on every tick would fight
+    // the user's typing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -49,7 +53,7 @@ export function DateTimeModal({
     if (!year || !month || !day || Number.isNaN(hour) || Number.isNaN(minute)) {
       return;
     }
-    onConfirm(pragueWallTimeToUtc({ year, month, day, hour, minute }));
+    onConfirm(pragueWallTimeToUtc({ year, month, day, hour, minute }, location));
     onClose();
   }
 

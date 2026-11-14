@@ -123,6 +123,60 @@
   }
 }
 
+.about-page-background-plate {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+  align-items: start;
+}
+
+.about-page-background-plate-copy {
+  min-width: 0;
+}
+
+.about-page-background-plate-copy p {
+  margin: 0 0 0.75rem;
+}
+
+.about-page-background-plate-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.about-page-background-plate-terms {
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.about-page-background-plate-terms dt {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.about-page-background-plate-terms dd {
+  margin: 0;
+}
+
+.about-page-background-plate-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  justify-self: center;
+  max-width: 420px;
+}
+
+@media (min-width: 1100px) {
+  .about-page-background-plate {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 3rem;
+  }
+}
+
 .about-page-diagram-copy {
   flex: 1 1 auto;
   min-width: 0;

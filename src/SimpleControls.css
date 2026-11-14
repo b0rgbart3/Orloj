@@ -3,7 +3,7 @@
   align-items: stretch;
   gap: 0;
   font-family: Helvetica, Arial, sans-serif;
-  background: #949494;
+  background: var(--control-bg);
   border: 2px solid #4d4d4d;
   border-radius: 999px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);

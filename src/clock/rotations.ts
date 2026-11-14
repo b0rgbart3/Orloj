@@ -1,3 +1,5 @@
+import type { Location } from './location'
+import { daylightHalfHourAngleDeg, solarDeclinationDeg, utcOffsetHours } from './solarPosition'
 import type { PragueTime } from './usePragueTime'
 
 /**
@@ -13,10 +15,6 @@ export function sunHandRotationDegrees({ hours, minutes, seconds }: PragueTime):
   const fractionalHour = hours + minutes / 60 + seconds / 3600
   return fractionalHour * 15
 }
-
-// Prague's geographic longitude — needed to convert Greenwich Sidereal Time
-// into Local Sidereal Time.
-const PRAGUE_LONGITUDE_DEG = 14.4378
 
 function toJulianDate(date: Date): number {
   return date.getTime() / 86400000 + 2440587.5
@@ -35,7 +33,7 @@ export function normalizeDegrees(degrees: number): number {
  * shorter than the 24h solar day), so the zodiac ring and the star arm
  * slowly drift relative to the Sun arm exactly as they should.
  */
-export function localSiderealTimeDegrees(date: Date): number {
+export function localSiderealTimeDegrees(date: Date, location: Location): number {
   const jd = toJulianDate(date)
   const centuriesSinceJ2000 = (jd - 2451545.0) / 36525
   const gmst =
@@ -43,7 +41,7 @@ export function localSiderealTimeDegrees(date: Date): number {
     360.98564736629 * (jd - 2451545.0) +
     0.000387933 * centuriesSinceJ2000 ** 2 -
     centuriesSinceJ2000 ** 3 / 38710000
-  return normalizeDegrees(normalizeDegrees(gmst) + PRAGUE_LONGITUDE_DEG)
+  return normalizeDegrees(normalizeDegrees(gmst) + location.longitudeDeg)
 }
 
 /**
@@ -51,8 +49,8 @@ export function localSiderealTimeDegrees(date: Date): number {
  * the same physical sidereal rotation, so they share this one value. The
  * artwork's unrotated baseline (pointing down) is defined as LST 0h.
  */
-export function siderealRotationDegrees(time: PragueTime): number {
-  return localSiderealTimeDegrees(time.date)
+export function siderealRotationDegrees(time: PragueTime, location: Location): number {
+  return localSiderealTimeDegrees(time.date, location)
 }
 
 // Mean synodic month (new moon to new moon). A known reference new moon,
@@ -88,49 +86,20 @@ export function moonHandRotationDegrees(time: PragueTime): number {
   return normalizeDegrees(sunHandRotationDegrees(time) - lunarPhaseAngleDegrees(time.date))
 }
 
-const PRAGUE_LATITUDE_DEG = 50.0755
-
-function degToRad(deg: number): number {
-  return (deg * Math.PI) / 180
-}
-
-function radToDeg(rad: number): number {
-  return (rad * 180) / Math.PI
-}
-
-function dayOfYearUTC(date: Date): number {
-  const startOfYear = Date.UTC(date.getUTCFullYear(), 0, 1)
-  return Math.floor((date.getTime() - startOfYear) / MS_PER_DAY) + 1
-}
-
-/** Prague's current UTC offset in hours (1 = CET, 2 = CEST), DST-safe. */
-function pragueUtcOffsetHours(date: Date): number {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Europe/Prague',
-    timeZoneName: 'shortOffset',
-  }).formatToParts(date)
-  const offsetName = parts.find((p) => p.type === 'timeZoneName')?.value ?? 'GMT+0'
-  const match = /GMT([+-]\d+)/.exec(offsetName)
-  return match ? Number(match[1]) : 0
-}
-
 /**
- * Sunset time in Prague, as a civil-clock hour (e.g. 20.5 = 20:30), for the
- * given date. Standard sunrise-equation solar declination + hour-angle
- * formula. Ignores the equation of time (a few minutes at most) — the
- * numeric ring moves so slowly over the year that error is imperceptible.
+ * Sunset time at the given location, as a civil-clock hour (e.g. 20.5 =
+ * 20:30), for the given date. Standard sunrise-equation solar declination +
+ * hour-angle formula (the altitude=0° case of solarPosition.ts's general
+ * daylightHalfHourAngleDeg). Ignores the equation of time (a few minutes at
+ * most) — the numeric ring moves so slowly over the year that error is
+ * imperceptible.
  */
-export function sunsetCivilHour(date: Date): number {
-  const dayOfYear = dayOfYearUTC(date)
-  const declinationDeg = -23.44 * Math.cos(degToRad((360 / 365.24) * (dayOfYear + 10)))
-  const cosHourAngle = Math.max(
-    -1,
-    Math.min(1, -Math.tan(degToRad(PRAGUE_LATITUDE_DEG)) * Math.tan(degToRad(declinationDeg))),
-  )
-  const hourAngleDeg = radToDeg(Math.acos(cosHourAngle))
+export function sunsetCivilHour(date: Date, location: Location): number {
+  const declinationDeg = solarDeclinationDeg(date)
+  const hourAngleDeg = daylightHalfHourAngleDeg(declinationDeg, location.latitudeDeg)
   const sunsetApparentSolarHour = 12 + hourAngleDeg / 15
-  const longitudeCorrectionHours = PRAGUE_LONGITUDE_DEG / 15
-  return sunsetApparentSolarHour + (pragueUtcOffsetHours(date) - longitudeCorrectionHours)
+  const longitudeCorrectionHours = location.longitudeDeg / 15
+  return sunsetApparentSolarHour + (utcOffsetHours(date, location.timeZone) - longitudeCorrectionHours)
 }
 
 // Where "24" sits in numeric_ring.svg's unrotated baseline, in this file's
@@ -149,7 +118,7 @@ const NUMERIC_RING_24_BASELINE_DEG = 285
  * sunset's civil-clock hour for today, convert that to the angle the Sun
  * hand will be at then, and rotate the ring so its 24 meets that angle.
  */
-export function numericRingRotationDegrees(date: Date): number {
-  const sunAngleAtSunset = sunsetCivilHour(date) * 15
+export function numericRingRotationDegrees(date: Date, location: Location): number {
+  const sunAngleAtSunset = sunsetCivilHour(date, location) * 15
   return normalizeDegrees(sunAngleAtSunset - NUMERIC_RING_24_BASELINE_DEG)
 }

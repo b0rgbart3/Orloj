@@ -1,10 +1,21 @@
 import { explainClock, HAND_COLOR_NAME, zodiacDateRange, zodiacName, zodiacSymbol } from './clock/explainClock'
+import type { Location } from './clock/location'
 import type { HandId, ZodiacSign } from './clock/zodiacHouses'
 import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import './DrawerClockInfo.css'
 
 function pad(n: number) {
   return n.toString().padStart(2, '0')
+}
+
+function getOrdinalSuffix(n: number): string {
+  if (n % 100 >= 11 && n % 100 <= 13) return 'th'
+  switch (n % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
 }
 
 function ZodiacLabel({ sign }: { sign: ZodiacSign }) {
@@ -42,10 +53,11 @@ function HighlightNote({ hand, winner }: { hand: HandId; winner: HandId }) {
 type DrawerClockInfoProps = {
   pragueTime: PragueTime
   dateParts: PragueDateParts
+  location: Location
 }
 
-export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps) {
-  const e = explainClock(pragueTime)
+export function DrawerClockInfo({ pragueTime, dateParts, location }: DrawerClockInfoProps) {
+  const e = explainClock(pragueTime, location)
 
   return (
     <div className="drawer-info">
@@ -117,7 +129,18 @@ export function DrawerClockInfo({ pragueTime, dateParts }: DrawerClockInfoProps)
           position against the zodiac for today, so anyone born on this day is considered a{' '}
           <strong>{zodiacName(e.sunSign)}</strong>, because the sun is in the house of{' '}
           {zodiacName(e.sunSign)} during the date range{' '}
-          <strong>{zodiacDateRange(e.sunSign)}</strong>.
+          <strong>{zodiacDateRange(e.sunSign)}</strong>. Right now it's also{' '}
+          {e.babylonianHour === 'night' ? (
+            <>
+              <strong>night</strong>, with the sun below the horizon
+            </>
+          ) : (
+            <>
+              the <strong>{e.babylonianHour}{getOrdinalSuffix(e.babylonianHour)} Babylonian hour</strong> —
+              daylight divided into 12 equal, seasonally-stretching hours counted from sunrise
+            </>
+          )}
+          .
         </span>
       </p>
       <div className="drawer-info-row">

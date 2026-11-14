@@ -1,4 +1,5 @@
 import type { Page } from './App'
+import type { Location } from './clock/location'
 import type { PragueDateParts, PragueTime } from './clock/usePragueTime'
 import { DrawerClockInfo } from './DrawerClockInfo'
 import './Drawer.css'
@@ -12,6 +13,7 @@ type DrawerProps = {
   onNavigate: (page: Page) => void
   pragueTime: PragueTime
   dateParts: PragueDateParts
+  location: Location
 }
 
 type NavItem = { page: Page; label: string; indent?: boolean } | { label: string }
@@ -30,7 +32,7 @@ const NAV_ITEMS: NavItem[] = [
   { page: 'learn/about-astrolabes', label: 'about astrolabes', indent: true },
 ]
 
-export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigate, pragueTime, dateParts }: DrawerProps) {
+export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigate, pragueTime, dateParts, location }: DrawerProps) {
   return (
     <>
       <nav
@@ -68,7 +70,7 @@ export function Drawer({ open, onToggle, menuOpen, onToggleMenu, page, onNavigat
         )}
         {open && (
           <div className="drawer-scroll">
-            <DrawerClockInfo pragueTime={pragueTime} dateParts={dateParts} />
+            <DrawerClockInfo pragueTime={pragueTime} dateParts={dateParts} location={location} />
           </div>
         )}
       </nav>

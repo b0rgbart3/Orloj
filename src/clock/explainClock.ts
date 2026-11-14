@@ -14,6 +14,8 @@ import {
   sunHandRotationDegrees,
   sunsetCivilHour,
 } from './rotations'
+import type { Location } from './location'
+import { currentHourAngleDeg, daylightHalfHourAngleDeg, solarDeclinationDeg } from './solarPosition'
 import { getPragueDateParts, type PragueDateParts, type PragueTime } from './usePragueTime'
 
 const MS_PER_DAY = 86400000
@@ -55,22 +57,22 @@ export function moonIlluminationPercent(phaseDeg: number): number {
  * outer ring's hour count and the chatbot's live context are built from
  * this same pair, so "hours since sunset" and "when is sunset" never
  * disagree. */
-export function sunsetWindow(pragueTime: PragueTime): {
+export function sunsetWindow(pragueTime: PragueTime, location: Location): {
   previous: { date: Date; civilHour: number }
   next: { date: Date; civilHour: number }
 } {
   const currentCivilHour = pragueTime.hours + pragueTime.minutes / 60 + pragueTime.seconds / 3600
-  const todaySunset = sunsetCivilHour(pragueTime.date)
+  const todaySunset = sunsetCivilHour(pragueTime.date, location)
   if (currentCivilHour >= todaySunset) {
     const tomorrow = new Date(pragueTime.date.getTime() + MS_PER_DAY)
     return {
       previous: { date: pragueTime.date, civilHour: todaySunset },
-      next: { date: tomorrow, civilHour: sunsetCivilHour(tomorrow) },
+      next: { date: tomorrow, civilHour: sunsetCivilHour(tomorrow, location) },
     }
   }
   const yesterday = new Date(pragueTime.date.getTime() - MS_PER_DAY)
   return {
-    previous: { date: yesterday, civilHour: sunsetCivilHour(yesterday) },
+    previous: { date: yesterday, civilHour: sunsetCivilHour(yesterday, location) },
     next: { date: pragueTime.date, civilHour: todaySunset },
   }
 }
@@ -85,13 +87,27 @@ function formatCivilHour(civilHour: number): string {
 
 /** The old Bohemian/Italian hour (1-24, counting up from the most recent
  * sunset) that the outer numeric ring currently reads under the hand. */
-export function outerRingHour(pragueTime: PragueTime): number {
+export function outerRingHour(pragueTime: PragueTime, location: Location): number {
   const currentCivilHour = pragueTime.hours + pragueTime.minutes / 60 + pragueTime.seconds / 3600
-  const { previous } = sunsetWindow(pragueTime)
+  const { previous } = sunsetWindow(pragueTime, location)
   let hoursSinceSunset = currentCivilHour - previous.civilHour
   if (hoursSinceSunset < 0) hoursSinceSunset += 24
   const rounded = Math.round(hoursSinceSunset)
   return rounded <= 0 ? 24 : rounded
+}
+
+/** The old Babylonian/unequal hour (1-12, counting from sunrise) that the
+ * sun's actual position corresponds to right now, or 'night' if the sun is
+ * below the horizon -- real sun-position math (declination, hour angle,
+ * latitude), the same real daylight window sunsetCivilHour/outerRingHour
+ * are built from, not a visual/pixel-derived reading. */
+export function babylonianHour(pragueTime: PragueTime, location: Location): number | 'night' {
+  const declinationDeg = solarDeclinationDeg(pragueTime.date)
+  const halfDaylightDeg = daylightHalfHourAngleDeg(declinationDeg, location.latitudeDeg)
+  const hourAngleDeg = currentHourAngleDeg(pragueTime, location)
+  if (hourAngleDeg < -halfDaylightDeg || hourAngleDeg > halfDaylightDeg) return 'night'
+  const fractionOfDaylight = (hourAngleDeg + halfDaylightDeg) / (2 * halfDaylightDeg)
+  return Math.min(12, Math.floor(fractionOfDaylight * 12) + 1)
 }
 
 const ZODIAC_SYMBOLS: Record<ZodiacSign, string> = {
@@ -164,6 +180,7 @@ export type ClockExplanation = {
   moonHighlightHand: HandId
   moonPhase: string
   moonIllumination: number
+  babylonianHour: number | 'night'
 }
 
 /** The Roman numeral the star pointer reads off the fixed Roman ring --
@@ -171,16 +188,16 @@ export type ClockExplanation = {
  * baseline convention as the civil-time hand. Unlike the star's position
  * against the (rigidly linked) zodiac ring, this reading actually changes
  * from moment to moment. */
-export function siderealRingNumeral(pragueTime: PragueTime): string {
-  const hourIndex = Math.floor(normalizeDegrees(siderealRotationDegrees(pragueTime)) / 15) % 12
+export function siderealRingNumeral(pragueTime: PragueTime, location: Location): string {
+  const hourIndex = Math.floor(normalizeDegrees(siderealRotationDegrees(pragueTime, location)) / 15) % 12
   return ROMAN_HOUR_NUMERALS[hourIndex]
 }
 
 /** Plain-language description of where every dial on the clock face
  * currently sits, derived from the same angle math that drives the
  * artwork's live rotations. */
-export function explainClock(pragueTime: PragueTime): ClockExplanation {
-  const ringRotation = siderealRotationDegrees(pragueTime)
+export function explainClock(pragueTime: PragueTime, location: Location): ClockExplanation {
+  const ringRotation = siderealRotationDegrees(pragueTime, location)
   const sunAngle = angleInRingFrame(sunHandRotationDegrees(pragueTime), ringRotation)
   const moonAngle = angleInRingFrame(moonHandRotationDegrees(pragueTime), ringRotation)
   const phaseDeg = lunarPhaseAngleDegrees(pragueTime.date)
@@ -193,14 +210,15 @@ export function explainClock(pragueTime: PragueTime): ClockExplanation {
 
   return {
     innerRingNumeral: innerRingNumeral(fractionalHour),
-    outerRingHour: outerRingHour(pragueTime),
-    starRingNumeral: siderealRingNumeral(pragueTime),
+    outerRingHour: outerRingHour(pragueTime, location),
+    starRingNumeral: siderealRingNumeral(pragueTime, location),
     sunSign,
     moonSign,
     sunHighlightHand: COLOR_TO_HAND[highlights.get(sunSign)!],
     moonHighlightHand: COLOR_TO_HAND[highlights.get(moonSign)!],
     moonPhase: moonPhaseName(phaseDeg),
     moonIllumination: moonIlluminationPercent(phaseDeg),
+    babylonianHour: babylonianHour(pragueTime, location),
   }
 }
 
@@ -220,12 +238,12 @@ function describeHighlight(hand: HandId, winner: HandId): string {
  * drawer shows, condensed and without the educational prose. The displayed
  * moment may be one the visitor has scrubbed to rather than the real
  * present, so this only describes what the clock currently shows. */
-export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueDateParts): string {
-  const e = explainClock(pragueTime)
+export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueDateParts, location: Location): string {
+  const e = explainClock(pragueTime, location)
   const pad = (n: number) => n.toString().padStart(2, '0')
-  const { previous, next } = sunsetWindow(pragueTime)
-  const previousParts = getPragueDateParts(previous.date)
-  const nextParts = getPragueDateParts(next.date)
+  const { previous, next } = sunsetWindow(pragueTime, location)
+  const previousParts = getPragueDateParts(previous.date, location)
+  const nextParts = getPragueDateParts(next.date, location)
   return [
     `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} Prague local time.`,
     `Sun dial: ${zodiacName(e.sunSign)} ${zodiacSymbol(e.sunSign)} -- ${describeHighlight('sun', e.sunHighlightHand)}.`,
@@ -233,5 +251,6 @@ export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueD
     `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}.`,
     `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}.`,
     `Sunset (computed live for Prague's latitude, not read off the hand): most recent was ${previousParts.month} ${previousParts.day} at ${formatCivilHour(previous.civilHour)} Prague local time -- hour 0 that the outer ring's count of ${e.outerRingHour} is measured from; the next one is ${nextParts.month} ${nextParts.day} at ${formatCivilHour(next.civilHour)}.`,
+    `Babylonian hour (unequal hour since sunrise, dividing today's daylight into 12 equal parts): ${e.babylonianHour === 'night' ? 'night (the sun is below the horizon)' : e.babylonianHour}.`,
   ].join('\n')
 }

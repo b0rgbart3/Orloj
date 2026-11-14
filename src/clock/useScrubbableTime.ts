@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { Location } from './location'
 import { getPragueTime } from './usePragueTime'
 
 const MONTH_MS = 30.4375 * 24 * 60 * 60 * 1000
@@ -25,7 +26,7 @@ function clamp(value: number, min: number, max: number) {
  * (`speedHoursPerSecond` simulated hours per real second) via
  * requestAnimationFrame, until it reaches the edge of the allowed range.
  */
-export function useScrubbableTime() {
+export function useScrubbableTime(location: Location) {
   const [offsetMs, setOffsetMsState] = useState(0)
   const [realNow, setRealNow] = useState(() => new Date())
   const [isPlaying, setIsPlaying] = useState(false)
@@ -82,7 +83,7 @@ export function useScrubbableTime() {
   }, [isPlaying, speedHoursPerSecond, maxOffsetMs])
 
   const effectiveDate = new Date(anchorDate.getTime() + offsetMs)
-  const pragueTime = getPragueTime(effectiveDate)
+  const pragueTime = getPragueTime(effectiveDate, location)
   const minDate = new Date(anchorDate.getTime() + minOffsetMs)
   const maxDate = new Date(anchorDate.getTime() + maxOffsetMs)
 

@@ -7,7 +7,7 @@ import { angleInRingFrame } from './zodiacHouses'
 
 const SUN_GLYPH_SCALE = 1.1
 
-type SunDialLayerProps = {
+type SunGlyphLayerProps = {
   src: string
   rotation?: number
   filter?: string
@@ -16,11 +16,14 @@ type SunDialLayerProps = {
 }
 
 /**
- * The Sun-dial layer, with its sun glyph (`#sun-glyph`) sliding radially to
- * ride the zodiac ring's eccentric circle over the year, instead of sitting
- * at the artwork's fixed baked-in radius. See sunGlyphRadius.ts.
+ * The Sun glyph (disc + corona), sliding radially to ride the zodiac ring's
+ * eccentric circle over the year, instead of sitting at the artwork's fixed
+ * baked-in radius. See sunGlyphRadius.ts. Decoupled from the pointer-arm
+ * artwork (sun_dial.svg, a plain static layer) so the glyph's own screen
+ * position is independently addressable -- e.g. for checking it against the
+ * background horizon plate.
  */
-export function SunDialLayer({ src, rotation, filter, pragueTime, ringRotation }: SunDialLayerProps) {
+export function SunGlyphLayer({ src, rotation, filter, pragueTime, ringRotation }: SunGlyphLayerProps) {
   const radius = useMemo(() => {
     const ringFrameAngle = angleInRingFrame(sunHandRotationDegrees(pragueTime), ringRotation)
     return sunGlyphRadius(ringFrameAngle)

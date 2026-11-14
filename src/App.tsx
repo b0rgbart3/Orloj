@@ -3,6 +3,7 @@ import { PragueTimeFootnote } from "./PragueTimeFootnote";
 import { AboutPage } from "./AboutPage";
 import { ChatPanel } from "./ChatPanel";
 import { ClockFace } from "./clock/ClockFace";
+import { PRAGUE_LOCATION } from "./clock/location";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
 import { DateTimeModal } from "./DateTimeModal";
@@ -37,6 +38,10 @@ function renderDigits(digits: string) {
 }
 
 function App() {
+  // Hardcoded to Prague for now -- a future location picker will let this
+  // vary, with civil time/timezone, the sunset ring, sidereal time, and the
+  // background plate all switching together (see Location's own comment).
+  const location = PRAGUE_LOCATION;
   const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,8 +65,8 @@ function App() {
     anchorDate,
     minDate,
     maxDate,
-  } = useScrubbableTime();
-  const { day, month, year } = getPragueDateParts(pragueTime.date);
+  } = useScrubbableTime(location);
+  const { day, month, year } = getPragueDateParts(pragueTime.date, location);
 
   return (
     <main
@@ -102,12 +107,14 @@ function App() {
         }}
         pragueTime={pragueTime}
         dateParts={{ day, month, year }}
+        location={location}
       />
       <ChatPanel
         open={chatOpen}
         onToggle={() => setChatOpen(false)}
         pragueTime={pragueTime}
         dateParts={{ day, month, year }}
+        location={location}
       />
       <header className="app-header">
         <div className="app-header-text">
@@ -166,7 +173,7 @@ function App() {
                 setDrawerOpen(true);
               }}
             >
-              What the clock tells us <br className="app-moment-button-break" /> about this moment
+              What the clock shows
             </button>
             <button
               type="button"
@@ -183,7 +190,7 @@ function App() {
       </header>
       {page === "home" ? (
         <>
-          <ClockFace pragueTime={pragueTime} />
+          <ClockFace pragueTime={pragueTime} location={location} />
           <SimpleScrubber
             offsetMs={offsetMs}
             minOffsetMs={minOffsetMs}
@@ -192,10 +199,12 @@ function App() {
             minDate={minDate}
             maxDate={maxDate}
             anchorDate={anchorDate}
+            location={location}
           />
           <DateTimeModal
             open={dateTimeModalOpen}
             initialDate={pragueTime.date}
+            location={location}
             onClose={() => setDateTimeModalOpen(false)}
             onConfirm={setExactDate}
           />

@@ -5,6 +5,9 @@ import facadeCloseup from "./assets/Astronomical_Clock_8341899828.jpg";
 import towerStreetView from "./assets/orloj_prague.jpg";
 import dialDetail from "./assets/prague-orloj-01.jpg";
 import sunsetView from "./assets/73d8d74de8664f17f0c32fb7903844c103d3d6bdee1eebce65622964eca56ffd.avif";
+import "./clock/ClockFace.css";
+import { HorizonPlateLayer } from "./clock/HorizonPlateLayer";
+import { PRAGUE_LOCATION } from "./clock/location";
 
 const GALLERY_IMAGES = [
   {
@@ -354,6 +357,70 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           sidereal time itself, shown as a Roman numeral in the info drawer
           instead.
         </p>
+
+        <h3>The background plate</h3>
+        <div className="about-page-background-plate">
+          <div className="about-page-background-plate-copy">
+            <p>
+              Behind the zodiac ring sits a fixed plate — the astrolabe
+              tympan the whole clock is built on. Unlike every ring and hand
+              layered above it, this plate never turns: it's cut for one
+              specific latitude (Prague's, a little over 50°N) and stays
+              locked in place while the rest of the mechanism sweeps across
+              it once a day. Its curved bands mark where the sun sits
+              relative to the horizon — blue for daylight, orange for
+              twilight, dark blue for true night — and eleven gold curves
+              divide the daylight band into the twelve Babylonian hours: the
+              old unequal-hour system that splits whatever daylight a given
+              day actually has, long or short, into twelve equal parts,
+              numbered 1 to 12 from sunrise to sunset.
+            </p>
+            <p>
+              Four Latin words are inscribed on the plate, with V standing
+              in for U in the old orthography:
+            </p>
+            <dl className="about-page-background-plate-terms">
+              <div>
+                <dt>ORTVS</dt>
+                <dd>
+                  (<em>ortus</em>): sunrise. It's on the left, along the
+                  eastern horizon curve.
+                </dd>
+              </div>
+              <div>
+                <dt>AVRORA</dt>
+                <dd>
+                  (<em>aurora</em>): dawn. It's on the left in the dawn band,
+                  just below the horizon.
+                </dd>
+              </div>
+              <div>
+                <dt>OCCASVS</dt>
+                <dd>
+                  (<em>occasus</em>): sunset. It's on the right, along the
+                  western horizon curve.
+                </dd>
+              </div>
+              <div>
+                <dt>CREPVSCVLVM</dt>
+                <dd>
+                  (<em>crepusculum</em>): dusk, or twilight. It's on the
+                  right in the twilight band.
+                </dd>
+              </div>
+            </dl>
+            <p>
+              The left side of the dial shows the morning — dawn, then
+              sunrise — and the right side mirrors it for the evening —
+              sunset, then dusk. The words follow the curved lines because
+              those curves mark where the sun crosses each of those
+              thresholds over the year.
+            </p>
+          </div>
+          <div className="about-page-background-plate-stage">
+            <HorizonPlateLayer location={PRAGUE_LOCATION} />
+          </div>
+        </div>
 
         <h3>The Kalendarium clockface</h3>
         <div className="about-page-kalendarium">

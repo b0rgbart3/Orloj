@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { describeCurrentMoment } from "./clock/explainClock";
+import type { Location } from "./clock/location";
 import type { PragueDateParts, PragueTime } from "./clock/usePragueTime";
 import janSindel from "./assets/jan_sindel.jpg";
 import "./ChatPanel.css";
@@ -17,6 +18,7 @@ type ChatPanelProps = {
   onToggle: () => void;
   pragueTime: PragueTime;
   dateParts: PragueDateParts;
+  location: Location;
 };
 
 // Each backend pipeline stage maps to one or more visitor-facing phrases;
@@ -207,6 +209,7 @@ export function ChatPanel({
   onToggle,
   pragueTime,
   dateParts,
+  location,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -388,7 +391,7 @@ export function ChatPanel({
     setStage("digesting");
 
     try {
-      const context = describeCurrentMoment(pragueTime, dateParts);
+      const context = describeCurrentMoment(pragueTime, dateParts, location);
       const response = await fetch("/api/ask/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
