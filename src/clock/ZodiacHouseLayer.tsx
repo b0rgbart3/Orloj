@@ -3,7 +3,6 @@ import { GradientClockLayer } from './GradientClockLayer'
 import { zodiacName, zodiacSymbol } from './explainClock'
 import type { PragueTime } from './usePragueTime'
 import { activeHouseHighlights, applyZodiacHighlights, zodiacSignFromWedgeId, type ZodiacSign } from './zodiacHouses'
-import './ZodiacHouseLayer.css'
 
 type ZodiacHouseLayerProps = {
   src: string
@@ -73,10 +72,10 @@ export function ZodiacHouseLayer({ src, gradientId, rotation, filter, pragueTime
       {tooltip && (
         <div
           ref={tooltipRef}
-          className="zodiac-sign-tooltip"
+          className="clock-tooltip"
           style={{ left: `${tooltip.xPct}%`, top: `${tooltip.yPct}%` }}
         >
-          {zodiacName(tooltip.sign)} <span className="zodiac-symbol">{zodiacSymbol(tooltip.sign)}</span>
+          {zodiacName(tooltip.sign)} <span className="clock-tooltip-secondary">{zodiacSymbol(tooltip.sign)}</span>
         </div>
       )}
     </>

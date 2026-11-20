@@ -271,9 +271,13 @@ body {
   .app-moment-button {
     width: 100%;
     max-width: 420px;
-    margin: 10px auto 24px;
+    margin: 0 auto;
     padding: 6px 20px;
     white-space: nowrap;
+  }
+
+  .app-moment-button:last-child {
+    margin-bottom: 24px;
   }
 
   .app-moment-button-break {

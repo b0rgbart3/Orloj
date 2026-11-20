@@ -97,22 +97,26 @@
 }
 
 .chat-panel-avatar {
-  width: 12rem;
-  height: 12rem;
+  width: 10.8rem;
+  height: 10.8rem;
   border-radius: 50%;
   object-fit: cover;
   position: relative;
-  top: -30px;
+  top: 0px;
 }
 
 .chat-panel-avatar-caption {
+  display: block;
+  width: 100%;
+  align-self: center;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 0.65rem;
   color: rgba(232, 232, 232, 0.55);
   text-align: center;
   white-space: nowrap;
   position: relative;
-  top: -20px;
+  left: -6px;
+  top: -30px;
 }
 
 .chat-panel-empty {

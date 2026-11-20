@@ -8,6 +8,7 @@ import sunsetView from "./assets/73d8d74de8664f17f0c32fb7903844c103d3d6bdee1eebc
 import "./clock/ClockFace.css";
 import { HorizonPlateLayer } from "./clock/HorizonPlateLayer";
 import { PRAGUE_LOCATION } from "./clock/location";
+import { Math } from "./Math";
 
 const GALLERY_IMAGES = [
   {
@@ -73,7 +74,10 @@ type DiagramItem = {
   link?: { term: string; href: string };
 };
 
-function renderDiagramBody(body: string, link?: { term: string; href: string }) {
+function renderDiagramBody(
+  body: string,
+  link?: { term: string; href: string },
+) {
   return body.split("\n\n").map((paragraph) => {
     if (!link || !paragraph.includes(link.term)) {
       return <p key={paragraph}>{paragraph}</p>;
@@ -268,8 +272,7 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           city to think of a day as a set of uniform, countable parts.
         </p>
         <p>
-          It's worth being precise about what the clock itself actually claims:
-          its zodiac ring and sun-and-moon dials encode a geocentric, Ptolemaic
+          The zodiac ring and sun-and-moon dials encode a geocentric, Ptolemaic
           universe, with sun and moon circling a fixed Earth — not the
           heliocentric model Copernicus would publish in 1543, more than fifty
           years after the clock's major 1490s renovation. There's no documented
@@ -285,6 +288,20 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           deeper assumption underneath it, that the cosmos is legible machinery,
           is the same thread running through all three.
         </p>
+        <p>
+          And yet the clock still works. Being wrong about what orbits what
+          isn't the same as being wrong about what you'd see in the sky — a
+          geocentric model and a heliocentric one describe the exact same
+          apparent motion, just from two different vantage points, and anyone
+          standing on the ground sees an identical result either way: the sun
+          still rises in the east, the zodiac signs still pass overhead in the
+          same yearly order, the moon still waxes and wanes on schedule. The
+          Orloj was never really a claim about what orbits what; it was a claim
+          about what you'd see from Prague at a given moment, and that claim has
+          held up for over 600 years. It's the same reason this digital version
+          can swap in modern orbital formulas underneath the same
+          five-century-old geometry and have every dial still reads true.
+        </p>
       </div>
 
       <div className="about-page-text">
@@ -292,9 +309,17 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           How it Works
         </h2>
         <p>
-          The clock face layers three rings, one turning inside the next, with
-          four dials sweeping across them at their own real rates. Each ring
-          sets a stage; each dial is a pointer reading that stage.
+          The clock is a very unique and creative combination of rings and
+          dials, built on top of a giant astrolabe tympan, or climate plate — a
+          latitude-specific plate that's normally fitted inside the body of a
+          classical astrolabe. It contains a stereographic projection: a
+          two-dimensional map of the celestial sphere projected onto a flat
+          plane for one specific geographic latitude.
+        </p>
+        <p>
+          On top of that are layered three rings and four dials. They all move
+          independently, but together they tell a story about the earth, the
+          cosmos, and the current moment we're living through.
         </p>
       </div>
       <img
@@ -358,33 +383,34 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           instead.
         </p>
 
-        <h3>The background plate</h3>
+        <h2 className="about-section-title">
+          The background plate, and the math behind it
+        </h2>
         <div className="about-page-background-plate">
           <div className="about-page-background-plate-copy">
             <p>
-              Behind the zodiac ring sits a fixed plate — the astrolabe
-              tympan the whole clock is built on. Unlike every ring and hand
-              layered above it, this plate never turns: it's cut for one
-              specific latitude (Prague's, a little over 50°N) and stays
-              locked in place while the rest of the mechanism sweeps across
-              it once a day. Its curved bands mark where the sun sits
-              relative to the horizon — blue for daylight, orange for
-              twilight, dark blue for true night — and eleven gold curves
-              divide the daylight band into the twelve Babylonian hours: the
-              old unequal-hour system that splits whatever daylight a given
-              day actually has, long or short, into twelve equal parts,
-              numbered 1 to 12 from sunrise to sunset.
+              Behind the zodiac ring sits a fixed plate — the astrolabe tympan
+              the whole clock is built on. Unlike every ring and hand layered
+              above it, this plate never turns: it's cut for one specific
+              latitude (Prague's, a little over 50°N) and stays locked in place
+              while the rest of the mechanism sweeps across it once a day. Its
+              curved bands mark where the sun sits relative to the horizon —
+              blue for daylight, orange for twilight, dark blue for true night —
+              and eleven gold curves divide the daylight band into the twelve
+              Babylonian hours: the old unequal-hour system that splits whatever
+              daylight a given day actually has, long or short, into twelve
+              equal parts, numbered 1 to 12 from sunrise to sunset.
             </p>
             <p>
-              Four Latin words are inscribed on the plate, with V standing
-              in for U in the old orthography:
+              Four Latin words are inscribed on the plate, with V standing in
+              for U in the old orthography:
             </p>
             <dl className="about-page-background-plate-terms">
               <div>
                 <dt>ORTVS</dt>
                 <dd>
-                  (<em>ortus</em>): sunrise. It's on the left, along the
-                  eastern horizon curve.
+                  (<em>ortus</em>): sunrise. It's on the left, along the eastern
+                  horizon curve.
                 </dd>
               </div>
               <div>
@@ -404,17 +430,16 @@ export function AboutPage({ initialSection }: AboutPageProps) {
               <div>
                 <dt>CREPVSCVLVM</dt>
                 <dd>
-                  (<em>crepusculum</em>): dusk, or twilight. It's on the
-                  right in the twilight band.
+                  (<em>crepusculum</em>): dusk, or twilight. It's on the right
+                  in the twilight band.
                 </dd>
               </div>
             </dl>
             <p>
-              The left side of the dial shows the morning — dawn, then
-              sunrise — and the right side mirrors it for the evening —
-              sunset, then dusk. The words follow the curved lines because
-              those curves mark where the sun crosses each of those
-              thresholds over the year.
+              The left side of the dial shows the morning — dawn, then sunrise —
+              and the right side mirrors it for the evening — sunset, then dusk.
+              The words follow the curved lines because those curves mark where
+              the sun crosses each of those thresholds over the year.
             </p>
           </div>
           <div className="about-page-background-plate-stage">
@@ -422,44 +447,161 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           </div>
         </div>
 
-        <h3>The Kalendarium clockface</h3>
-        <div className="about-page-kalendarium">
-          <div className="about-page-kalendarium-copy">
-            <p>
-              Mounted directly below the astronomical dial is a second,
-              quieter clockface — the Kalendarium. A large disc of 365 days
-              turns once a year past a fixed pointer, held by a gilded angel,
-              to mark today's date; its outer ring also carries a name-day for
-              each day of the year. A middle ring holds twelve painted
-              roundels, one per month, in the medieval "Labors of the Months"
-              tradition — sowing, harvesting, and other scenes of the
-              agricultural year paired with each zodiac sign. At the center
-              sits a medallion bearing the coat of arms of Prague's Old Town.
-            </p>
-            <p>
-              It's a much younger addition than the dial above it — the
-              artwork you see today was painted by Josef Mánes in 1865–70,
-              replacing an earlier Gothic calendar plate. (The roundels
-              mounted on the tower are copies; Mánes's originals now hang in
-              Prague's City Museum.)
-            </p>
-            <p>
-              Mechanically it's simple: a single gear train advancing one
-              division per day, with no sun, moon, or star position to
-              compute. The real astronomical achievement is the dial above it
-              — the Kalendarium is a civic and artistic companion piece,
-              prized for its artwork and its saints'-day calendar rather than
-              for any astronomy of its own. That's also why this digital
-              version doesn't model it: there's no underlying mechanism to
-              simulate, just a date on a painted disc.
-            </p>
-          </div>
-          <img
-            className="about-page-kalendarium-image"
-            src="/about_page/kalendarium.png"
-            alt="The Kalendarium, the calendar dial mounted below the astronomical dial"
-          />
+        <h4>A deliberate pole-inversion twist</h4>
+        <p>
+          The plate is a stereographic astrolabe projection cut for Prague's
+          latitude (φ ≈ 50°N) — but not the standard kind. A handheld astrolabe
+          of this era normally projects from the South Celestial Pole onto the
+          equatorial plane, which puts the North Celestial Pole at the dial's
+          center. Around 1410, the clock's designers — the
+          astronomer/mathematician Jan Šindel and clockmaker Mikuláš of Kadaň —
+          flipped that convention: the Orloj projects from the North Celestial
+          Pole instead, placing the South Celestial Pole at the center of the
+          dial.
+        </p>
+        <p>
+          The reason was practical: projecting from the north makes the dial
+          read the way the sky actually looks to someone in Prague facing south
+          at midday, with the Tropic of Cancer forming the outer bounding ring
+          and the Tropic of Capricorn the inner one. That flip shows up directly
+          in the almucantar math — reversing the pole of projection reverses the
+          sign on the altitude term:
+        </p>
+        <Math
+          display
+          tex="\sin\phi + \sin h \;\longrightarrow\; \sin\phi - \sin h"
+        />
+        <p>
+          the same pole-flip this digital version's own projection formula
+          carries (see <code>horizonPlate.ts</code>'s doc comments for the
+          equivalent sign change in its stereographic-radius equation, verified
+          numerically against hand-placed reference circles before being
+          trusted).
+        </p>
+        <h4>Which almucantars are painted</h4>
+        <p>
+          Rather than a dense grid of altitude circles, the plate paints just
+          two: the horizon almucantar (h = 0°), separating the blue daytime sky
+          from the orange twilight band, and the astronomical twilight
+          almucantar (h = −18°), separating twilight from the black circle of
+          true night. The twilight circle doesn't reach all the way out to the
+          Tropic of Cancer ring — which is exactly why the dial itself shows
+          Prague never getting a full astronomical night around the summer
+          solstice: at that time of year the sun's path stays close enough to
+          the horizon that it never dips a full 18° below it, even at midnight.
+        </p>
+        <p>
+          Both painted circles come from the same pair of equations, just
+          evaluated at a different altitude h: the almucantar's center offset
+          from the plate's own center (y<sub>c</sub>) and its radius (r
+          <sub>a</sub>), each expressed as a multiple of R<sub>eq</sub>, the
+          celestial equator's own projected radius:
+        </p>
+        <Math
+          display
+          tex="y_c = R_{\mathrm{eq}}\,\frac{\cos\phi}{\sin\phi-\sin h},\qquad r_a = R_{\mathrm{eq}}\,\frac{\cos h}{\left|\sin\phi-\sin h\right|}"
+        />
+        <p>
+          Plug in h = 0° for the horizon and h = −18° for astronomical twilight,
+          at Prague's own latitude, and these are the two circles the plate
+          paints.
+        </p>
+        <h4>Exact dimensions at Prague's latitude</h4>
+        <p>
+          Using Prague's own geographic latitude (φ = 50°05′N ≈ 50.0833°) and an
+          ecliptic obliquity of ε = 23.5° — the medieval/ early-Renaissance
+          value the real plate's geometry was cut for, slightly rounder than the
+          more precise ≈23.44° used elsewhere in this app's own live
+          calculations — the plate's radii work out to clean, named proportions.
+        </p>
+        <p>
+          Because the Orloj projects from the North Celestial Pole, the
+          outermost bounding circle of the whole dial is the Tropic of Cancer (R
+          <sub>outer</sub>), with the celestial equator sitting inside it at:
+        </p>
+        <Math
+          display
+          tex="R_{\mathrm{eq}} = R_{\mathrm{outer}} \,/\, \tan\!\left(\frac{90°+\varepsilon}{2}\right) \approx 0.6556\,R_{\mathrm{outer}}"
+        />
+        <p>Evaluated at Prague's own numbers, that works out to:</p>
+        <div className="about-page-table-wrapper">
+          <table className="about-page-dimensions-table">
+            <thead>
+              <tr>
+                <th>Dial feature</th>
+                <th>Defining altitude / angle</th>
+                <th>
+                  Center offset (y<sub>c</sub>/R<sub>eq</sub>)
+                </th>
+                <th>
+                  Circle radius (r<sub>a</sub>/R<sub>eq</sub>)
+                </th>
+                <th>
+                  Normalized to outer ring (R<sub>outer</sub> = 1)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tropic of Cancer (outer edge)</td>
+                <td>δ = +23.5°</td>
+                <td>0 (centered)</td>
+                <td>1.5253</td>
+                <td>r = 1.0000</td>
+              </tr>
+              <tr>
+                <td>Celestial equator</td>
+                <td>δ = 0°</td>
+                <td>0 (centered)</td>
+                <td>1.0000</td>
+                <td>r = 0.6556</td>
+              </tr>
+              <tr>
+                <td>Tropic of Capricorn (inner ring)</td>
+                <td>δ = −23.5°</td>
+                <td>0 (centered)</td>
+                <td>0.6556</td>
+                <td>r = 0.4298</td>
+              </tr>
+              <tr>
+                <td>Horizon almucantar (day/twilight)</td>
+                <td>h = 0°</td>
+                <td>+0.8366 (north/up)</td>
+                <td>1.3038</td>
+                <td>
+                  y<sub>c</sub> = +0.5485, r<sub>a</sub> = 0.8548
+                </td>
+              </tr>
+              <tr>
+                <td>Astronomical twilight almucantar</td>
+                <td>h = −18°</td>
+                <td>+0.5964 (north/up)</td>
+                <td>0.8839</td>
+                <td>
+                  y<sub>c</sub> = +0.3910, r<sub>a</sub> = 0.5795
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+        <h4>Generated, not just redrawn</h4>
+        <p>
+          The real plate is a single fixed piece of brass, cut once for Prague's
+          latitude and never changing. This digital version instead computes
+          that same plate live from the formulas above — the horizon and
+          twilight almucantars, the Babylonian-hour arcs, even the teal shading
+          bands are all derived at render time from whatever latitude is in
+          effect, not hand-traced to match a reference photo of Prague's own
+          plate. The two approaches were checked against each other rather than
+          one replacing the other: the computed geometry was tuned until it
+          reproduced Prague's real plate closely, then re-verified by swapping
+          in other latitudes (Reykjavík's, among others) to confirm the shapes
+          still made astronomical sense rather than only looking right at the
+          one latitude they were eyeballed against. That means a future location
+          picker could move this plate to any latitude on Earth and have it
+          redraw correctly, something the real clock's fixed brass plate was
+          never built to do.
+        </p>
       </div>
 
       <div className="about-page-section">
@@ -507,18 +649,18 @@ export function AboutPage({ initialSection }: AboutPageProps) {
         </p>
         <p>
           The clock dials only work because they're based on the geometry of a
-          rotating, axially-tilted globe. Run the animation
-          long enough to see the zodiac ring's year-long drift or the moon
-          dial's phase catch back up with the sun, and you're watching the
-          consequences of a spherical, moving Earth play out mechanically — the
-          same consequences the Orloj's original builders worked out five
-          centuries ago with nothing but geometry. Maybe the simplest lesson is
-          the most honest one: a clockmaker in 1410 built a model good enough
-          that, with nothing but updated math and a screen instead of gears, it
-          still tells the same true story about the sky today. The tools for
-          measuring time and watching the heavens have gotten smaller and faster
-          since 1510 — but the basic human itch to mark the hour and watch the
-          sky turn hasn't changed all that much.
+          rotating, axially-tilted globe. Run the animation long enough to see
+          the zodiac ring's year-long drift or the moon dial's phase catch back
+          up with the sun, and you're watching the consequences of a spherical,
+          moving Earth play out mechanically — the same consequences the Orloj's
+          original builders worked out five centuries ago with nothing but
+          geometry. Maybe the simplest lesson is the most honest one: a
+          clockmaker in 1410 built a model good enough that, with nothing but
+          updated math and a screen instead of gears, it still tells the same
+          true story about the sky today. The tools for measuring time and
+          watching the heavens have gotten smaller and faster since 1510 — but
+          the basic human itch to mark the hour and watch the sky turn hasn't
+          changed all that much.
         </p>
 
         <p>
@@ -549,6 +691,46 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           </a>
           .
         </p>
+      </div>
+
+      <div className="about-page-section">
+        <h3>The Kalendarium clockface</h3>
+        <div className="about-page-kalendarium">
+          <div className="about-page-kalendarium-copy">
+            <p>
+              Mounted directly below the astronomical dial is a second, quieter
+              clockface — the Kalendarium. A large disc of 365 days turns once a
+              year past a fixed pointer, held by a gilded angel, to mark today's
+              date; its outer ring also carries a name-day for each day of the
+              year. A middle ring holds twelve painted roundels, one per month,
+              in the medieval "Labors of the Months" tradition — sowing,
+              harvesting, and other scenes of the agricultural year paired with
+              each zodiac sign. At the center sits a medallion bearing the coat
+              of arms of Prague's Old Town.
+            </p>
+            <p>
+              It's a much younger addition than the dial above it — the artwork
+              you see today was painted by Josef Mánes in 1865–70, replacing an
+              earlier Gothic calendar plate. (The roundels mounted on the tower
+              are copies; Mánes's originals now hang in Prague's City Museum.)
+            </p>
+            <p>
+              Mechanically it's simple: a single gear train advancing one
+              division per day, with no sun, moon, or star position to compute.
+              The real astronomical achievement is the dial above it — the
+              Kalendarium is a civic and artistic companion piece, prized for
+              its artwork and its saints'-day calendar rather than for any
+              astronomy of its own. That's also why this digital version doesn't
+              model it: there's no underlying mechanism to simulate, just a date
+              on a painted disc.
+            </p>
+          </div>
+          <img
+            className="about-page-kalendarium-image"
+            src="/about_page/kalendarium.png"
+            alt="The Kalendarium, the calendar dial mounted below the astronomical dial"
+          />
+        </div>
       </div>
     </article>
   );

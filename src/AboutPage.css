@@ -48,6 +48,13 @@
   font-weight: 700;
 }
 
+.about-page h4 {
+  margin: 1.25rem 0 0.5rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 .about-section-title {
   margin: 0 0 0.75rem;
   font-family: var(--title-font-family);
@@ -167,7 +174,61 @@
   border-radius: 50%;
   overflow: hidden;
   justify-self: center;
-  max-width: 420px;
+  /* 30% larger than the original 420px, by request. */
+  max-width: 546px;
+}
+
+/* HorizonPlateLayer's own SVG uses the clock's shared 1200x1200 viewBox,
+   but the plate itself (clipped to PLATE_OUTER_RADIUS=385 around the
+   600,600 pivot) only fills a 770px-diameter circle in the middle -- on
+   the real clock face that's fine, since the surrounding rings/hands fill
+   the rest of the canvas, but shown alone here it left a huge ring of
+   empty padding around the plate. Scaling up by 1200/770 makes the plate
+   itself fill the container edge to edge; transform-origin stays centered
+   (ClockFace.css's own default for .clock-layer), which lines up exactly
+   with the plate's own pivot. */
+.about-page-background-plate-stage .clock-layer {
+  transform: scale(1.5584);
+}
+
+.about-page-table-wrapper {
+  margin: 0.5rem 0 1.25rem;
+  overflow-x: auto;
+}
+
+.about-page-dimensions-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.about-page-dimensions-table th,
+.about-page-dimensions-table td {
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid #4d4d4d33;
+  vertical-align: top;
+}
+
+.about-page-dimensions-table th {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.about-page-dimensions-table td:first-child {
+  font-weight: 700;
+}
+
+.math-display {
+  margin: 0.25rem 0 1rem;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.math-display .katex {
+  color: inherit;
 }
 
 @media (min-width: 1100px) {

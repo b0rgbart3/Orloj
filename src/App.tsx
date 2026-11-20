@@ -4,6 +4,7 @@ import { AboutPage } from "./AboutPage";
 import { ChatPanel } from "./ChatPanel";
 import { ClockFace } from "./clock/ClockFace";
 import { PRAGUE_LOCATION } from "./clock/location";
+import { useLocationDebug } from "./clock/useLocationDebug";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
 import { DateTimeModal } from "./DateTimeModal";
@@ -41,7 +42,10 @@ function App() {
   // Hardcoded to Prague for now -- a future location picker will let this
   // vary, with civil time/timezone, the sunset ring, sidereal time, and the
   // background plate all switching together (see Location's own comment).
-  const location = PRAGUE_LOCATION;
+  // `?location=<key>` (see useLocationDebug) overrides it for visual
+  // testing in the meantime, e.g. ?onlyLayer=background&location=cairo.
+  const debugLocation = useLocationDebug();
+  const location = debugLocation ?? PRAGUE_LOCATION;
   const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

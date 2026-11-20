@@ -28,29 +28,22 @@ type Layer =
 // GradientClockLayer), keeping it visually vertical once these layers
 // start rotating.
 const LAYERS: Layer[] = [
-  // background's `kind`/`src` here are nominal -- ClockFace special-cases
-  // its id to render via HorizonPlateLayer instead (see below), a
-  // generated astrolabe plate rather than a static file.
+  // background's `kind`/`src` here are nominal (the file no longer exists)
+  // -- ClockFace special-cases its id to render via HorizonPlateLayer
+  // instead (see below), a generated astrolabe plate rather than a static
+  // file. The id has to stay in this array regardless, since it's what
+  // drives both z-order and the ?onlyLayer= debug toggle.
   { id: 'background', kind: 'image', src: '/clock/background.svg' },
-  {
-    id: 'gold-trim',
-    kind: 'gradient',
-    src: '/clock/gold_trim.svg',
-    gradientId: 'goldtrim-gold-gradient',
-    filter: DROP_SHADOW,
-  },
+  // gold-trim and center-ring (the original hand-drawn hour-arc fan and
+  // globe-in-a-gold-ring) are deliberately gone, not forgotten -- both are
+  // now computed live as part of HorizonPlateLayer instead of this static
+  // artwork, and keeping both rendered the same elements twice, slightly
+  // misaligned.
   {
     id: 'roman-ring',
     kind: 'gradient',
     src: '/clock/roman_ring.svg',
     gradientId: 'roman-gold-gradient',
-    filter: DROP_SHADOW,
-  },
-  {
-    id: 'center-ring',
-    kind: 'gradient',
-    src: '/clock/center_ring.svg',
-    gradientId: 'center-gold-gradient',
     filter: DROP_SHADOW,
   },
   {
