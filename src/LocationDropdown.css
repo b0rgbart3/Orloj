@@ -1,0 +1,92 @@
+.location-dropdown {
+  position: relative;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.location-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.location-dropdown-trigger:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.location-dropdown-caret {
+  width: 8px;
+  height: 5px;
+  flex-shrink: 0;
+}
+
+.location-dropdown-list {
+  /* position: fixed (not absolute) -- this is portaled to <body> (see
+     LocationDropdown.tsx), with top/right/minWidth supplied inline from
+     the trigger's own bounding rect, so it isn't positioned relative to
+     anything in this stylesheet. */
+  position: fixed;
+  /* Higher than .clock-stage's z-index: 2 (ClockFace.css) -- the clock is
+     deliberately the highest-stacked thing in the rest of the layout, but
+     this dropdown is the one exception that needs to draw over it. */
+  z-index: 1000;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border: 2px solid #4d4d4d;
+  border-radius: 10px;
+  background: var(--control-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  max-height: min(640px, 70vh);
+  overflow-y: auto;
+  /* A list this long (39 entries) needs a visibly scrollable affordance --
+     without one, the OS's default overlay scrollbar is invisible until
+     actively dragged, and the list simply looks like it ends mid-row. */
+  scrollbar-width: thin;
+  scrollbar-color: #4d4d4d transparent;
+}
+
+.location-dropdown-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.location-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.location-dropdown-list::-webkit-scrollbar-thumb {
+  background: #4d4d4d;
+  border-radius: 4px;
+}
+
+.location-dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 4px 14px;
+  border: none;
+  background: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  color: #000;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.location-dropdown-option:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.location-dropdown-option-active {
+  font-weight: 700;
+}

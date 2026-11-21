@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Location } from "./clock/location";
+import type { NamedLocation } from "./clock/location";
 import {
   getPragueDateTimeInputValues,
   pragueWallTimeToUtc,
@@ -15,7 +15,7 @@ export function DateTimeModal({
 }: {
   open: boolean;
   initialDate: Date;
-  location: Location;
+  location: NamedLocation;
   onClose: () => void;
   onConfirm: (date: Date) => void;
 }) {
@@ -79,7 +79,7 @@ export function DateTimeModal({
             />
           </label>
           <label className="datetime-modal-field">
-            Time (Prague)
+            Time ({location.city})
             <input
               type="time"
               value={timeValue}

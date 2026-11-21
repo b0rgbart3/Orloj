@@ -48,6 +48,12 @@ const INSCRIPTIONS: Record<InscriptionId, { text: string; fontSize: number; tran
 
 const INSCRIPTION_ID_PREFIX = "inscription-";
 
+// Click-to-reveal tooltip for the hour numerals, same interaction as the
+// inscriptions above -- id doubles as the DOM id suffix each numeral's
+// <text> carries, so handleClick can recover which one was clicked via
+// closest('[id^="numeral-"]').
+const NUMERAL_ID_PREFIX = "numeral-";
+
 // 1..12 -- one numeral per division's *end* boundary, not its start, so
 // hourIndex 0 (sunrise) is deliberately excluded: it has no numeral of its
 // own on the real dial either, since it's the starting line, not the end
@@ -152,16 +158,28 @@ export function HorizonPlateLayer({ location }: { location: Location }) {
     };
   }, [location.latitudeDeg]);
 
-  const [tooltip, setTooltip] = useState<{ id: InscriptionId; xPct: number; yPct: number } | null>(null);
+  const [tooltip, setTooltip] = useState<{ text: string; xPct: number; yPct: number } | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const handleClick = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
-    const inscriptionEl = (event.target as Element).closest(`[id^="${INSCRIPTION_ID_PREFIX}"]`);
-    const id = inscriptionEl?.id.slice(INSCRIPTION_ID_PREFIX.length) as InscriptionId | undefined;
-    if (!id || !(id in INSCRIPTIONS)) return;
+    const target = event.target as Element;
+    const inscriptionEl = target.closest(`[id^="${INSCRIPTION_ID_PREFIX}"]`);
+    const numeralEl = target.closest(`[id^="${NUMERAL_ID_PREFIX}"]`);
+    if (!inscriptionEl && !numeralEl) return;
+
+    let text: string | undefined;
+    if (inscriptionEl) {
+      const id = inscriptionEl.id.slice(INSCRIPTION_ID_PREFIX.length) as InscriptionId;
+      if (id in INSCRIPTIONS) text = INSCRIPTIONS[id].translation;
+    } else if (numeralEl) {
+      const hourNumber = numeralEl.id.slice(NUMERAL_ID_PREFIX.length);
+      text = `${hourNumber} - Babylonian hours`;
+    }
+    if (!text) return;
+
     const rect = event.currentTarget.getBoundingClientRect();
     setTooltip({
-      id,
+      text,
       xPct: ((event.clientX - rect.left) / rect.width) * 100,
       yPct: ((event.clientY - rect.top) / rect.height) * 100,
     });
@@ -332,9 +350,15 @@ export function HorizonPlateLayer({ location }: { location: Location }) {
               fontWeight="bold"
               textAnchor="middle"
               dominantBaseline="middle"
+              style={{ cursor: "pointer", pointerEvents: "auto" }}
             >
               {geometry.numerals.map(({ hourNumber, point }) => (
-                <text key={hourNumber} x={point.x} y={point.y}>
+                <text
+                  key={hourNumber}
+                  id={`${NUMERAL_ID_PREFIX}${hourNumber}`}
+                  x={point.x}
+                  y={point.y}
+                >
                   {hourNumber}
                 </text>
               ))}
@@ -386,7 +410,7 @@ export function HorizonPlateLayer({ location }: { location: Location }) {
           className="clock-tooltip"
           style={{ left: `${tooltip.xPct}%`, top: `${tooltip.yPct}%` }}
         >
-          {INSCRIPTIONS[tooltip.id].translation}
+          {tooltip.text}
         </div>
       )}
     </>

@@ -245,12 +245,12 @@ export function describeCurrentMoment(pragueTime: PragueTime, dateParts: PragueD
   const previousParts = getPragueDateParts(previous.date, location)
   const nextParts = getPragueDateParts(next.date, location)
   return [
-    `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} Prague local time.`,
+    `Date/time currently shown on the clock: ${dateParts.month} ${dateParts.day}, ${dateParts.year}, ${pad(pragueTime.hours)}:${pad(pragueTime.minutes)} local time.`,
     `Sun dial: ${zodiacName(e.sunSign)} ${zodiacSymbol(e.sunSign)} -- ${describeHighlight('sun', e.sunHighlightHand)}.`,
     `Moon dial: ${zodiacName(e.moonSign)} ${zodiacSymbol(e.moonSign)} -- ${e.moonPhase}, ${e.moonIllumination}% lit -- ${describeHighlight('moon', e.moonHighlightHand)}.`,
     `Star pointer (true local sidereal time, fixed Roman ring): ${e.starRingNumeral}.`,
     `Hand -- inner ring (civil hour): ${e.innerRingNumeral}; outer ring (old Bohemian hour count since sunset): ${e.outerRingHour}.`,
-    `Sunset (computed live for Prague's latitude, not read off the hand): most recent was ${previousParts.month} ${previousParts.day} at ${formatCivilHour(previous.civilHour)} Prague local time -- hour 0 that the outer ring's count of ${e.outerRingHour} is measured from; the next one is ${nextParts.month} ${nextParts.day} at ${formatCivilHour(next.civilHour)}.`,
+    `Sunset (computed live for this location's latitude, not read off the hand): most recent was ${previousParts.month} ${previousParts.day} at ${formatCivilHour(previous.civilHour)} local time -- hour 0 that the outer ring's count of ${e.outerRingHour} is measured from; the next one is ${nextParts.month} ${nextParts.day} at ${formatCivilHour(next.civilHour)}.`,
     `Babylonian hour (unequal hour since sunrise, dividing today's daylight into 12 equal parts): ${e.babylonianHour === 'night' ? 'night (the sun is below the horizon)' : e.babylonianHour}.`,
   ].join('\n')
 }

@@ -104,7 +104,8 @@ const RING_ITEMS: DiagramItem[] = [
     src: "/about_page/zodiac_ring.svg",
     alt: "The zodiac ring, carrying the twelve zodiac signs",
     title: "The zodiac ring",
-    body: "This ring turns on its own sidereal clock — one full rotation every 23 hours and 56 minutes, the true rotation period of the Earth against the stars rather than the sun. Over the year it slowly drifts out of step with civil time, carrying the zodiac signs past the sun, moon, and star dials in their actual seasonal order.\n\nLook closely and the twelve signs aren't evenly sized — Taurus and Cancer stretch wide while Capricorn and Scorpio pinch narrow. That comes from how the ring is drawn: a classical astrolabe projects the ecliptic, the sun's path through the zodiac, onto a flat disk as seen from the celestial pole. Because the ecliptic sits 23.4° off from the celestial equator — Earth's axial tilt — that projection pushes the ring off-center, and the signs along it end up stretched or squeezed depending on how far each one falls from the pole in the projection.\n\nThat distortion comes entirely from the tilt of the Earth's axis, not from where the clock is built — the real Orloj's zodiac ring would look identical mounted in Prague or anywhere else on Earth. (The parts of a real astrolabe that are genuinely tied to one location — the horizon line and the unequal day-and-night hour curves — live on the plate behind the ring, not on the ring itself.)",
+    body: "This ring turns on its own sidereal clock — one full rotation every 23 hours and 56 minutes, the true rotation period of the Earth against the stars rather than the sun. Over the year it slowly drifts out of step with civil time, carrying the zodiac signs past the sun, moon, and star dials in their actual seasonal order.\n\nLook closely and the twelve signs aren't evenly sized — Taurus and Cancer stretch wide while Capricorn and Scorpio pinch narrow. That comes from how the ring is drawn: a classical astrolabe projects the ecliptic, the sun's path through the zodiac, onto a flat disk as seen from the celestial pole. Because the ecliptic sits 23.4° off from the celestial equator — Earth's axial tilt — that projection pushes the ring off-center, and the signs along it end up stretched or squeezed depending on how far each one falls from the pole in the projection.\n\nThat distortion comes entirely from the tilt of the Earth's axis, not from where the clock is built — the real Orloj's zodiac ring would look identical mounted in Prague or anywhere else on Earth. (The parts of a real astrolabe that are genuinely tied to one location — the horizon line and the unequal day-and-night hour curves — live on the plate behind the ring, not on the ring itself.)\n\nThe gold outer band of the ring isn't pure ornament either — it's a graduated scale. Each sign covers exactly 30° of the ecliptic, and the fine ticks running around the band subdivide that into smaller steps, letting the dial register the sun's precise ecliptic longitude rather than just which sign it's passing through. Since the sun creeps roughly one degree along the ecliptic per day, that scale effectively lets a reader pin down the date itself — the same instinct behind the minute-ticks between hour-numerals on an ordinary clock face: coarse divisions for the sign, fine divisions for an actual reading.",
+    link: { term: "sidereal", href: "#learn/sidereal-time" },
   },
   {
     src: "/about_page/numeric_ring.svg",
@@ -118,14 +119,14 @@ const DIAL_ITEMS: DiagramItem[] = [
   {
     src: "/about_page/hand_dial.svg",
     alt: "The gilded pointing hand",
-    title: "The hand",
+    title: "The hand dial",
     body: "A single gilded hand, cast as a pointing arm, sweeps a full circle every 24 hours. Whatever numeral it reaches on the Roman ring is the current civil hour; read against the old Bohemian ring turning beneath it, that same position gives the hours elapsed since sunset.",
   },
   {
     src: "/about_page/sun_dial.svg",
     alt: "The golden sun dial",
     title: "The sun dial",
-    body: "A golden sun glyph marks the sun's real position against the zodiac ring, circling once a day and drifting through the twelve signs over the course of the year exactly as the real sun does.",
+    body: "A golden sun glyph marks the sun's real position against the zodiac ring, circling once a day and drifting through the twelve signs over the course of the year exactly as the real sun does.\n\nThe glyph doesn't just travel in a circle, though — it also slides closer to or farther from the dial's center over the course of the year. It rides the zodiac ring's own off-center circle like a peg on a track: the ring's center sits well apart from the hand's own pivot, so as the sun's angle sweeps around with the time of day, the point where it meets the ring's rim keeps changing distance from the pivot.\n\nThat distance traces out a slow yearly breathing motion layered on top of the daily sweep. Around the summer solstice, with the sun in Cancer, the glyph rides out near the dial's outer edge; around the winter solstice, with the sun in Capricorn, it pulls in close to the center. It's the same off-center ecliptic projection described above for the zodiac ring, showing up a second time here as a changing radius instead of stretched and squeezed signs.",
   },
   {
     src: "/about_page/moon_dial.svg",
@@ -399,8 +400,20 @@ export function AboutPage({ initialSection }: AboutPageProps) {
               and eleven gold curves divide the daylight band into the twelve
               Babylonian hours: the old unequal-hour system that splits whatever
               daylight a given day actually has, long or short, into twelve
-              equal parts, numbered 1 to 12 from sunrise to sunset.
+              equal parts, numbered 1 to 12 from sunrise to sunset. Because the
+              length of daylight itself stretches and shrinks with the seasons,
+              so does each Babylonian hour along with it — a Prague summer hour
+              runs well over 60 real minutes, a winter one well under — which is
+              exactly why the numerals fan out unevenly around the dial instead
+              of sitting at even 30° intervals, bunched tightly near the top
+              (midday) and spread wide near the horizon (sunrise and sunset).
+              This was ordinary civil time across much of medieval Europe, long
+              before mechanical clocks made fixed, equal-length hours the
+              default; the Orloj still keeps both systems side by side — the
+              Babylonian hours on this plate, the familiar equal hours on the
+              outer Roman-numeral ring.
             </p>
+            <h4>Dawn, sunrise, sunset, dusk: the plate's four thresholds</h4>
             <p>
               Four Latin words are inscribed on the plate, with V standing in
               for U in the old orthography:
@@ -633,6 +646,17 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           are reading in both civil and old Bohemian hours. It's a detailed,
           moment-by-moment breakdown the mechanical clock itself can't offer —
           one of the real advantages of a digital version.
+        </p>
+        <p>
+          The sun dial itself is built to match the real Orloj's own
+          mechanical engineering — a hand geared to civil time, a zodiac ring
+          geared to true sidereal time, just like the original 15th-century
+          clockwork. As a bonus only a digital version can offer, the precise
+          solstice date predictions displayed in the "At this moment" drawer
+          come from a proper solar ephemeris built alongside it: the exact
+          moments the sun's own ecliptic longitude crosses 90° and 270°, the
+          real astronomical definition of a solstice, accurate to within a few
+          minutes.
         </p>
         <h3>What this digital version can teach people in the 21st century</h3>
         <p>

@@ -16,7 +16,7 @@ export function sunHandRotationDegrees({ hours, minutes, seconds }: PragueTime):
   return fractionalHour * 15
 }
 
-function toJulianDate(date: Date): number {
+export function toJulianDate(date: Date): number {
   return date.getTime() / 86400000 + 2440587.5
 }
 

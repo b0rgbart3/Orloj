@@ -3,13 +3,13 @@ import { PragueTimeFootnote } from "./PragueTimeFootnote";
 import { AboutPage } from "./AboutPage";
 import { ChatPanel } from "./ChatPanel";
 import { ClockFace } from "./clock/ClockFace";
-import { PRAGUE_LOCATION } from "./clock/location";
-import { useLocationDebug } from "./clock/useLocationDebug";
+import { useSelectedLocation } from "./clock/useSelectedLocation";
 import { useScrubbableTime } from "./clock/useScrubbableTime";
 import { getPragueDateParts } from "./clock/usePragueTime";
 import { DateTimeModal } from "./DateTimeModal";
 import { Drawer } from "./Drawer";
 import { LearnPage } from "./LearnPage";
+import { LocationDropdown } from "./LocationDropdown";
 import { usePageRoute } from "./routing";
 import { SimpleControls } from "./SimpleControls";
 import { SimpleScrubber } from "./SimpleScrubber";
@@ -39,13 +39,12 @@ function renderDigits(digits: string) {
 }
 
 function App() {
-  // Hardcoded to Prague for now -- a future location picker will let this
-  // vary, with civil time/timezone, the sunset ring, sidereal time, and the
-  // background plate all switching together (see Location's own comment).
-  // `?location=<key>` (see useLocationDebug) overrides it for visual
-  // testing in the meantime, e.g. ?onlyLayer=background&location=cairo.
-  const debugLocation = useLocationDebug();
-  const location = debugLocation ?? PRAGUE_LOCATION;
+  // location drives civil time/timezone, the sunset ring, sidereal time,
+  // and the background plate together (see Location's own comment) --
+  // picked via the header's LocationDropdown and persisted across reloads
+  // (see useSelectedLocation). `?location=<key>` still overrides it for
+  // visual testing, e.g. ?onlyLayer=background&location=cairo.
+  const [location, setLocation] = useSelectedLocation();
   const [page, navigate] = usePageRoute();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -152,12 +151,13 @@ function App() {
                   {renderDigits(pad(pragueTime.minutes))}
                 </span>
               </button>
-              <PragueTimeFootnote />
+              <PragueTimeFootnote location={location} />
             </p>
           )}
         </div>
         {page === "home" && (
           <div className="app-header-right">
+            <LocationDropdown value={location} onChange={setLocation} />
             <SimpleControls
               offsetMs={offsetMs}
               onReset={resetToNow}

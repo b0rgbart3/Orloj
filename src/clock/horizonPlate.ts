@@ -384,13 +384,59 @@ export function babylonianHourNumeralPoint(hourNumber: number, latitudeDeg: numb
 export type LabelPlacement = { point: Point; rotationDeg: number }
 
 // How far inside the globe's own edge (and the plate's own outer clip) a
-// candidate point has to stay -- without this margin the scan below would
-// happily pick a point one pixel clear of either edge, which looks just as
-// clipped in practice as actually overlapping it. Wide enough to also cover
-// half the inscription's own rendered width poking past its center point,
-// not just the point itself.
-const LABEL_GLOBE_CLEARANCE = 35
+// candidate point has to stay, on top of the clearance each word's own
+// rendered half-width already buys it (see textHalfWidthPx below) -- a
+// small fixed visual buffer, not a stand-in for the word's width itself.
+// An earlier version tried to fold half a word's width into this single
+// flat number (~35px, sized for ORTVS), which only worked by accident for
+// a short word placed at a rotation close to radial -- OCCASVS and
+// CREPVSCVLVM are long enough, and at some latitudes (Prague, Sydney)
+// rotated far enough from radial, that half their rendered width alone
+// exceeds 35px measured *along the text's own rotated axis*, not along
+// the radius padding was actually inflating -- so their near-globe letter
+// visibly entered the clearance margin (occasionally the globe itself)
+// despite the center point individually clearing it fine. Fixed by
+// checking the whole rendered text segment against the globe/horizon/
+// outer-clip circles (see segmentMinDistanceToPoint/
+// segmentMaxDistanceToPoint) instead of just its center point.
+const LABEL_GLOBE_CLEARANCE = 8
 const LABEL_OUTER_CLIP_CLEARANCE = 15
+
+/** Minimum distance from `center` to the straight segment of length
+ * `2*halfLength` centered at `point` running along unit vector
+ * `direction` -- i.e. treats the rendered (straight, middle-anchored) SVG
+ * text as a line segment rather than the single point at its middle. */
+function segmentMinDistanceToPoint(point: Point, direction: Point, halfLength: number, center: Point): number {
+  const alongUnclamped = (center.x - point.x) * direction.x + (center.y - point.y) * direction.y
+  const along = Math.max(-halfLength, Math.min(halfLength, alongUnclamped))
+  const closest = { x: point.x + along * direction.x, y: point.y + along * direction.y }
+  return Math.hypot(center.x - closest.x, center.y - closest.y)
+}
+
+/** Maximum distance from `center` to that same segment -- always at one of
+ * its two endpoints, since distance-to-a-line-point is convex along the
+ * segment. */
+function segmentMaxDistanceToPoint(point: Point, direction: Point, halfLength: number, center: Point): number {
+  const p1 = { x: point.x - halfLength * direction.x, y: point.y - halfLength * direction.y }
+  const p2 = { x: point.x + halfLength * direction.x, y: point.y + halfLength * direction.y }
+  return Math.max(Math.hypot(center.x - p1.x, center.y - p1.y), Math.hypot(center.x - p2.x, center.y - p2.y))
+}
+
+// Half the rendered pixel width of each inscription, at its own fontSize
+// (see HorizonPlateLayer.tsx's INSCRIPTIONS), used so the clearance checks
+// below can require the word's whole rendered extent -- not just its
+// middle anchor point -- stay clear of the globe/horizon/outer edge.
+// Derived from standard Helvetica-Bold uppercase advance widths (AFM
+// metrics: O 778, R 722, T 611, V 667, S 667, A 722, C 722, E 667, P 667,
+// L 611, M 833, per 1000 units of em), summed per word and scaled by
+// fontSize/1000, then padded ~12% for the actual font (Helvetica Neue,
+// not Helvetica) and cross-browser bold-rendering variance -- not an
+// exact measurement, but close enough that the clearance checks below
+// have real margin instead of none.
+const ORTVS_HALF_WIDTH_PX = 46
+const OCCASVS_HALF_WIDTH_PX = 67
+const AVRORA_HALF_WIDTH_PX = 63
+const CREPVSCVLVM_HALF_WIDTH_PX = 94
 
 // The radial thickness a candidate needs for the inscription to actually
 // fit without the font crowding the horizon disc on one side and the
@@ -458,6 +504,7 @@ function sunriseOrSunsetSliverPlacement(
   hourIndex: number,
   numeralNumber: number,
   minNumeralClearancePx: number,
+  textHalfWidthPx: number,
 ): LabelPlacement {
   const horizon = horizonCircle(latitudeDeg)
   const arc = babylonianHourDividerCircle(hourIndex, latitudeDeg)
@@ -476,16 +523,23 @@ function sunriseOrSunsetSliverPlacement(
   for (let angleDeg = 0; angleDeg < 360; angleDeg += 1) {
     const theta = degToRad(angleDeg)
     const direction = { x: Math.cos(theta), y: Math.sin(theta) }
+    // The word's own rendered rotation is this angle's tangent (see the
+    // final `tangent` below) -- checking clearance along that axis, not
+    // just at the single radial sample point, is what keeps a long word's
+    // near-globe letter from poking past where its own center point
+    // cleared (see LABEL_GLOBE_CLEARANCE's doc comment).
+    const tangent = { x: -Math.sin(theta), y: Math.cos(theta) }
     let rMin: number | null = null
     let rMax: number | null = null
     for (let r = 10; r <= arc.radius; r += 2) {
       const point = { x: arc.center.x + r * direction.x, y: arc.center.y + r * direction.y }
-      const distToHorizonCenter = Math.hypot(point.x - horizon.center.x, point.y - horizon.center.y)
-      const distToPivot = Math.hypot(point.x - PIVOT.x, point.y - PIVOT.y)
+      const distToHorizonCenter = segmentMinDistanceToPoint(point, tangent, textHalfWidthPx, horizon.center)
+      const distToPivotMin = segmentMinDistanceToPoint(point, tangent, textHalfWidthPx, PIVOT)
+      const distToPivotMax = segmentMaxDistanceToPoint(point, tangent, textHalfWidthPx, PIVOT)
       const clear =
         distToHorizonCenter > horizon.radius &&
-        distToPivot > globeRadius + LABEL_GLOBE_CLEARANCE &&
-        distToPivot < PLATE_OUTER_RADIUS - LABEL_OUTER_CLIP_CLEARANCE
+        distToPivotMin > globeRadius + LABEL_GLOBE_CLEARANCE &&
+        distToPivotMax < PLATE_OUTER_RADIUS - LABEL_OUTER_CLIP_CLEARANCE
       if (clear) {
         if (rMin === null) rMin = r
         rMax = r
@@ -548,7 +602,7 @@ const OCCASVS_MIN_NUMERAL_CLEARANCE_PX = 110
 
 /** "ORTVS" (sunrise) -- see sunriseOrSunsetSliverPlacement's doc comment. */
 export function ortvsInscriptionPlacement(latitudeDeg: number, globeRadius: number): LabelPlacement {
-  return sunriseOrSunsetSliverPlacement(latitudeDeg, globeRadius, 1, 1, ORTVS_MIN_NUMERAL_CLEARANCE_PX)
+  return sunriseOrSunsetSliverPlacement(latitudeDeg, globeRadius, 1, 1, ORTVS_MIN_NUMERAL_CLEARANCE_PX, ORTVS_HALF_WIDTH_PX)
 }
 
 /**
@@ -566,7 +620,7 @@ export function ortvsInscriptionPlacement(latitudeDeg: number, globeRadius: numb
  * further correction needed.
  */
 export function occasvsInscriptionPlacement(latitudeDeg: number, globeRadius: number): LabelPlacement {
-  return sunriseOrSunsetSliverPlacement(latitudeDeg, globeRadius, 11, 12, OCCASVS_MIN_NUMERAL_CLEARANCE_PX)
+  return sunriseOrSunsetSliverPlacement(latitudeDeg, globeRadius, 11, 12, OCCASVS_MIN_NUMERAL_CLEARANCE_PX, OCCASVS_HALF_WIDTH_PX)
 }
 
 // How far around the pivot (degrees) AVRORA sits from ORTVS's own pivot
@@ -627,6 +681,7 @@ function avroraOrCrepvsculvmPlacement(
   globeRadius: number,
   reference: LabelPlacement,
   angleOffsetDeg: number,
+  textHalfWidthPx: number,
 ): LabelPlacement {
   const horizon = horizonCircle(latitudeDeg)
   const twilight = twilightCircle(latitudeDeg)
@@ -639,9 +694,24 @@ function avroraOrCrepvsculvmPlacement(
   let rMax: number | null = null
   for (let r = globeRadius + LABEL_GLOBE_CLEARANCE; r <= PLATE_OUTER_RADIUS - LABEL_OUTER_CLIP_CLEARANCE; r += 1) {
     const point = { x: PIVOT.x + r * direction.x, y: PIVOT.y + r * direction.y }
-    const distToHorizonCenter = Math.hypot(point.x - horizon.center.x, point.y - horizon.center.y)
-    const distToTwilightCenter = Math.hypot(point.x - twilight.center.x, point.y - twilight.center.y)
-    const clear = distToHorizonCenter <= horizon.radius && distToTwilightCenter > twilight.radius
+    // The word's own rendered rotation follows the horizon circle's
+    // tangent at this point (see the final `tangent` below), which isn't
+    // radial from the pivot -- checking the whole rendered segment along
+    // that tangent, not just this one sample point, is what keeps a long
+    // word's near-globe letter (CREPVSCVLVM especially) from poking past
+    // where its center point alone cleared (see LABEL_GLOBE_CLEARANCE's
+    // doc comment).
+    const horizonTheta = Math.atan2(point.y - horizon.center.y, point.x - horizon.center.x)
+    const tangent = { x: -Math.sin(horizonTheta), y: Math.cos(horizonTheta) }
+    const distToHorizonCenter = segmentMaxDistanceToPoint(point, tangent, textHalfWidthPx, horizon.center)
+    const distToTwilightCenter = segmentMinDistanceToPoint(point, tangent, textHalfWidthPx, twilight.center)
+    const distToPivotMin = segmentMinDistanceToPoint(point, tangent, textHalfWidthPx, PIVOT)
+    const distToPivotMax = segmentMaxDistanceToPoint(point, tangent, textHalfWidthPx, PIVOT)
+    const clear =
+      distToHorizonCenter <= horizon.radius &&
+      distToTwilightCenter > twilight.radius &&
+      distToPivotMin > globeRadius + LABEL_GLOBE_CLEARANCE &&
+      distToPivotMax < PLATE_OUTER_RADIUS - LABEL_OUTER_CLIP_CLEARANCE
     if (clear) {
       if (rMin === null) rMin = r
       rMax = r
@@ -673,7 +743,7 @@ function avroraOrCrepvsculvmPlacement(
 
 /** "AVRORA" (dawn) -- see avroraOrCrepvsculvmPlacement's doc comment. */
 export function avroraInscriptionPlacement(latitudeDeg: number, globeRadius: number, ortvs: LabelPlacement): LabelPlacement {
-  return avroraOrCrepvsculvmPlacement(latitudeDeg, globeRadius, ortvs, AVRORA_PIVOT_ANGLE_OFFSET_DEG)
+  return avroraOrCrepvsculvmPlacement(latitudeDeg, globeRadius, ortvs, AVRORA_PIVOT_ANGLE_OFFSET_DEG, AVRORA_HALF_WIDTH_PX)
 }
 
 /**
@@ -688,5 +758,5 @@ export function crepvsculvmInscriptionPlacement(
   globeRadius: number,
   occasvs: LabelPlacement,
 ): LabelPlacement {
-  return avroraOrCrepvsculvmPlacement(latitudeDeg, globeRadius, occasvs, -AVRORA_PIVOT_ANGLE_OFFSET_DEG)
+  return avroraOrCrepvsculvmPlacement(latitudeDeg, globeRadius, occasvs, -AVRORA_PIVOT_ANGLE_OFFSET_DEG, CREPVSCVLVM_HALF_WIDTH_PX)
 }

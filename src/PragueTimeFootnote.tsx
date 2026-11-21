@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { locationLabel, type NamedLocation } from "./clock/location";
 import "./PragueTimeFootnote.css";
 
-export function PragueTimeFootnote() {
+export function PragueTimeFootnote({ location }: { location: NamedLocation }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
 
@@ -26,7 +27,11 @@ export function PragueTimeFootnote() {
       >
         &#10059;
       </button>
-      {open && <span className="prague-time-footnote-tooltip">Date and time in Prague, Czech Republic</span>}
+      {open && (
+        <span className="prague-time-footnote-tooltip">
+          Date and time in {locationLabel(location)}
+        </span>
+      )}
     </span>
   );
 }
