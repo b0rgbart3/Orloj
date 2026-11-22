@@ -13,6 +13,7 @@ import {
   siderealRotationDegrees,
   sunHandRotationDegrees,
   sunsetCivilHour,
+  zodiacRingRotationDegrees,
 } from './rotations'
 import type { Location } from './location'
 import { currentHourAngleDeg, daylightHalfHourAngleDeg, solarDeclinationDeg } from './solarPosition'
@@ -197,7 +198,7 @@ export function siderealRingNumeral(pragueTime: PragueTime, location: Location):
  * currently sits, derived from the same angle math that drives the
  * artwork's live rotations. */
 export function explainClock(pragueTime: PragueTime, location: Location): ClockExplanation {
-  const ringRotation = siderealRotationDegrees(pragueTime, location)
+  const ringRotation = zodiacRingRotationDegrees(pragueTime, location)
   const sunAngle = angleInRingFrame(sunHandRotationDegrees(pragueTime), ringRotation)
   const moonAngle = angleInRingFrame(moonHandRotationDegrees(pragueTime), ringRotation)
   const phaseDeg = lunarPhaseAngleDegrees(pragueTime.date)

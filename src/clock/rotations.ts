@@ -45,12 +45,43 @@ export function localSiderealTimeDegrees(date: Date, location: Location): number
 }
 
 /**
- * Degrees to rotate the zodiac-ring and star-dial layers — both driven by
- * the same physical sidereal rotation, so they share this one value. The
- * artwork's unrotated baseline (pointing down) is defined as LST 0h.
+ * Raw Local Sidereal Time, as a rotation — used only where the reading
+ * itself must stay true LST (the Roman-ring numeral in
+ * explainClock.ts's siderealRingNumeral). For rotating the zodiac-ring and
+ * star-dial layers themselves, or for resolving which zodiac house a hand
+ * sits over, use zodiacRingRotationDegrees below instead — see its doc
+ * comment for why these two aren't the same rotation.
  */
 export function siderealRotationDegrees(time: PragueTime, location: Location): number {
   return localSiderealTimeDegrees(time.date, location)
+}
+
+/**
+ * Degrees to rotate the zodiac-ring and star-dial layers — both driven by
+ * the same physical sidereal rotation (same spindle), so they share this
+ * one value, and it's also the rotation angleInRingFrame expects for
+ * resolving which zodiac house a hand currently sits over.
+ *
+ * This is raw LST plus a 180° correction, not raw LST directly. LST=0h
+ * means "the First Point of Aries is at *upper* culmination" (on the
+ * meridian, at its highest) — the natural zero-point for sidereal time,
+ * analogous to how civil noon is the sun's own upper culmination. But the
+ * artwork's unrotated baseline (0°, pointing down) was built to mirror the
+ * civil-time hand's own baseline, which points down at *midnight* —
+ * civil time's lower culmination of the sun, the opposite transit from
+ * noon. Pairing "0°, down" with LST 0h (upper culmination) instead of
+ * LST 12h (lower culmination, the actual down-pointing match) mixes the
+ * two civil-time transits up: it's the sidereal equivalent of defining the
+ * sun-hand's baseline against solar noon instead of solar midnight.
+ * Verified against the ring's own artwork: with this correction (and
+ * ZODIAC_HOUSES.ts's angle ranges, independently verified correct against
+ * real solar ecliptic longitude), the sun/moon hands land on the wedge
+ * whose own drawn glyph matches the real current sign -- without it, they
+ * land on that sign's glyph's opposite-pair partner, consistently, for
+ * every sign.
+ */
+export function zodiacRingRotationDegrees(time: PragueTime, location: Location): number {
+  return normalizeDegrees(siderealRotationDegrees(time, location) + 180)
 }
 
 // Mean synodic month (new moon to new moon). A known reference new moon,

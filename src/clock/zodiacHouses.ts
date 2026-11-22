@@ -27,24 +27,34 @@ type ZodiacHouse = {
 // centroid (via proper SVG path parsing, not the ring's own eccentric
 // center — the wedges are angularly bucketed from the shared hand pivot
 // (600,600), confirmed by fitting their radial cut-edges), then the sign
-// for each was read off a rendered overlay marking each centroid angle
-// against the zodiac glyphs. Order runs *against* standard zodiac order
-// (Virgo, Leo, Cancer, ... instead of Aries, Taurus, Gemini, ...) — a
-// mirrored convention that's normal for this kind of sky projection, since
-// the dial represents looking up at the sky rather than down at a map.
+// for each was read off against the zodiac glyphs themselves (reference
+// crops: cancer.svg, capricorn.svg, gemini.svg, sagitarius.svg in
+// public/clock/), not against the wedges' own (at the time, mislabeled)
+// ids. Order runs *against* standard zodiac order (Pisces, Aquarius,
+// Capricorn, ... instead of Aries, Taurus, Gemini, ...) — a mirrored
+// convention that's normal for this kind of sky projection, since the
+// dial represents looking up at the sky rather than down at a map.
+//
+// These angle ranges assume rotations.ts's zodiacRingRotationDegrees (LST
+// + 180°), not raw siderealRotationDegrees/localSiderealTimeDegrees -- see
+// that function's doc comment for why the +180 belongs there. Houses here
+// were placed by matching each range to its own drawn glyph directly, so
+// they're correct for whichever ring-rotation convention actually puts
+// that glyph under the hand during that sign's real season; today that's
+// zodiacRingRotationDegrees.
 export const ZODIAC_HOUSES: ZodiacHouse[] = [
-  { sign: 'virgo', startDeg: 359.835, endDeg: 29.885 },
-  { sign: 'leo', startDeg: 29.885, endDeg: 58.64 },
-  { sign: 'cancer', startDeg: 58.64, endDeg: 88.31 },
-  { sign: 'gemini', startDeg: 88.31, endDeg: 116.515 },
-  { sign: 'taurus', startDeg: 116.515, endDeg: 145.285 },
-  { sign: 'aries', startDeg: 145.285, endDeg: 174.905 },
-  { sign: 'pisces', startDeg: 174.905, endDeg: 203.43 },
-  { sign: 'aquarius', startDeg: 203.43, endDeg: 234.08 },
-  { sign: 'capricorn', startDeg: 234.08, endDeg: 266.0 },
-  { sign: 'sagittarius', startDeg: 266.0, endDeg: 297.105 },
-  { sign: 'scorpio', startDeg: 297.105, endDeg: 327.54 },
-  { sign: 'libra', startDeg: 327.54, endDeg: 359.835 },
+  { sign: 'pisces', startDeg: 359.835, endDeg: 29.885 },
+  { sign: 'aquarius', startDeg: 29.885, endDeg: 58.64 },
+  { sign: 'capricorn', startDeg: 58.64, endDeg: 88.31 },
+  { sign: 'sagittarius', startDeg: 88.31, endDeg: 116.515 },
+  { sign: 'scorpio', startDeg: 116.515, endDeg: 145.285 },
+  { sign: 'libra', startDeg: 145.285, endDeg: 174.905 },
+  { sign: 'virgo', startDeg: 174.905, endDeg: 203.43 },
+  { sign: 'leo', startDeg: 203.43, endDeg: 234.08 },
+  { sign: 'cancer', startDeg: 234.08, endDeg: 266.0 },
+  { sign: 'gemini', startDeg: 266.0, endDeg: 297.105 },
+  { sign: 'taurus', startDeg: 297.105, endDeg: 327.54 },
+  { sign: 'aries', startDeg: 327.54, endDeg: 359.835 },
 ]
 
 /** Which house contains the given angle (handles the house that wraps past 360°/0°). */

@@ -49,7 +49,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   max-height: min(640px, 70vh);
   overflow-y: auto;
-  /* A list this long (39 entries) needs a visibly scrollable affordance --
+  /* A list this long (246 entries) needs a visibly scrollable affordance --
      without one, the OS's default overlay scrollbar is invisible until
      actively dragged, and the list simply looks like it ends mid-row. */
   scrollbar-width: thin;
@@ -89,4 +89,32 @@
 
 .location-dropdown-option-active {
   font-weight: 700;
+}
+
+/* Prague is the app's default location (see DEFAULT_LOCATION in
+   location.ts) -- flagged here so it's easy to spot while scanning a
+   246-entry, alphabetical-by-country list rather than having to know
+   it sits under "Czech Republic". */
+.location-dropdown-option-default {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  background: rgba(201, 162, 39, 0.14);
+}
+
+.location-dropdown-default-star {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  fill: #c9a227;
+}
+
+.location-dropdown-default-tag {
+  margin-left: auto;
+  padding-left: 10px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #8a7320;
 }

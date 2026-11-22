@@ -15,6 +15,17 @@ function pad(n: number) {
   return n.toString().padStart(2, "0");
 }
 
+/** `nextSolstice`'s "summer"/"winter" kind names the calendar event itself
+ * (June vs. December), a Northern-hemisphere framing baked into
+ * solarEphemeris.ts's SolsticeKind type. For display, a southern-hemisphere
+ * location needs the opposite label -- June is *its* winter solstice, and
+ * December is its summer one -- even though it's the same June/December
+ * instant being described either way. */
+function solsticeDisplayKind(kind: "summer" | "winter", latitudeDeg: number): "summer" | "winter" {
+  if (latitudeDeg >= 0) return kind;
+  return kind === "summer" ? "winter" : "summer";
+}
+
 function getOrdinalSuffix(n: number): string {
   if (n % 100 >= 11 && n % 100 <= 13) return "th";
   switch (n % 10) {
@@ -95,7 +106,12 @@ export function DrawerClockInfo({
   const upcomingSolstices = [
     { kind: "summer" as const, date: nextSolstice(pragueTime.date, "summer") },
     { kind: "winter" as const, date: nextSolstice(pragueTime.date, "winter") },
-  ].sort((a, b) => a.date.getTime() - b.date.getTime());
+  ]
+    .map((solstice) => ({
+      ...solstice,
+      displayKind: solsticeDisplayKind(solstice.kind, location.latitudeDeg),
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
   const [firstSolstice, secondSolstice] = upcomingSolstices;
 
   return (
@@ -215,11 +231,11 @@ export function DrawerClockInfo({
           </p>
           <p className="drawer-info-subpara">
             Looking ahead: the next{" "}
-            <strong>{firstSolstice.kind} solstice</strong> falls on{" "}
+            <strong>{firstSolstice.displayKind} solstice</strong> falls on{" "}
             <strong>
               {formatSolsticeInstant(firstSolstice.date, location.timeZone)}
             </strong>
-            , and the next <strong>{secondSolstice.kind} solstice</strong> on{" "}
+            , and the next <strong>{secondSolstice.displayKind} solstice</strong> on{" "}
             <strong>
               {formatSolsticeInstant(secondSolstice.date, location.timeZone)}
             </strong>

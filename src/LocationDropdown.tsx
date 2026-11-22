@@ -70,26 +70,34 @@ export function LocationDropdown({
             role="listbox"
             style={{ top: listRect.top, right: listRect.right, minWidth: listRect.minWidth }}
           >
-            {LOCATIONS.map((location) => (
-              <li key={location.id}>
-                <button
-                  type="button"
-                  className={
-                    location.id === value.id
-                      ? "location-dropdown-option location-dropdown-option-active"
-                      : "location-dropdown-option"
-                  }
-                  role="option"
-                  aria-selected={location.id === value.id}
-                  onClick={() => {
-                    onChange(location);
-                    setOpen(false);
-                  }}
-                >
-                  {locationLabel(location)}
-                </button>
-              </li>
-            ))}
+            {LOCATIONS.map((location) => {
+              const isDefault = location.id === "prague";
+              const classNames = ["location-dropdown-option"];
+              if (location.id === value.id) classNames.push("location-dropdown-option-active");
+              if (isDefault) classNames.push("location-dropdown-option-default");
+              return (
+                <li key={location.id}>
+                  <button
+                    type="button"
+                    className={classNames.join(" ")}
+                    role="option"
+                    aria-selected={location.id === value.id}
+                    onClick={() => {
+                      onChange(location);
+                      setOpen(false);
+                    }}
+                  >
+                    {isDefault && (
+                      <svg className="location-dropdown-default-star" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 0l1.9 5.6H16l-4.8 3.5 1.9 5.6L8 11.2 3 14.7l1.9-5.6L0 5.6h6.1z" />
+                      </svg>
+                    )}
+                    {locationLabel(location)}
+                    {isDefault && <span className="location-dropdown-default-tag">default</span>}
+                  </button>
+                </li>
+              );
+            })}
           </ul>,
           document.body,
         )}

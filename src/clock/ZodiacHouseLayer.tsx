@@ -42,7 +42,19 @@ export function ZodiacHouseLayer({ src, gradientId, rotation, filter, pragueTime
     const wedgeEl = (event.target as Element).closest('[id^="zodiac-wedge-"]')
     const sign = wedgeEl && zodiacSignFromWedgeId(wedgeEl.id)
     if (!sign) return
-    const rect = event.currentTarget.getBoundingClientRect()
+    // The tooltip below is positioned as a percentage of .clock-stage (the
+    // nearest ancestor with `position: relative`), not of this layer's own
+    // div -- which matters because this div itself is live-rotated via CSS
+    // `transform: rotate(...)` (see GradientClockLayer). getBoundingClientRect()
+    // on a rotated element returns its rotated on-screen bounding box, whose
+    // width/height don't match its unrotated layout box at any angle that
+    // isn't a multiple of 90°, so computing the percentage from *this* div's
+    // rect would drift from where the tooltip actually renders as soon as
+    // the ring sits at a skewed angle (e.g. after picking a location whose
+    // longitude differs a lot from Prague's). .clock-stage only ever scales,
+    // never rotates, so its rect doesn't have that mismatch.
+    const stage = (event.currentTarget as HTMLElement).closest('.clock-stage')
+    const rect = (stage ?? event.currentTarget).getBoundingClientRect()
     setTooltip({
       sign,
       xPct: ((event.clientX - rect.left) / rect.width) * 100,

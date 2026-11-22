@@ -327,6 +327,16 @@ export function HorizonPlateLayer({ location }: { location: Location }) {
                 width={GLOBE.radius * 2}
                 height={GLOBE.radius * 2}
                 preserveAspectRatio="xMidYMid slice"
+                // The globe emblem is a fixed image, drawn as if seen from
+                // the north -- for a southern-hemisphere location, flip it
+                // 180° around its own center so the hemisphere nearer the
+                // viewer still roughly matches which hemisphere the clock
+                // is actually set to.
+                transform={
+                  location.latitudeDeg < 0
+                    ? `rotate(180 ${GLOBE.center.x} ${GLOBE.center.y})`
+                    : undefined
+                }
               />
             </g>
             <circle

@@ -5,8 +5,8 @@ import type { Location } from './location'
 import {
   moonHandRotationDegrees,
   numericRingRotationDegrees,
-  siderealRotationDegrees,
   sunHandRotationDegrees,
+  zodiacRingRotationDegrees,
 } from './rotations'
 import { SunGlyphLayer } from './SunGlyphLayer'
 import { useOnlyLayerDebug } from './useOnlyLayerDebug'
@@ -85,7 +85,7 @@ function liveRotation(id: string, pragueTime: PragueTime, location: Location): n
     // motion (Earth relative to the fixed stars), same spindle.
     case 'zodiac-ring':
     case 'star-dial':
-      return siderealRotationDegrees(pragueTime, location)
+      return zodiacRingRotationDegrees(pragueTime, location)
     case 'numeric-ring':
       return numericRingRotationDegrees(pragueTime.date, location)
     default:
@@ -127,7 +127,7 @@ export function ClockFace({ pragueTime, location }: { pragueTime: PragueTime; lo
               rotation={rotation}
               filter={layer.filter}
               pragueTime={pragueTime}
-              ringRotation={siderealRotationDegrees(pragueTime, location)}
+              ringRotation={zodiacRingRotationDegrees(pragueTime, location)}
             />
           )
         }
