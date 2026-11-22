@@ -2,6 +2,7 @@ import { ClockLayer } from './ClockLayer'
 import { GradientClockLayer } from './GradientClockLayer'
 import { HorizonPlateLayer } from './HorizonPlateLayer'
 import type { Location } from './location'
+import { MoonGlyphLayer } from './MoonGlyphLayer'
 import {
   moonHandRotationDegrees,
   numericRingRotationDegrees,
@@ -69,6 +70,12 @@ const LAYERS: Layer[] = [
   // ring's eccentric circle over the year.
   { id: 'sun-glyph', kind: 'image', src: '/clock/sun_glyph.svg', filter: DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
+  // moon-glyph's `kind: 'image'` here is nominal -- ClockFace special-cases
+  // its id to render via MoonGlyphLayer instead (see below), mirroring
+  // sun-glyph: the glyph needs to be inlined and repositioned at runtime as
+  // it rides the zodiac ring's eccentric circle, and it redraws its own
+  // phase shape every tick.
+  { id: 'moon-glyph', kind: 'image', src: '/clock/moon_glyph.svg', filter: DROP_SHADOW },
   { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
 ]
 
@@ -80,6 +87,7 @@ function liveRotation(id: string, pragueTime: PragueTime, location: Location): n
     case 'sun-glyph':
       return sunHandRotationDegrees(pragueTime)
     case 'moon-dial':
+    case 'moon-glyph':
       return moonHandRotationDegrees(pragueTime)
     // Zodiac ring and star-dial share one sidereal rotation — same physical
     // motion (Earth relative to the fixed stars), same spindle.
@@ -122,6 +130,18 @@ export function ClockFace({ pragueTime, location }: { pragueTime: PragueTime; lo
         if (layer.id === 'sun-glyph') {
           return (
             <SunGlyphLayer
+              key={layer.id}
+              src={layer.src}
+              rotation={rotation}
+              filter={layer.filter}
+              pragueTime={pragueTime}
+              ringRotation={zodiacRingRotationDegrees(pragueTime, location)}
+            />
+          )
+        }
+        if (layer.id === 'moon-glyph') {
+          return (
+            <MoonGlyphLayer
               key={layer.id}
               src={layer.src}
               rotation={rotation}

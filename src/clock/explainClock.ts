@@ -6,8 +6,8 @@ import {
   type HandId,
   type ZodiacSign,
 } from './zodiacHouses'
+import { trueLunarElongationDeg } from './lunarEphemeris'
 import {
-  lunarPhaseAngleDegrees,
   moonHandRotationDegrees,
   normalizeDegrees,
   siderealRotationDegrees,
@@ -201,7 +201,7 @@ export function explainClock(pragueTime: PragueTime, location: Location): ClockE
   const ringRotation = zodiacRingRotationDegrees(pragueTime, location)
   const sunAngle = angleInRingFrame(sunHandRotationDegrees(pragueTime), ringRotation)
   const moonAngle = angleInRingFrame(moonHandRotationDegrees(pragueTime), ringRotation)
-  const phaseDeg = lunarPhaseAngleDegrees(pragueTime.date)
+  const phaseDeg = trueLunarElongationDeg(pragueTime.date)
 
   const sunSign = houseAt(sunAngle).sign
   const moonSign = houseAt(moonAngle).sign

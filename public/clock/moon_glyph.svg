@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Extracted from moon_dial.svg's ball: the sphere MoonGlyphLayer slides
+     radially (riding the zodiac ring, like SunGlyphLayer) and redraws every
+     tick. #moon-phase-bright's `d` is rewritten from the current Sun-Moon
+     elongation (see moonPhaseShape.ts) to show the Moon's true phase shape,
+     layered over the static dark base disc beneath it. -->
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1200 1200" style="enable-background:new 0 0 1200 1200;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#7F8CCC;}
+</style>
+<g id="moon-glyph">
+	<circle class="st0" cx="600" cy="881.29" r="23.16"/>
+	<radialGradient id="moon-dark-base-gradient" cx="593" cy="875" r="26" gradientUnits="userSpaceOnUse">
+		<stop offset="0" style="stop-color:#5F6470"/>
+		<stop offset="0.63" style="stop-color:#000000"/>
+		<stop offset="1" style="stop-color:#31343A"/>
+	</radialGradient>
+	<circle style="fill:url(#moon-dark-base-gradient);" cx="600" cy="881.29" r="18.19"/>
+	<linearGradient id="moon-bright-gradient" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+		<stop offset="0" style="stop-color:#81848D"/>
+		<stop offset="0.7" style="stop-color:#E7ECFC"/>
+		<stop offset="0.95" style="stop-color:#FFFFFF"/>
+		<stop offset="1" style="stop-color:#E7ECFC"/>
+	</linearGradient>
+	<path id="moon-phase-bright" style="fill:url(#moon-bright-gradient);"
+		d="M600,863.1 A18.19,18.19 0 0 1 600,899.47 A0,18.19 0 0 0 600,863.1 Z"/>
+	<radialGradient id="SVGID_00000057862919496373956490000004894984449319756433_" cx="599.2105" cy="871.4058" r="8.3033" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.7636" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	</radialGradient>
+	<circle style="fill:url(#SVGID_00000057862919496373956490000004894984449319756433_);" cx="599.21" cy="871.41" r="8.3"/>
+	<radialGradient id="SVGID_00000152243026636508027970000015783088680967353774_" cx="604.8322" cy="885.0475" r="23.5623" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#000000"/>
+		<stop  offset="0.763" style="stop-color:#000000;stop-opacity:0"/>
+	</radialGradient>
+	<circle style="fill:url(#SVGID_00000152243026636508027970000015783088680967353774_);" cx="604.83" cy="885.05" r="23.56"/>
+</g>
+</svg>

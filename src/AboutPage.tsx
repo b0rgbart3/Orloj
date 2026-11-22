@@ -52,6 +52,10 @@ const EXTERNAL_LINKS = [
     label: "Wikipedia: Prague astronomical clock",
   },
   {
+    href: "https://orloj.cesnet.cz/en/",
+    label: "CESNET: a 3D interactive digitalization of the Prague Orloj",
+  },
+  {
     href: "https://www.google.com/search?sca_esv=906155477d0fcc73&rlz=1C5MACD_enUS1116US1116&sxsrf=AKL5yDhkSEg_OG31SGgVsruaZl9Owzk45w:1793720929675&q=prague+astronomical+clock&source=lnms&fbs=ACAhTvwdifjn2dKXmjtOfBxVFl_koHVe5RLSnJlTH2QYaq_YVfnwA0k4pzZ9d-ZbRA0e6tww_WM0IOMLGL1GAIRO4RsbjJjjpycyTparesHCNTyqO8ZGu_yTJxggHqAlblyUQ10FCLRnvkxMEB9EO08PODvbUjIGT3xO42l6bARmMkjsY6WGvbo5otApwIskyZcF12Xk-NLTSd_HRuNGpKZEUIuLmcm7aVYIzAesJ0LVoKzYqmh9j_w&sa=X&ved=2ahUKEwj7jtuWk-yXAxXUMjQIHaVHO6wQ0pQJegQIDRAB&biw=1186&bih=693&dpr=2.5#lpg=cid:CgIgAQ%3D%3D,ik:CAoSFkNJSE0wb2dLRUlDQWdJQ1J6NS04RlE%3D",
     label: "Google: more photos of the Prague Astronomical Clock",
   },
@@ -132,7 +136,7 @@ const DIAL_ITEMS: DiagramItem[] = [
     src: "/about_page/moon_dial.svg",
     alt: "The moon dial, half silvered to show its phase",
     title: "The moon dial",
-    body: "Turning at nearly the same rate as the sun dial, this half-silvered sphere shows the moon's current phase and its own place among the zodiac signs — offset from the sun by the moon's actual phase, so the two meet exactly at new moon and sit opposite each other at full moon.",
+    body: "Turning at nearly the same rate as the sun dial, this bicolor sphere shows the moon's true current phase — not just a fixed half-and-half split, but the actual crescent, quarter, gibbous, or full shape the real moon shows tonight — and its own place among the zodiac signs, offset from the sun by the moon's real phase so the two meet exactly at new moon and sit opposite each other at full moon.",
   },
   {
     src: "/about_page/star_dial.svg",
@@ -610,10 +614,12 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           reproduced Prague's real plate closely, then re-verified by swapping
           in other latitudes (Reykjavík's, among others) to confirm the shapes
           still made astronomical sense rather than only looking right at the
-          one latitude they were eyeballed against. That means a future location
-          picker could move this plate to any latitude on Earth and have it
-          redraw correctly, something the real clock's fixed brass plate was
-          never built to do.
+          one latitude they were eyeballed against. That's exactly what powers
+          the location picker in the app's header: choosing a city redraws this
+          plate for that city's own latitude, something the real clock's fixed
+          brass plate was never built to do. See{" "}
+          <a href="#about/digital-version">About this digital version</a> for
+          more on that feature.
         </p>
       </div>
 
@@ -657,6 +663,39 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           moments the sun's own ecliptic longitude crosses 90° and 270°, the
           real astronomical definition of a solstice, accurate to within a few
           minutes.
+        </p>
+        <p>
+          The moon dial takes the same approach a step further. The real
+          Orloj's moon hand is geared to a fixed mean synodic month — 29.53
+          days, via a 379-tooth wheel — a fine approximation that nonetheless
+          drifts out of sync with the sky over time and periodically needs
+          hand correction, because the moon's real orbital speed varies by
+          several percent across its elliptical orbit, something no fixed
+          gear ratio can capture. This digital version computes the moon's
+          and the sun's true ecliptic longitudes straight from orbital
+          mechanics and takes their real difference to get the moon's actual
+          position and illuminated phase at every instant — so unlike the
+          mechanical original, it never drifts and never needs winding back
+          onto the real sky.
+        </p>
+        <p>
+          Perhaps the biggest advantage this digital version has over the real
+          Orloj: the real clock is bolted to one wall in Prague and can only
+          ever show Prague's sky. The location picker in the header lets you
+          pick any of roughly 250 cities worldwide — Reykjavík, Cairo, Rio de
+          Janeiro, Sydney, Tokyo — and the entire clock recomputes itself for
+          that city's own latitude and longitude, live. The background plate's
+          horizon and twilight almucantars redraw for the new latitude, the
+          Babylonian hour arcs reshape to match that city's own daylight
+          length, the civil/sidereal/sunset math all shifts to the new
+          longitude and time zone, and even the zodiac dials' seasonal
+          reading stays correct for wherever you've chosen. A city near the
+          equator shows almost no seasonal swing in day length; a city near
+          the Arctic Circle shows the horizon band swelling and shrinking
+          dramatically across the year — exactly the kind of comparison no
+          single fixed plate of brass could ever make. Your choice of city is
+          saved and baked into the page's own URL, so a link to this app can
+          point at a specific place, not just a specific moment.
         </p>
         <h3>What this digital version can teach people in the 21st century</h3>
         <p>

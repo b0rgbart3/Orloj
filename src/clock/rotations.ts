@@ -1,6 +1,10 @@
+import { normalizeDegrees, toJulianDate } from './astroMath'
+import { trueLunarElongationDeg } from './lunarEphemeris'
 import type { Location } from './location'
 import { daylightHalfHourAngleDeg, solarDeclinationDeg, utcOffsetHours } from './solarPosition'
 import type { PragueTime } from './usePragueTime'
+
+export { normalizeDegrees, toJulianDate }
 
 /**
  * Degrees to rotate the sun-dial layer for the given Prague time.
@@ -14,14 +18,6 @@ import type { PragueTime } from './usePragueTime'
 export function sunHandRotationDegrees({ hours, minutes, seconds }: PragueTime): number {
   const fractionalHour = hours + minutes / 60 + seconds / 3600
   return fractionalHour * 15
-}
-
-export function toJulianDate(date: Date): number {
-  return date.getTime() / 86400000 + 2440587.5
-}
-
-export function normalizeDegrees(degrees: number): number {
-  return ((degrees % 360) + 360) % 360
 }
 
 /**
@@ -84,37 +80,27 @@ export function zodiacRingRotationDegrees(time: PragueTime, location: Location):
   return normalizeDegrees(siderealRotationDegrees(time, location) + 180)
 }
 
-// Mean synodic month (new moon to new moon). A known reference new moon,
-// used purely to anchor the phase — any accurate new-moon timestamp works
-// equally well since the cycle is periodic.
-const SYNODIC_MONTH_DAYS = 29.530588861
-const MS_PER_DAY = 86400000
-const REFERENCE_NEW_MOON_MS = Date.UTC(2000, 0, 6, 18, 14)
-
-/**
- * Lunar phase angle in degrees: 0° = new moon, 180° = full moon, increasing
- * over the ~29.53-day synodic month.
- */
-export function lunarPhaseAngleDegrees(date: Date): number {
-  const daysSinceReference = (date.getTime() - REFERENCE_NEW_MOON_MS) / MS_PER_DAY
-  return normalizeDegrees((daysSinceReference / SYNODIC_MONTH_DAYS) * 360)
-}
-
 /**
  * Degrees to rotate the moon-dial layer.
  *
  * The Sun and Moon arms share one pivot and turn at very nearly the same
  * rate (a "lunar day" is ~24h50m vs the Sun's 24h00m — diagram calls them
- * three collars on one spindle). Rather than simulate that near-24h gear
- * ratio from an arbitrary starting alignment, we derive the Moon's angle
- * directly from the Sun's live angle minus the actual current lunar phase,
- * anchored to a real reference new moon. Same mechanical relationship,
- * correctly synced to today's real phase: at new moon (phase 0°) the Moon
- * sits exactly on the Sun; at full moon (phase 180°) it sits exactly
- * opposite.
+ * three collars on one spindle). We derive the Moon's angle directly from
+ * the Sun's live angle minus the actual Sun-Moon elongation: at new moon
+ * (elongation 0°) the Moon sits exactly on the Sun; at full moon
+ * (elongation 180°) it sits exactly opposite.
+ *
+ * Unlike the real Orloj — whose Moon hand is geared to a fixed 29.53-day
+ * mean synodic month and drifts out of sync with the sky over time, needing
+ * periodic hand-correction — this uses `trueLunarElongationDeg`, computed
+ * from the Moon's and Sun's real apparent ecliptic longitudes (see
+ * lunarEphemeris.ts/solarEphemeris.ts). The Moon's real orbital speed varies
+ * by several percent across its elliptical orbit; a fixed gear ratio can't
+ * capture that, but this calculation does, so the dial never needs winding
+ * back onto the real sky.
  */
 export function moonHandRotationDegrees(time: PragueTime): number {
-  return normalizeDegrees(sunHandRotationDegrees(time) - lunarPhaseAngleDegrees(time.date))
+  return normalizeDegrees(sunHandRotationDegrees(time) - trueLunarElongationDeg(time.date))
 }
 
 /**

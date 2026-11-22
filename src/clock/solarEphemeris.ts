@@ -1,4 +1,4 @@
-import { normalizeDegrees, toJulianDate } from './rotations'
+import { normalizeDegrees, toJulianDate } from './astroMath'
 
 const MS_PER_DAY = 86400000
 
