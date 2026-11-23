@@ -9,6 +9,7 @@ import type { Location } from "./clock/location";
 import { nextSolstice } from "./clock/solarEphemeris";
 import type { HandId, ZodiacSign } from "./clock/zodiacHouses";
 import type { PragueDateParts, PragueTime } from "./clock/usePragueTime";
+import { MoonPhaseIcon } from "./MoonPhaseIcon";
 import "./DrawerClockInfo.css";
 
 function pad(n: number) {
@@ -143,11 +144,7 @@ export function DrawerClockInfo({
           </tr>
           <tr>
             <td className="drawer-info-table-icon">
-              <img
-                className="drawer-info-icon"
-                src="/clock/icons/moon-icon.svg"
-                alt=""
-              />
+              <MoonPhaseIcon className="drawer-info-icon" date={pragueTime.date} />
             </td>
             <td className="drawer-info-table-label">Moon</td>
             <td className="drawer-info-table-value">
@@ -276,11 +273,7 @@ export function DrawerClockInfo({
         </div>
       </div>
       <p className="drawer-info-row">
-        <img
-          className="drawer-info-icon"
-          src="/clock/icons/moon-icon.svg"
-          alt=""
-        />
+        <MoonPhaseIcon className="drawer-info-icon" date={pragueTime.date} />
         <span className="drawer-info-text">
           The <strong>moon dial</strong> shows a <strong>{e.moonPhase}</strong>{" "}
           ({e.moonIllumination}% lit), resting in{" "}

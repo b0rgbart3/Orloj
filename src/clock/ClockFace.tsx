@@ -18,6 +18,11 @@ import './ClockFace.css'
 // Layers are stacked bottom to top. Every SVG shares the same 1200x1200
 // viewBox (center at 600,600), so they line up automatically.
 const DROP_SHADOW = 'drop-shadow(0 0 8px #000000)'
+// The sun glyph's shadow reads as cool blue-gray against its warm gold fill
+// when it's plain black, so it gets its own warm dark-brown shadow instead.
+// Stacked twice (a tight core + a wider falloff) since a single drop-shadow
+// at this blur radius faded out too quickly to read as a strong shadow.
+const SUN_GLYPH_DROP_SHADOW = 'drop-shadow(0 0 3px #1A0F08) drop-shadow(0 0 8px #1A0F08)'
 
 type Layer =
   | { id: string; kind: 'image'; src: string; filter?: string; rotation?: number }
@@ -68,7 +73,7 @@ const LAYERS: Layer[] = [
   // its id to render via SunGlyphLayer instead (see below), since the glyph
   // needs to be inlined and repositioned at runtime as it rides the zodiac
   // ring's eccentric circle over the year.
-  { id: 'sun-glyph', kind: 'image', src: '/clock/sun_glyph.svg', filter: DROP_SHADOW },
+  { id: 'sun-glyph', kind: 'image', src: '/clock/sun_glyph.svg', filter: SUN_GLYPH_DROP_SHADOW },
   { id: 'moon-dial', kind: 'image', src: '/clock/moon_dial.svg', filter: DROP_SHADOW },
   // moon-glyph's `kind: 'image'` here is nominal -- ClockFace special-cases
   // its id to render via MoonGlyphLayer instead (see below), mirroring
