@@ -25,6 +25,6 @@ export function arrowheadPoints(tipX: number, tipY: number, deg: number, size = 
   return `${tipX.toFixed(2)},${tipY.toFixed(2)} ${back1.x.toFixed(2)},${back1.y.toFixed(2)} ${back2.x.toFixed(2)},${back2.y.toFixed(2)}`;
 }
 
-export const DIAGRAM_INK = "#2a2a2a";
-export const DIAGRAM_GOLD = "#9a6b00";
+export const DIAGRAM_INK = "#f0eee8";
+export const DIAGRAM_GOLD = "#f0b429";
 export const DIAGRAM_FONT = "Helvetica, Arial, sans-serif";

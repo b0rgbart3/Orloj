@@ -654,29 +654,27 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           one of the real advantages of a digital version.
         </p>
         <p>
-          The sun dial itself is built to match the real Orloj's own
-          mechanical engineering — a hand geared to civil time, a zodiac ring
-          geared to true sidereal time, just like the original 15th-century
-          clockwork. As a bonus only a digital version can offer, the precise
-          solstice date predictions displayed in the "At this moment" drawer
-          come from a proper solar ephemeris built alongside it: the exact
-          moments the sun's own ecliptic longitude crosses 90° and 270°, the
-          real astronomical definition of a solstice, accurate to within a few
-          minutes.
+          The sun dial itself is built to match the real Orloj's own mechanical
+          engineering — a hand geared to civil time, a zodiac ring geared to
+          true sidereal time, just like the original 15th-century clockwork. As
+          a bonus only a digital version can offer, the precise solstice date
+          predictions displayed in the "At this moment" drawer come from a
+          proper solar ephemeris built alongside it: the exact moments the sun's
+          own ecliptic longitude crosses 90° and 270°, the real astronomical
+          definition of a solstice, accurate to within a few minutes.
         </p>
         <p>
-          The moon dial takes the same approach a step further. The real
-          Orloj's moon hand is geared to a fixed mean synodic month — 29.53
-          days, via a 379-tooth wheel — a fine approximation that nonetheless
-          drifts out of sync with the sky over time and periodically needs
-          hand correction, because the moon's real orbital speed varies by
-          several percent across its elliptical orbit, something no fixed
-          gear ratio can capture. This digital version computes the moon's
-          and the sun's true ecliptic longitudes straight from orbital
-          mechanics and takes their real difference to get the moon's actual
-          position and illuminated phase at every instant — so unlike the
-          mechanical original, it never drifts and never needs winding back
-          onto the real sky.
+          The moon dial takes the same approach a step further. The real Orloj's
+          moon hand is geared to a fixed mean synodic month — 29.53 days, via a
+          379-tooth wheel — a fine approximation that nonetheless drifts out of
+          sync with the sky over time and periodically needs hand correction,
+          because the moon's real orbital speed varies by several percent across
+          its elliptical orbit, something no fixed gear ratio can capture. This
+          digital version computes the moon's and the sun's true ecliptic
+          longitudes straight from orbital mechanics and takes their real
+          difference to get the moon's actual position and illuminated phase at
+          every instant — so unlike the mechanical original, it never drifts and
+          never needs winding back onto the real sky.
         </p>
         <p>
           Perhaps the biggest advantage this digital version has over the real
@@ -686,16 +684,16 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           Janeiro, Sydney, Tokyo — and the entire clock recomputes itself for
           that city's own latitude and longitude, live. The background plate's
           horizon and twilight almucantars redraw for the new latitude, the
-          Babylonian hour arcs reshape to match that city's own daylight
-          length, the civil/sidereal/sunset math all shifts to the new
-          longitude and time zone, and even the zodiac dials' seasonal
-          reading stays correct for wherever you've chosen. A city near the
-          equator shows almost no seasonal swing in day length; a city near
-          the Arctic Circle shows the horizon band swelling and shrinking
-          dramatically across the year — exactly the kind of comparison no
-          single fixed plate of brass could ever make. Your choice of city is
-          saved and baked into the page's own URL, so a link to this app can
-          point at a specific place, not just a specific moment.
+          Babylonian hour arcs reshape to match that city's own daylight length,
+          the civil/sidereal/sunset math all shifts to the new longitude and
+          time zone, and even the zodiac dials' seasonal reading stays correct
+          for wherever you've chosen. A city near the equator shows almost no
+          seasonal swing in day length; a city near the Arctic Circle shows the
+          horizon band swelling and shrinking dramatically across the year —
+          exactly the kind of comparison no single fixed plate of brass could
+          ever make. Your choice of city is saved and baked into the page's own
+          URL, so a link to this app can point at a specific place, not just a
+          specific moment.
         </p>
         <h3>What this digital version can teach people in the 21st century</h3>
         <p>
@@ -748,7 +746,17 @@ export function AboutPage({ initialSection }: AboutPageProps) {
           >
             Bart Dority
           </a>
-          . More projects live at{" "}
+          .
+        </p>
+        <p>
+          I enjoy building complex, data-driven applications engineered with AI
+          tools, with the goal of turning dense technical or historical subjects
+          into something people can explore and actually understand. This clock,
+          like most of my projects, sits at that intersection: real astronomical
+          data and history made interactive.
+        </p>
+        <p>
+          More projects live at{" "}
           <a href={MOON_MATH_URL} target="_blank" rel="noopener noreferrer">
             moon-math.online
           </a>

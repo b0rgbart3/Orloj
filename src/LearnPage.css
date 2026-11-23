@@ -69,9 +69,6 @@
 .learn-figure {
   margin: 1.25rem 0;
   padding: 1rem 1rem 0.75rem;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(26, 26, 26, 0.12);
-  border-radius: 10px;
 }
 
 .learn-figure svg {
@@ -96,12 +93,19 @@
   text-align: center;
 }
 
-@media (min-width: 700px) {
-  .learn-figure {
-    max-width: 30rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
+.learn-figure {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.learn-figure--dark {
+  background: #121212;
+  border-radius: 10px;
+}
+
+.learn-figure--dark figcaption {
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .zodiac-list {
@@ -115,9 +119,6 @@
 
 .zodiac-list-item {
   padding: 0.9rem 1.1rem;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(26, 26, 26, 0.12);
-  border-radius: 10px;
 }
 
 .zodiac-list-item p {
@@ -158,9 +159,6 @@
 
 .term-list-item {
   padding: 0.9rem 1.1rem;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(26, 26, 26, 0.12);
-  border-radius: 10px;
 }
 
 .term-list-term {

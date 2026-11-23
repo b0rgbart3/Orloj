@@ -15,7 +15,7 @@ export function SiderealTime() {
   return (
     <>
       <h3>Two kinds of day</h3>
-      <Figure caption="A solar day: the sun back in the same part of the sky, noon to noon.">
+      <Figure dark caption="A solar day: the sun back in the same part of the sky, noon to noon.">
         <SolarDayDiagram />
       </Figure>
       <p>
@@ -25,7 +25,7 @@ export function SiderealTime() {
         it is.
       </p>
 
-      <Figure caption="A sidereal day is a full turn against the stars — a touch short of facing the sun again.">
+      <Figure dark caption="A sidereal day is a full turn against the stars — a touch short of facing the sun again.">
         <SiderealDayDiagram />
       </Figure>
       <p>
@@ -38,7 +38,7 @@ export function SiderealTime() {
         solar day, every single day, forever.
       </p>
 
-      <Figure caption="That four-minute gap, compounded over a year, is one full extra lap.">
+      <Figure dark caption="That four-minute gap, compounded over a year, is one full extra lap.">
         <AnnualLapDiagram />
       </Figure>
       <p>
@@ -53,7 +53,7 @@ export function SiderealTime() {
       </p>
 
       <h3>The sky's own zero point</h3>
-      <Figure caption="Where the sun's path crosses the sky's equator: the vernal equinox point.">
+      <Figure dark caption="Where the sun's path crosses the sky's equator: the vernal equinox point.">
         <EclipticEquatorDiagram />
       </Figure>
       <p>
@@ -69,7 +69,7 @@ export function SiderealTime() {
         it consistently, year after year.
       </p>
 
-      <Figure caption="A star's highest point, crossing due north–south overhead, is its transit.">
+      <Figure dark caption="A star's highest point, crossing due north–south overhead, is its transit.">
         <MeridianTransitDiagram />
       </Figure>
       <p>
@@ -82,7 +82,7 @@ export function SiderealTime() {
         <strong>culmination</strong>.
       </p>
 
-      <Figure caption="LST 0h: the instant the vernal equinox point sits on the meridian.">
+      <Figure dark caption="LST 0h: the instant the vernal equinox point sits on the meridian.">
         <LstZeroDiagram />
       </Figure>
       <p>
@@ -95,7 +95,7 @@ export function SiderealTime() {
       </p>
 
       <h3>Why anyone bothered measuring it</h3>
-      <Figure caption="Whatever right ascension equals LST is transiting — overhead right now.">
+      <Figure dark caption="Whatever right ascension equals LST is transiting — overhead right now.">
         <RightAscensionDiagram />
       </Figure>
       <p>
@@ -112,7 +112,7 @@ export function SiderealTime() {
       </p>
 
       <h3>Why the Orloj has a dial for it at all</h3>
-      <Figure caption="The real mechanism on Old Town Hall: gears, not pixels, since 1410.">
+      <Figure dark caption="The real mechanism on Old Town Hall: gears, not pixels, since 1410.">
         <OrlojHistoryPhoto />
       </Figure>
       <p>
@@ -128,7 +128,7 @@ export function SiderealTime() {
         scientific feat — not a toy, a working instrument.
       </p>
 
-      <Figure caption="On this clock: the star hand runs about four minutes ahead, every day.">
+      <Figure dark caption="On this clock: the star hand runs about four minutes ahead, every day.">
         <LiveReadingDiagram />
       </Figure>
       <p>
