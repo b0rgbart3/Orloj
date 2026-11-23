@@ -112,6 +112,16 @@ export function AstrologicalZodiac() {
         with its own glyph, element, and classical ruling planet. Below is each sign in order, starting
         from Aries at the spring equinox.
       </p>
+      <p>
+        To learn more about the zodiac and how it relates to the sun and earth's orbits, visit:{" "}
+        <a
+          href="https://theorrery.moon-math.online/?speed=1&playing=1&focus=overview&axis=1&grid=1&labels=1&orbits=hidden&zodiac=1&rainbow=1&zodiacStyle=classic&date=2026-11-29T08%3A58%3A29.348Z"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          The Orrery
+        </a>
+      </p>
       <ol className="zodiac-list">
         {SIGN_ORDER.map((sign) => {
           const detail = SIGN_DETAILS[sign];
