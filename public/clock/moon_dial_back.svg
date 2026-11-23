@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1200 1200" style="enable-background:new 0 0 1200 1200;" xml:space="preserve">
+<!-- The short, capped end of the moon hand; see moon_dial.svg for the
+     long plain end and the shared backstory. Split into its own file so
+     ClockFace can paint it as a separate layer underneath the zodiac ring,
+     while the long end stays layered above it; both still share the same
+     rotation (moonHandRotationDegrees) so they move together as one rigid
+     hand through the pivot. -->
+<style type="text/css">
+	.st0{fill:#3b596d;}
+</style>
+<!-- Short end, on the opposite side of the pivot from the long end: stem
+     runs to r=292 (attachment point, where the cap below takes over) so it
+     reads as a single bar running clean through the pivot rather than a
+     one-sided hand. -->
+<polygon class="st0" points="604.04,598.56 604.04,307.74 595.96,307.74 595.96,598.56 "/>
+<!-- Fancy cap terminating the short end: the exact shape from
+     moondial_endcap.svg (its own 50x50 artwork, stem hanging down from a
+     T-bar), scaled (and, since this is the north-pointing end, mirrored
+     vertically rather than flipped like the original south-pointing
+     version) so the narrow end lines up with this stem's width and the
+     bar flares at the outermost point. The attachment point is pulled in
+     to r=307.74 (radius 292 from the clock's 600,600 center) so the bar's
+     outer tip lands at radius 332, matching the roman ring's own inner
+     edge (public/clock/roman_ring.svg) so the cap never pokes past it. -->
+<g transform="matrix(1.114328,0,0,0.880892,573.178,264.533)">
+	<path class="st0" d="M20.09,49V35.29c0,0-0.46-1.84-2.35-3.63s-1.74-5.47-1.13-6.6c0.61-1.13,3.12-3.63,3.12-5.78s-0.97-6.55-5.32-6.91
+		s-2.51-0.05-4.4-0.51C8.12,11.4,8.39,9.55,8.4,7.87c0.01-1.51,0.08,0.41,0.03-1.38s1.59-2.56,4.71-2.56
+		c6.29,0,24.81,0.31,24.81,0.31s4.3-0.72,4.19,3.38c-0.07,2.71,0.22,4.09-2.51,4.14c-5.73,0.1-8.85,0.1-9.87,3.73
+		c-1.09,3.85-0.51,4.3,0.2,5.98c0.66,1.57,3.12,2.3,3.22,5.22c0.1,2.92,0.16,3.53-3.22,6.45c-2.2,1.89-1.79,2.81-1.79,6.19
+		c0,3.38-0.15,9.72-0.15,9.72L20.09,49z"/>
+</g>
+</svg>

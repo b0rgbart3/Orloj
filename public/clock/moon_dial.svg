@@ -14,26 +14,20 @@
      fall short of the glyph whenever it slides inward; drawing it out
      past the ring's own maximum radius keeps it underlapping the glyph
      at every point in its swing, the same way sun_dial.svg's own stem
-     is drawn well past its glyph's baseline for the same reason. -->
+     is drawn well past its glyph's baseline for the same reason.
+
+     This file is the long, plain (uncapped) end only; the short, capped
+     end lives in moon_dial_back.svg as its own layer so ClockFace can
+     paint it underneath the zodiac ring while this long end stays layered
+     above it. Both share the same rotation and pivot, so they move
+     together as one rigid hand. -->
 <style type="text/css">
 	.st0{fill:#3b596d;}
 	.st1{fill:#5F6999;}
 </style>
 <line class="st0" x1="604.04" y1="601.44" x2="595.96" y2="601.44"/>
-<polygon class="st0" points="604.04,601.89 604.04,892.26 595.96,892.26 595.96,601.44 "/>
-<!-- Fancy cap terminating the stem's outer end: the exact shape from
-     moondial_endcap.svg (its own 50x50 artwork, stem hanging down from a
-     T-bar), flipped and scaled so the narrow end lines up with this stem's
-     width and the bar flares at the outermost point. The attachment point
-     is pulled in to r=892.26 (radius 292 from the clock's 600,600 center)
-     so the bar's outer tip lands at radius 332, matching the roman ring's
-     own inner edge (public/clock/roman_ring.svg) so the cap never pokes
-     past it. -->
-<g transform="matrix(1.114328,0,0,-0.880892,573.178,935.467)">
-	<path class="st0" d="M20.09,49V35.29c0,0-0.46-1.84-2.35-3.63s-1.74-5.47-1.13-6.6c0.61-1.13,3.12-3.63,3.12-5.78s-0.97-6.55-5.32-6.91
-		s-2.51-0.05-4.4-0.51C8.12,11.4,8.39,9.55,8.4,7.87c0.01-1.51,0.08,0.41,0.03-1.38s1.59-2.56,4.71-2.56
-		c6.29,0,24.81,0.31,24.81,0.31s4.3-0.72,4.19,3.38c-0.07,2.71,0.22,4.09-2.51,4.14c-5.73,0.1-8.85,0.1-9.87,3.73
-		c-1.09,3.85-0.51,4.3,0.2,5.98c0.66,1.57,3.12,2.3,3.22,5.22c0.1,2.92,0.16,3.53-3.22,6.45c-2.2,1.89-1.79,2.81-1.79,6.19
-		c0,3.38-0.15,9.72-0.15,9.72L20.09,49z"/>
-</g>
+<!-- Plain long end, no cap: runs straight out to r=407, flush with the
+     numeric ring's own inner edge, same flush convention as the capped
+     end (in moon_dial_back.svg) lands on the roman ring's inner edge. -->
+<polygon class="st0" points="604.04,601.89 604.04,1007 595.96,1007 595.96,601.44 "/>
 </svg>

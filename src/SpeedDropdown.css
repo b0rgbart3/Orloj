@@ -30,10 +30,14 @@
 }
 
 .speed-dropdown-list {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 20;
+  /* position: fixed (not absolute) -- this is portaled to <body> (see
+     SpeedDropdown.tsx), with top/right/minWidth supplied inline from the
+     trigger's own bounding rect, so it isn't positioned relative to
+     anything in this stylesheet. */
+  position: fixed;
+  /* Higher than .clock-stage's z-index: 2 (ClockFace.css) -- see
+     LocationDropdown.css for why this needs to draw over the clock. */
+  z-index: 1000;
   margin: 0;
   padding: 4px 0;
   list-style: none;

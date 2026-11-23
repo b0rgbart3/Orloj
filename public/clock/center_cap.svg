@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1200 1200" style="enable-background:new 0 0 1200 1200;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#394e5f;}
+	.st1{fill:#a2a2ba;}
+</style>
+<!-- Axial end-cap at the clock's dead center (600,600), covering the point
+     where every hand's stem converges. Sized off the moon stem's own width
+     (8.08 units, public/clock/moon_dial.svg) so it reads as a nut/cap
+     proportioned to the hands it sits on: outer disc at twice that width,
+     inner disc at half the outer, both then bumped 35% larger. Rendered as
+     its own top-most layer (ClockFace.tsx) so it sits above every hand and
+     glyph, not just the ones drawn before it; that layer also carries the
+     drop shadow (a tight 70%-black shadow) since CSS filters apply per
+     layer, not per shape. -->
+<circle class="st0" cx="600" cy="600" r="10.908"/>
+<circle class="st1" cx="600" cy="600" r="5.454"/>
+</svg>

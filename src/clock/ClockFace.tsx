@@ -23,6 +23,7 @@ const DROP_SHADOW = 'drop-shadow(0 0 8px #000000)'
 // Stacked twice (a tight core + a wider falloff) since a single drop-shadow
 // at this blur radius faded out too quickly to read as a strong shadow.
 const SUN_GLYPH_DROP_SHADOW = 'drop-shadow(0 0 3px #1A0F08) drop-shadow(0 0 8px #1A0F08)'
+const CENTER_CAP_DROP_SHADOW = 'drop-shadow(0 0 3px rgba(0,0,0,0.7))'
 
 type Layer =
   | { id: string; kind: 'image'; src: string; filter?: string; rotation?: number }
@@ -52,6 +53,11 @@ const LAYERS: Layer[] = [
     gradientId: 'roman-gold-gradient',
     filter: DROP_SHADOW,
   },
+  // moon-dial-back is the moon hand's short, capped end -- painted here,
+  // underneath the zodiac ring, while its long plain end (moon-dial,
+  // below) stays layered above the ring. Same rigid hand, same rotation,
+  // split into two files purely so the ring can occlude one end of it.
+  { id: 'moon-dial-back', kind: 'image', src: '/clock/moon_dial_back.svg', filter: DROP_SHADOW },
   {
     id: 'zodiac-ring',
     kind: 'gradient',
@@ -82,6 +88,10 @@ const LAYERS: Layer[] = [
   // phase shape every tick.
   { id: 'moon-glyph', kind: 'image', src: '/clock/moon_glyph.svg', filter: DROP_SHADOW },
   { id: 'star-dial', kind: 'image', src: '/clock/star_dial.svg', filter: DROP_SHADOW },
+  // Static axial end-cap, deliberately last so it sits above every hand and
+  // glyph -- it's rotationally symmetric about the clock's center, so it
+  // looks identical whether or not it ever gets a rotation of its own.
+  { id: 'center-cap', kind: 'image', src: '/clock/center_cap.svg', filter: CENTER_CAP_DROP_SHADOW },
 ]
 
 // Layers whose rotation is computed live from Prague time, rather than
@@ -92,6 +102,7 @@ function liveRotation(id: string, pragueTime: PragueTime, location: Location): n
     case 'sun-glyph':
       return sunHandRotationDegrees(pragueTime)
     case 'moon-dial':
+    case 'moon-dial-back':
     case 'moon-glyph':
       return moonHandRotationDegrees(pragueTime)
     // Zodiac ring and star-dial share one sidereal rotation — same physical
